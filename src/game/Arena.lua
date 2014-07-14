@@ -28,6 +28,10 @@ function Arena.new()
     function self:update(dt)
     end
 
+    function self:getGrid()
+        return grid;
+    end
+
     return self;
 end
 
