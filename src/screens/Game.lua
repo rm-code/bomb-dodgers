@@ -2,6 +2,7 @@
 -- Copyright (C) 2014 by Robert Machmer                                                            =
 --==================================================================================================
 
+local BombHandler = require('src/game/BombHandler');
 local Arena = require('src/game/Arena');
 local Player = require('src/game/Player');
 local Screen = require('lib/screens/Screen');
@@ -27,13 +28,23 @@ function Game.new()
         arena:init();
 
         player = Player.new(arena:getGrid());
+        player:init();
+
+        BombHandler.setArena(arena);
     end
 
     function self:update(dt)
+        BombHandler.update(dt);
         player:update(dt);
+        arena:update(dt);
+    end
+
+    function self:keypressed(key)
+        player:keypressed(key);
     end
 
     function self:draw()
+        BombHandler.draw();
         arena:draw();
         player:draw();
     end
