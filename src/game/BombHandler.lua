@@ -11,10 +11,12 @@ end
 
 function BombHandler.addBomb(playerId, bomb)
     bombs[playerId][#bombs[playerId] + 1] = bomb;
+    arena:setObject(bomb:getX(), bomb:getY(), 1);
 end
 
 local function explode(bomb)
     arena:addExplosion(bomb:getX(), bomb:getY(), bomb:getStrength());
+    arena:setObject(bomb:getX(), bomb:getY(), 0);
 end
 
 function BombHandler.update(dt)
