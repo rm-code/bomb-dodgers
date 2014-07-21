@@ -3,6 +3,8 @@
 --==================================================================================================
 
 local ScreenManager = require('lib/screens/ScreenManager');
+local InputManager = require('lib/InputManager');
+local Controls = require('src/Controls');
 
 -- ------------------------------------------------
 -- Screens
@@ -56,6 +58,9 @@ function love.load()
 
     -- Start game on the main menu.
     ScreenManager:init(Game.new());
+
+    -- Set the default control map.
+    InputManager.setMap(Controls.GAME);
 end
 
 -- ------------------------------------------------
@@ -64,6 +69,7 @@ end
 
 function love.update(dt)
     ScreenManager:update(dt);
+    InputManager.update(dt);
 end
 
 function love.draw()
@@ -72,6 +78,9 @@ function love.draw()
     local format = string.format;
 
     ScreenManager:draw();
+
+    -- InputManager.draw();
+
     if info then
         lg.print(format("FT: %.3f ms", 1000 * lt.getAverageDelta()), 10, love.window.getHeight() - 60);
         lg.print(format("FPS: %.3f fps", lt.getFPS()), 10, love.window.getHeight() - 40);
@@ -125,6 +134,14 @@ end
 
 function love.mousefocus(focus)
     ScreenManager:mousefocus(focus);
+end
+
+function love.joystickadded(joystick)
+    InputManager.addJoystick(joystick);
+end
+
+function love.joystickremoved(joystick)
+    InputManager.removeJoystick(joystick);
 end
 
 -- ------------------------------------------------

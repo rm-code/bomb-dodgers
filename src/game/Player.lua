@@ -1,6 +1,7 @@
 local Bomb = require('src/game/Bomb');
 local BombHandler = require('src/game/BombHandler');
 local Config = require('src/Config');
+local InputManager = require('lib/InputManager');
 
 local Player = {};
 
@@ -29,41 +30,34 @@ function Player.new()
         arena = narena;
     end
 
+    local function handleInput(dt)
+        -- Vertical movement.
+        if InputManager.hasCommand('UP') then
+            move(0, -1);
+        elseif InputManager.hasCommand('DOWN') then
+            move(0, 1);
+        end
+
+        if InputManager.hasCommand('LEFT') then
+            move(-1, 0);
+
+        elseif InputManager.hasCommand('RIGHT') then
+            move(1, 0);
+        end
+
+        if InputManager.hasCommand('BOMB') then
+            plantBomb(x, y, 20, 2);
+        end
+    end
+
     function self:update(dt)
-        --        local rnd = love.math.random(1, 4);
-        --        if rnd == 1 then
-        --            move(0, -1);
-        --        elseif rnd == 2 then
-        --            move(0, 1);
-        --        elseif rnd == 3 then
-        --            move(-1, 0);
-        --        else
-        --            move(1, 0);
-        --        end
+        handleInput(dt);
     end
 
     function self:draw()
         love.graphics.setColor(0, 255, 0);
         love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
         love.graphics.setColor(255, 255, 255);
-    end
-
-    function self:keypressed(key)
-        if key == 'up' then
-            move(0, -1);
-        elseif key == 'down' then
-            move(0, 1);
-        end
-
-        if key == 'left' then
-            move(-1, 0);
-        elseif key == 'right' then
-            move(1, 0);
-        end
-
-        if key == ' ' then
-            plantBomb(x, y, 20, 2);
-        end
     end
 
     function self:getX()

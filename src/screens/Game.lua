@@ -41,10 +41,6 @@ function Game.new()
         arena:update(dt);
     end
 
-    function self:keypressed(key)
-        player:keypressed(key);
-    end
-
     function self:draw()
         BombHandler.draw();
         arena:draw();
