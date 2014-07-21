@@ -1,3 +1,5 @@
+local Config = require('src/Config');
+
 local Arena = {}
 
 local TILE = {};
@@ -8,7 +10,6 @@ TILE.RUBBLE = 2;
 function Arena.new()
     local self = {};
 
-    local tileSize = 32;
     local grid;
     local explosions = {};
     local explosionDelay = 40;
@@ -46,12 +47,12 @@ function Arena.new()
         for x = 1, #grid do
             for y = 1, #grid[x] do
                 if grid[x][y] == TILE.WALL then
-                    love.graphics.rectangle('fill', x * tileSize, y * tileSize, tileSize, tileSize);
+                    love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
                 elseif grid[x][y] == TILE.SPACE then
-                    -- love.graphics.rectangle('line', x * tileSize, y * tileSize, tileSize, tileSize);
+                    -- love.graphics.rectangle('line', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
                 elseif grid[x][y] == TILE.RUBBLE then
                     love.graphics.setColor(100, 100, 100);
-                    love.graphics.rectangle('fill', x * tileSize, y * tileSize, tileSize, tileSize);
+                    love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
                     love.graphics.setColor(255, 255, 255);
                 end
             end
@@ -60,7 +61,7 @@ function Arena.new()
             for y = 1, #explosions[x] do
                 if explosions[x][y] >= 1 then
                     love.graphics.setColor(255, 0, 0);
-                    love.graphics.rectangle('fill', x * tileSize, y * tileSize, tileSize, tileSize);
+                    love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
                     love.graphics.setColor(255, 255, 255);
                 end
             end

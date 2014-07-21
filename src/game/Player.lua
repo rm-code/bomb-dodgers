@@ -1,5 +1,6 @@
 local Bomb = require('src/game/Bomb');
 local BombHandler = require('src/game/BombHandler');
+local Config = require('src/Config');
 
 local Player = {};
 
@@ -11,8 +12,6 @@ function Player.new()
     local y = 2;
 
     local arena;
-
-    local tileSize = 32;
 
     local function move(dx, dy)
         if not arena:hasCollision(x + dx, y + dy) then
@@ -45,7 +44,7 @@ function Player.new()
 
     function self:draw()
         love.graphics.setColor(0, 255, 0);
-        love.graphics.rectangle('fill', x * tileSize, y * tileSize, tileSize, tileSize);
+        love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
         love.graphics.setColor(255, 255, 255);
     end
 

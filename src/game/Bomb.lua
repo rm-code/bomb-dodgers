@@ -1,3 +1,5 @@
+local Config = require('src/Config');
+
 local Bomb = {};
 
 function Bomb.new(x, y, timer, strength)
@@ -5,7 +7,6 @@ function Bomb.new(x, y, timer, strength)
 
     local x, y = x, y;
     local timer = timer;
-    local tileSize = 32;
     local strength = strength;
 
     function self:update(dt)
@@ -14,7 +15,7 @@ function Bomb.new(x, y, timer, strength)
 
     function self:draw()
         love.graphics.setColor(255, 0, 0);
-        love.graphics.circle('fill', x * tileSize + 16, y * tileSize + 16, 16, 6);
+        love.graphics.circle('fill', x * Config.tileSize + Config.tileSize * 0.5, y * Config.tileSize + Config.tileSize * 0.5, Config.tileSize * 0.5, 20);
         love.graphics.setColor(255, 255, 255);
     end
 
