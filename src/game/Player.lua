@@ -7,20 +7,20 @@ function Player.new(grid)
     local self = {};
 
     local id;
-    local posX = 2;
-    local posY = 2;
+    local x = 2;
+    local y = 2;
 
     local grid = grid;
 
     local tileSize = 32;
 
     local function move(dx, dy)
-        local x = posX + dx or 0;
-        local y = posY + dy or 0;
+        local nx = x + dx or 0;
+        local ny = y + dy or 0;
 
-        if grid and grid[x] and grid[x][y] and grid[x][y] == 0 then
-            posX = x;
-            posY = y;
+        if grid and grid[nx] and grid[nx][ny] and grid[nx][ny] == 0 then
+            x = nx;
+            y = ny;
         end
     end
 
@@ -47,7 +47,7 @@ function Player.new(grid)
 
     function self:draw()
         love.graphics.setColor(0, 255, 0);
-        love.graphics.rectangle('fill', posX * tileSize, posY * tileSize, tileSize, tileSize);
+        love.graphics.rectangle('fill', x * tileSize, y * tileSize, tileSize, tileSize);
         love.graphics.setColor(255, 255, 255);
     end
 
@@ -65,8 +65,16 @@ function Player.new(grid)
         end
 
         if key == ' ' then
-            plantBomb(posX, posY, 20, 2);
+            plantBomb(x, y, 20, 2);
         end
+    end
+
+    function self:getX()
+        return x;
+    end
+
+    function self:getY()
+        return y;
     end
 
     return self;

@@ -128,6 +128,17 @@ function Arena.new()
         return explosions[x][y] > 0;
     end
 
+    function self:removeRubble(x, y, radius)
+        for ix = -radius, radius do
+            for iy = -radius, radius do
+                if grid[x + ix] and grid[x + ix][y + iy] and grid[x + ix][y + iy] == TILE.RUBBLE then
+                    grid[x + ix][y + iy] = TILE.SPACE;
+                    print("remove rubble");
+                end
+            end
+        end
+    end
+
     return self;
 end
 

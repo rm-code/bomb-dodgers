@@ -30,6 +30,8 @@ function Game.new()
         player = Player.new(arena:getGrid());
         player:init();
 
+        arena:removeRubble(player:getX(), player:getX(), 2);
+
         BombHandler.setArena(arena);
     end
 
