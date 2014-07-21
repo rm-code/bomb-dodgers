@@ -1,5 +1,10 @@
 local Arena = {}
 
+local TILE = {};
+TILE.SPACE = 0;
+TILE.WALL = 1;
+TILE.RUBBLE = 2;
+
 function Arena.new()
     local self = {};
 
@@ -12,6 +17,16 @@ function Arena.new()
         grid = love.filesystem.load('res/grid.lua')();
 
         for x = 1, #grid do
+            for y = 1, #grid[x] do
+                if grid[x][y] == 0 then
+                    if love.math.random(0, 2) == 1 then
+                        grid[x][y] = TILE.RUBBLE;
+                    end
+                end
+            end
+        end
+
+        for x = 1, #grid do
             explosions[x] = {};
             for y = 1, #grid[x] do
                 explosions[x][y] = 0;
@@ -22,10 +37,14 @@ function Arena.new()
     function self:draw()
         for x = 1, #grid do
             for y = 1, #grid[x] do
-                if grid[x][y] == 1 then
+                if grid[x][y] == TILE.WALL then
                     love.graphics.rectangle('fill', x * tileSize, y * tileSize, tileSize, tileSize);
-                elseif grid[x][y] == 0 then
+                elseif grid[x][y] == TILE.SPACE then
                     -- love.graphics.rectangle('line', x * tileSize, y * tileSize, tileSize, tileSize);
+                elseif grid[x][y] == TILE.RUBBLE then
+                    love.graphics.setColor(100, 100, 100);
+                    love.graphics.rectangle('fill', x * tileSize, y * tileSize, tileSize, tileSize);
+                    love.graphics.setColor(255, 255, 255);
                 end
             end
         end
@@ -57,36 +76,49 @@ function Arena.new()
     function self:addExplosion(x, y, strength)
         explosions[x][y] = explosionDelay;
 
-        local n;
+        local dx;
         for i = 1, strength do
-            n = x + i;
-            if explosions[n] and explosions[n][y] and grid[n][y] == 0 then
-                explosions[n][y] = explosionDelay;
-            else
+            dx = x + i;
+            if grid[dx][y] == TILE.SPACE then
+                explosions[dx][y] = explosionDelay;
+            elseif grid[dx][y] == TILE.WALL then
+                break;
+            elseif grid[dx][y] == TILE.RUBBLE then
+                grid[dx][y] = 0;
                 break;
             end
         end
         for i = 1, strength do
-            n = x - i;
-            if explosions[n] and explosions[n][y] and grid[n][y] == 0 then
-                explosions[n][y] = explosionDelay;
-            else
+            dx = x - i;
+            if grid[dx][y] == TILE.SPACE then
+                explosions[dx][y] = explosionDelay;
+            elseif grid[dx][y] == TILE.WALL then
+                break;
+            elseif grid[dx][y] == TILE.RUBBLE then
+                grid[dx][y] = 0;
+                break;
+            end
+        end
+        local dy;
+        for i = 1, strength do
+            dy = y + i;
+            if grid[x][dy] == TILE.SPACE then
+                explosions[x][dy] = explosionDelay;
+            elseif grid[x][dy] == TILE.WALL then
+                break;
+            elseif grid[x][dy] == TILE.RUBBLE then
+                grid[x][dy] = 0;
                 break;
             end
         end
         for i = 1, strength do
-            n = y + i;
-            if explosions[x] and explosions[x][n] and grid[x][n] == 0 then
-                explosions[x][n] = explosionDelay;
-            else
+            dy = y - i;
+            if grid[x][dy] == TILE.SPACE then
+                explosions[x][dy] = explosionDelay;
+            elseif grid[x][dy] == TILE.WALL then
                 break;
-            end
-        end
-        for i = 1, strength do
-            n = y - i;
-            if explosions[x] and explosions[x][n] and grid[x][n] == 0 then
-                explosions[x][n] = explosionDelay;
-            else
+            elseif grid[x][dy] == TILE.RUBBLE then
+                grid[x][dy] = 0;
                 break;
             end
         end
@@ -94,6 +126,17 @@ function Arena.new()
 
     function self:isExplosion(x, y)
         return explosions[x][y] > 0;
+    end
+
+    function self:removeRubble(x, y, radius)
+        for ix = -radius, radius do
+            for iy = -radius, radius do
+                if grid[x + ix] and grid[x + ix][y + iy] and grid[x + ix][y + iy] == TILE.RUBBLE then
+                    grid[x + ix][y + iy] = TILE.SPACE;
+                    print("remove rubble");
+                end
+            end
+        end
     end
 
     return self;
