@@ -12,6 +12,7 @@ function Arena.new()
     local grid;
     local explosions = {};
     local explosionDelay = 40;
+    local objects = {};
 
     function self:init()
         grid = love.filesystem.load('res/grid.lua')();
@@ -30,6 +31,13 @@ function Arena.new()
             explosions[x] = {};
             for y = 1, #grid[x] do
                 explosions[x][y] = 0;
+            end
+        end
+
+        for x = 1, #grid do
+            objects[x] = {};
+            for y = 1, #grid[x] do
+                objects[x][y] = 0;
             end
         end
     end
@@ -71,6 +79,14 @@ function Arena.new()
 
     function self:getGrid()
         return grid;
+    end
+
+    function self:hasCollision(x, y)
+        if grid[x][y] == 0 and objects[x][y] == 0 then
+            return false;
+        else
+            return true;
+        end
     end
 
     function self:addExplosion(x, y, strength)
@@ -137,6 +153,10 @@ function Arena.new()
                 end
             end
         end
+    end
+
+    function self:setObject(x, y, yesno)
+        objects[x][y] = yesno;
     end
 
     return self;
