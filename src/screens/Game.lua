@@ -27,8 +27,8 @@ function Game.new()
         arena = Arena.new();
         arena:init();
 
-        player = Player.new(arena:getGrid());
-        player:init();
+        player = Player.new();
+        player:init(arena);
 
         arena:removeRubble(player:getX(), player:getX(), 2);
 

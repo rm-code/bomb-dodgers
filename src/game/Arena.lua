@@ -73,6 +73,14 @@ function Arena.new()
         return grid;
     end
 
+    function self:hasCollision(x, y)
+        if grid[x][y] == 0 then
+            return false;
+        else
+            return true;
+        end
+    end
+
     function self:addExplosion(x, y, strength)
         explosions[x][y] = explosionDelay;
 

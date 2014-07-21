@@ -3,24 +3,21 @@ local BombHandler = require('src/game/BombHandler');
 
 local Player = {};
 
-function Player.new(grid)
+function Player.new()
     local self = {};
 
     local id;
     local x = 2;
     local y = 2;
 
-    local grid = grid;
+    local arena;
 
     local tileSize = 32;
 
     local function move(dx, dy)
-        local nx = x + dx or 0;
-        local ny = y + dy or 0;
-
-        if grid and grid[nx] and grid[nx][ny] and grid[nx][ny] == 0 then
-            x = nx;
-            y = ny;
+        if not arena:hasCollision(x + dx, y + dy) then
+            x = x + dx;
+            y = y + dy;
         end
     end
 
@@ -28,8 +25,9 @@ function Player.new(grid)
         BombHandler.addBomb(id, Bomb.new(x, y, 20, 2));
     end
 
-    function self:init()
+    function self:init(narena)
         id = BombHandler.registerPlayer();
+        arena = narena;
     end
 
     function self:update(dt)
