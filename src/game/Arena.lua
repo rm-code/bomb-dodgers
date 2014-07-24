@@ -13,35 +13,39 @@ local Arena = {}
 function Arena.new()
     local self = {};
 
-    local tiles;
+    local grid;
 
     function self:init()
-        tiles = love.filesystem.load('res/grid.lua')();
+        grid = love.filesystem.load('res/grid.lua')();
 
-        for x = 1, #tiles do
-            for y = 1, #tiles[x] do
-                local type = tiles[x][y];
-                tiles[x][y] = Tile.new();
-                tiles[x][y]:init(x, y, type, type);
-                tiles[x][y]:setGrid(tiles);
+        for x = 1, #grid do
+            for y = 1, #grid[x] do
+                local type = grid[x][y];
+                grid[x][y] = Tile.new();
+                grid[x][y]:init(x, y, type, type);
+                grid[x][y]:setGrid(grid);
             end
         end
     end
 
     function self:draw()
-        for x = 1, #tiles do
-            for y = 1, #tiles[x] do
-                tiles[x][y]:draw();
+        for x = 1, #grid do
+            for y = 1, #grid[x] do
+                grid[x][y]:draw();
             end
         end
     end
 
     function self:update(dt)
-        for x = 1, #tiles do
-            for y = 1, #tiles[x] do
-                tiles[x][y]:update(dt);
+        for x = 1, #grid do
+            for y = 1, #grid[x] do
+                grid[x][y]:update(dt);
             end
         end
+    end
+
+    function self:getGrid()
+        return grid;
     end
 
     return self;
