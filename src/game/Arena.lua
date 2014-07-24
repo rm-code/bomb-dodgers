@@ -1,5 +1,6 @@
 local Tile = require('src/game/Tile');
 local SoftWall = require('src/game/objects/SoftWall');
+local HardWall = require('src/game/objects/HardWall');
 
 -- ------------------------------------------------
 -- Module
@@ -26,13 +27,17 @@ function Arena.new()
                 grid[x][y]:init(x, y, type, type);
                 grid[x][y]:setGrid(grid);
 
-                -- Add soft walls.
+                -- Add walls.
                 if type == 0 then
                     if love.math.random(0, 3) == 1 then
                         local wall = SoftWall.new();
                         wall:init(x, y);
                         grid[x][y]:addContent(wall);
                     end
+                elseif type == 1 then
+                    local wall = HardWall.new();
+                    wall:init(x, y);
+                    grid[x][y]:addContent(wall);
                 end
             end
         end
