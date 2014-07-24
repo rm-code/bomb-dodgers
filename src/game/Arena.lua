@@ -1,5 +1,5 @@
 local Tile = require('src/game/Tile');
-local SoftWall = require('src/game/SoftWall');
+local SoftWall = require('src/game/objects/SoftWall');
 
 -- ------------------------------------------------
 -- Module

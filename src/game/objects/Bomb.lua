@@ -1,6 +1,5 @@
 local Config = require('src/Config');
 
-
 local Bomb = {};
 
 function Bomb.new()

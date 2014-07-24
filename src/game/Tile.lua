@@ -1,5 +1,5 @@
 local Config = require('src/Config');
-local Explosion = require('src/game/Explosion');
+local Explosion = require('src/game/objects/Explosion');
 
 local Tile = {};
 

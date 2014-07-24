@@ -1,4 +1,4 @@
-local Bomb = require('src/game/Bomb');
+local Bomb = require('src/game/objects/Bomb');
 local Config = require('src/Config');
 local InputManager = require('lib/InputManager');
 
