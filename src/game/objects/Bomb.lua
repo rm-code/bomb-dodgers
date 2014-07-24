@@ -9,6 +9,7 @@ function Bomb.new()
     local timer;
     local strength;
     local tile;
+    local type = 'bomb';
 
     function self:init(nx, ny, ntimer, nstrength)
         x, y = nx, ny;
@@ -37,6 +38,10 @@ function Bomb.new()
         love.graphics.setColor(255, 0, 0);
         love.graphics.circle('fill', x * Config.tileSize + Config.tileSize * 0.5, y * Config.tileSize + Config.tileSize * 0.5, Config.tileSize * 0.5, 20);
         love.graphics.setColor(255, 255, 255);
+    end
+
+    function self:getType()
+        return type;
     end
 
     return self;

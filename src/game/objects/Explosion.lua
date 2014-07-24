@@ -7,6 +7,7 @@ function Explosion.new()
 
     local x, y;
     local tile;
+    local type = 'explosion';
     local timer = 1;
 
     function self:init(nx, ny)
@@ -31,6 +32,10 @@ function Explosion.new()
 
     function self:setTile(ntile)
         tile = ntile;
+    end
+
+    function self:getType()
+        return type;
     end
 
     return self;

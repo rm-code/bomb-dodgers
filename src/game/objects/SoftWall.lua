@@ -7,6 +7,7 @@ function SoftWall.new()
 
     local x, y;
     local tile;
+    local type = 'softwall';
 
     function self:init(nx, ny)
         x, y = nx, ny;
@@ -29,6 +30,10 @@ function SoftWall.new()
 
     function self:setTile(ntile)
         tile = ntile;
+    end
+
+    function self:getType()
+        return type;
     end
 
     return self;

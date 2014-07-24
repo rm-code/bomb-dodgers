@@ -122,6 +122,12 @@ function Tile.new()
         return passable and content == nil;
     end
 
+    function self:getContentType()
+        if content then
+            return content:getType();
+        end
+    end
+
     return self;
 end
 
