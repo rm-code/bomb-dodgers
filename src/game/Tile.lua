@@ -7,20 +7,12 @@ function Tile.new()
     local self = {};
 
     local content;
-    local passable;
     local grid;
     local x, y;
-    local background;
 
-    function self:init(nx, ny, nbg, npassable)
+    function self:init(nx, ny)
         x = nx;
         y = ny;
-        background = nbg;
-        if npassable == 0 then
-            passable = true;
-        else
-            passable = false;
-        end
     end
 
     function self:update(dt)
@@ -30,15 +22,6 @@ function Tile.new()
     end
 
     function self:draw()
-        -- TODO replace with images
-        if background == 0 then
-            -- love.graphics.rectangle('line', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
-        elseif background == 1 then
-            love.graphics.setColor(200, 200, 200);
-            love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
-        end
-        love.graphics.setColor(255, 255, 255);
-
         if content then
             content:draw();
         end
@@ -119,7 +102,15 @@ function Tile.new()
     end
 
     function self:isPassable()
-        return passable and content == nil;
+        if content then
+            if content:getType() == 'softwall' or content:getType() == 'bomb' or content:getType() == 'hardwall' then
+                return false;
+            elseif content:getType() == 'explosion' then
+                return true;
+            end
+        else
+            return true;
+        end
     end
 
     function self:getContentType()
