@@ -32,7 +32,7 @@ function Tile.new()
     function self:draw()
         -- TODO replace with images
         if background == 0 then
-            love.graphics.rectangle('line', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
+            -- love.graphics.rectangle('line', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
         elseif background == 1 then
             love.graphics.setColor(200, 200, 200);
             love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
