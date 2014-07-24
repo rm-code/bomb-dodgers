@@ -6,6 +6,7 @@ function Bomb.new()
     local self = {};
 
     local x, y;
+    local dx, dy;
     local timer;
     local strength;
     local tile;
@@ -17,7 +18,21 @@ function Bomb.new()
         strength = nstrength;
     end
 
+    function self:move(ndx, ndy)
+        dx, dy = ndx, ndy;
+        x = x + dx;
+        y = y + dy;
+    end
+
+    local updates = 0;
     function self:update(dt)
+        updates = updates + 1;
+        if updates % 2 == 0 then
+            if dx and dy then
+                tile:signal('kickbomb', dx, dy);
+            end
+        end
+
         timer = timer - dt;
         if timer <= 0 then
             tile:signal('detonate', strength);

@@ -14,6 +14,8 @@ function Player.new()
         if grid[x + dx][y + dy]:isPassable() then
             x = x + dx;
             y = y + dy;
+        elseif grid[x + dx][y + dy]:getContentType() == 'bomb' then
+            grid[x + dx][y + dy]:signal('kickbomb', dx, dy);
         end
     end
 

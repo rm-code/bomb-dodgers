@@ -27,8 +27,9 @@ function Tile.new()
         end
     end
 
-    function self:signal(signal, params)
+    function self:signal(signal, paramOne, paramTwo)
         if signal == 'detonate' then
+            local strength = paramOne;
             -- Add explosion to this tile.
             local explosion = Explosion.new();
             explosion:init(x, y);
@@ -36,55 +37,63 @@ function Tile.new()
 
             -- Check adjacent tiles.
             local dx;
-            for i = 1, params do
+            for i = 1, strength do
                 dx = x + i;
                 if grid[dx][y]:isPassable() then
                     local explosion = Explosion.new();
                     explosion:init(dx, y);
                     grid[dx][y]:addContent(explosion);
                 elseif not grid[dx][y]:isPassable() then
-                    grid[dx][y]:signal('explode', params);
+                    grid[dx][y]:signal('explode', strength);
                     break;
                 end
             end
-            for i = 1, params do
+            for i = 1, strength do
                 dx = x - i;
                 if grid[dx][y]:isPassable() then
                     local explosion = Explosion.new();
                     explosion:init(dx, y);
                     grid[dx][y]:addContent(explosion);
                 elseif not grid[dx][y]:isPassable() then
-                    grid[dx][y]:signal('explode', params);
+                    grid[dx][y]:signal('explode', strength);
                     break;
                 end
             end
 
             local dy;
-            for i = 1, params do
+            for i = 1, strength do
                 dy = y + i;
                 if grid[x][dy]:isPassable() then
                     local explosion = Explosion.new();
                     explosion:init(x, dy);
                     grid[x][dy]:addContent(explosion);
                 elseif not grid[x][dy]:isPassable() then
-                    grid[x][dy]:signal('explode', params);
+                    grid[x][dy]:signal('explode', strength);
                     break;
                 end
             end
-            for i = 1, params do
+            for i = 1, strength do
                 dy = y - i;
                 if grid[x][dy]:isPassable() then
                     local explosion = Explosion.new();
                     explosion:init(x, dy);
                     grid[x][dy]:addContent(explosion);
                 elseif not grid[x][dy]:isPassable() then
-                    grid[x][dy]:signal('explode', params);
+                    grid[x][dy]:signal('explode', strength);
                     break;
                 end
             end
+        elseif signal == 'kickbomb' then
+            local dx, dy = paramOne, paramTwo;
+            if grid[x + dx][y + dy]:isPassable() then
+                local bomb = content;
+                self:removeContent();
+                bomb:move(dx, dy);
+                grid[x + dx][y + dy]:addContent(bomb);
+            end
         end
         if content then
-            content:signal(signal, params);
+            content:signal(signal, paramOne, paramTwo);
         end
     end
 
