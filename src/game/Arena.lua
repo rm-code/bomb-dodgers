@@ -25,7 +25,6 @@ function Arena.new()
                 local type = grid[x][y];
                 grid[x][y] = Tile.new();
                 grid[x][y]:init(x, y, type, type);
-                grid[x][y]:setGrid(grid);
 
                 -- Add walls.
                 if type == 0 then
@@ -39,6 +38,17 @@ function Arena.new()
                     wall:init(x, y);
                     grid[x][y]:addContent(wall);
                 end
+            end
+        end
+
+        -- Set neighbours.
+        for x = 1, #grid do
+            for y = 1, #grid[x] do
+                local n = self:getTile(x, y - 1);
+                local s = self:getTile(x, y + 1);
+                local w = self:getTile(x - 1, y);
+                local e = self:getTile(x + 1, y);
+                grid[x][y]:setNeighbours(n, s, w, e);
             end
         end
     end
@@ -61,6 +71,10 @@ function Arena.new()
 
     function self:getGrid()
         return grid;
+    end
+
+    function self:getTile(x, y)
+        return grid[x] and grid[x][y] or false;
     end
 
     return self;

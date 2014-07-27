@@ -1,6 +1,14 @@
 local Config = require('src/Config');
 
+-- ------------------------------------------------
+-- Module
+-- ------------------------------------------------
+
 local Bomb = {};
+
+-- ------------------------------------------------
+-- Constructor
+-- ------------------------------------------------
 
 function Bomb.new()
     local self = {};
@@ -35,13 +43,15 @@ function Bomb.new()
 
         timer = timer - dt;
         if timer <= 0 then
-            tile:signal('detonate', strength);
+            tile:removeContent();
+            tile:signal({ name = 'detonate', strength = strength, direction = 'all' });
         end
     end
 
     function self:signal(signal)
-        if signal == 'explode' then
-            tile:signal('detonate', strength);
+        if signal.name == 'detonate' then
+            tile:removeContent();
+            tile:signal({ name = 'detonate', strength = strength, direction = 'all' });
         end
     end
 
@@ -61,6 +71,10 @@ function Bomb.new()
 
     return self;
 end
+
+-- ------------------------------------------------
+-- Return Module
+-- ------------------------------------------------
 
 return Bomb;
 

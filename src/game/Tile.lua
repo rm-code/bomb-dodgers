@@ -1,13 +1,25 @@
-local Config = require('src/Config');
 local Explosion = require('src/game/objects/Explosion');
 
+-- ------------------------------------------------
+-- Module
+-- ------------------------------------------------
+
 local Tile = {};
+
+-- ------------------------------------------------
+-- Constructor
+-- ------------------------------------------------
 
 function Tile.new()
     local self = {};
 
+    -- The neighbouring tiles.
+    local north;
+    local south;
+    local west;
+    local east;
+
     local content;
-    local grid;
     local x, y;
 
     function self:init(nx, ny)
@@ -27,73 +39,50 @@ function Tile.new()
         end
     end
 
-    function self:signal(signal, paramOne, paramTwo)
-        if signal == 'detonate' then
-            local strength = paramOne;
-            -- Add explosion to this tile.
+    local function detonate(detonate)
+        -- Place explosion on the current tile.
+        if content then
+            if content:getType() == 'bomb' then
+                content:signal(detonate.name);
+            elseif content:getType() == 'softwall' then
+                self:removeContent();
+                return;
+            elseif content:getType() == 'hardwall' then
+                return;
+            end
+        else
             local explosion = Explosion.new();
             explosion:init(x, y);
             self:addContent(explosion);
+        end
 
-            -- Check adjacent tiles.
-            local dx;
-            for i = 1, strength do
-                dx = x + i;
-                if grid[dx][y]:isPassable() then
-                    local explosion = Explosion.new();
-                    explosion:init(dx, y);
-                    grid[dx][y]:addContent(explosion);
-                elseif not grid[dx][y]:isPassable() then
-                    grid[dx][y]:signal('explode', strength);
-                    break;
-                end
-            end
-            for i = 1, strength do
-                dx = x - i;
-                if grid[dx][y]:isPassable() then
-                    local explosion = Explosion.new();
-                    explosion:init(dx, y);
-                    grid[dx][y]:addContent(explosion);
-                elseif not grid[dx][y]:isPassable() then
-                    grid[dx][y]:signal('explode', strength);
-                    break;
-                end
-            end
-
-            local dy;
-            for i = 1, strength do
-                dy = y + i;
-                if grid[x][dy]:isPassable() then
-                    local explosion = Explosion.new();
-                    explosion:init(x, dy);
-                    grid[x][dy]:addContent(explosion);
-                elseif not grid[x][dy]:isPassable() then
-                    grid[x][dy]:signal('explode', strength);
-                    break;
-                end
-            end
-            for i = 1, strength do
-                dy = y - i;
-                if grid[x][dy]:isPassable() then
-                    local explosion = Explosion.new();
-                    explosion:init(x, dy);
-                    grid[x][dy]:addContent(explosion);
-                elseif not grid[x][dy]:isPassable() then
-                    grid[x][dy]:signal('explode', strength);
-                    break;
-                end
-            end
-        elseif signal == 'kickbomb' then
-            local dx, dy = paramOne, paramTwo;
-            if grid[x + dx][y + dy]:isPassable() then
-                local bomb = content;
-                self:removeContent();
-                bomb:move(dx, dy);
-                grid[x + dx][y + dy]:addContent(bomb);
+        -- Send the explosion to the neighbouring tiles.
+        if detonate.strength > 0 then
+            if detonate.direction == 'all' then
+                if north then north:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'north' }); end
+                if south then south:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'south' }); end
+                if west then west:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'west' }); end
+                if east then east:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'east' }); end
+            elseif north and detonate.direction == 'north' then
+                north:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'north' });
+            elseif south and detonate.direction == 'south' then
+                south:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'south' });
+            elseif west and detonate.direction == 'west' then
+                west:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'west' });
+            elseif east and detonate.direction == 'east' then
+                east:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'east' });
             end
         end
+    end
+
+    function self:signal(signal)
+        if signal.name == 'detonate' then
+            detonate(signal);
+        end
+
+        -- Signal content.
         if content then
-            content:signal(signal, paramOne, paramTwo);
+            content:signal(signal);
         end
     end
 
@@ -106,8 +95,8 @@ function Tile.new()
         content = nil;
     end
 
-    function self:setGrid(ngrid)
-        grid = ngrid;
+    function self:setNeighbours(n, s, w, e)
+        north, south, west, east = n, s, w, e;
     end
 
     function self:isPassable()
@@ -130,6 +119,10 @@ function Tile.new()
 
     return self;
 end
+
+-- ------------------------------------------------
+-- Return Module
+-- ------------------------------------------------
 
 return Tile;
 
