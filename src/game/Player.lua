@@ -15,7 +15,17 @@ function Player.new()
             x = x + dx;
             y = y + dy;
         elseif grid[x + dx][y + dy]:getContentType() == 'bomb' then
-            grid[x + dx][y + dy]:signal('kickbomb', dx, dy);
+            local dir;
+            if dx < 0 then
+                dir = 'west';
+            elseif dx > 0 then
+                dir = 'east';
+            elseif dy < 0 then
+                dir = 'north';
+            elseif dy > 0 then
+                dir = 'south';
+            end
+            grid[x + dx][y + dy]:signal({ name = 'kickbomb', direction = dir });
         end
     end
 

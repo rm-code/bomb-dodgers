@@ -75,9 +75,36 @@ function Tile.new()
         end
     end
 
+    local function kickbomb(signal)
+        if signal.direction == 'north' then
+            if north and north:isPassable() then
+                north:addContent(content);
+                north:signal(signal);
+            end
+        elseif signal.direction == 'south' then
+            if south and south:isPassable() then
+                south:addContent(content);
+                south:signal(signal);
+            end
+        elseif signal.direction == 'west' then
+            if west and west:isPassable() then
+                west:addContent(content);
+                west:signal(signal);
+            end
+        elseif signal.direction == 'east' then
+            if east and east:isPassable() then
+                east:addContent(content);
+                self:removeContent();
+                east:signal(signal);
+            end
+        end
+    end
+
     function self:signal(signal)
         if signal.name == 'detonate' then
             detonate(signal);
+        elseif signal.name == 'kickbomb' then
+            kickbomb(signal);
         end
 
         -- Signal content.
