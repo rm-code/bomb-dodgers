@@ -31,7 +31,7 @@ function Player.new()
 
     local function plantBomb(x, y)
         local bomb = Bomb.new();
-        bomb:init(x, y, 2, 2);
+        bomb:init(2, 2);
         grid[x][y]:addContent(bomb);
     end
 

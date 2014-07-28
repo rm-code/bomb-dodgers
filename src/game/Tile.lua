@@ -35,7 +35,7 @@ function Tile.new()
 
     function self:draw()
         if content then
-            content:draw();
+            content:draw(x, y);
         end
     end
 
