@@ -52,6 +52,10 @@ function Bomb.new()
         return type;
     end
 
+    function self:getStrength()
+        return strength;
+    end
+
     return self;
 end
 
