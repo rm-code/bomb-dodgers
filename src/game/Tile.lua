@@ -35,7 +35,7 @@ function Tile.new()
 
     function self:draw()
         if content then
-            content:draw();
+            content:draw(x, y);
         end
     end
 
@@ -75,9 +75,59 @@ function Tile.new()
         end
     end
 
+    local function kickbomb(signal)
+        if signal.direction == 'north' then
+            if north and north:getContentType() == 'explosion' then
+                local strength = content:getStrength();
+                north:addContent(content);
+                self:removeContent();
+                north:signal({ name = 'detonate', strength = strength, direction = 'all' });
+            elseif north and north:isPassable() then
+                north:addContent(content);
+                self:removeContent();
+                north:signal(signal);
+            end
+        elseif signal.direction == 'south' then
+            if south and south:getContentType() == 'explosion' then
+                local strength = content:getStrength();
+                south:addContent(content);
+                self:removeContent();
+                south:signal({ name = 'detonate', strength = strength, direction = 'all' });
+            elseif south and south:isPassable() then
+                south:addContent(content);
+                self:removeContent();
+                south:signal(signal);
+            end
+        elseif signal.direction == 'west' then
+            if west and west:getContentType() == 'explosion' then
+                local strength = content:getStrength();
+                west:addContent(content);
+                self:removeContent();
+                west:signal({ name = 'detonate', strength = strength, direction = 'all' });
+            elseif west and west:isPassable() then
+                west:addContent(content);
+                self:removeContent();
+                west:signal(signal);
+            end
+        elseif signal.direction == 'east' then
+            if east and east:getContentType() == 'explosion' then
+                local strength = content:getStrength();
+                east:addContent(content);
+                self:removeContent();
+                east:signal({ name = 'detonate', strength = strength, direction = 'all' });
+            elseif east and east:isPassable() then
+                east:addContent(content);
+                self:removeContent();
+                east:signal(signal);
+            end
+        end
+    end
+
     function self:signal(signal)
         if signal.name == 'detonate' then
             detonate(signal);
+        elseif signal.name == 'kickbomb' then
+            kickbomb(signal);
         end
 
         -- Signal content.
