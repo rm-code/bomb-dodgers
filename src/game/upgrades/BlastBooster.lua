@@ -17,7 +17,7 @@ function BlastBooster.new()
     end
 
     function self:draw(x, y)
-        love.graphics.setColor(255, 20, 147);
+        love.graphics.setColor(148, 0, 211);
         love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
         love.graphics.setColor(255, 255, 255);
     end
