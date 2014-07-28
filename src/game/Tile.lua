@@ -51,9 +51,7 @@ function Tile.new()
                 return;
             end
         else
-            local explosion = Explosion.new();
-            explosion:init(x, y);
-            self:addContent(explosion);
+            self:addContent(Explosion.new());
         end
 
         -- Send the explosion to the neighbouring tiles.

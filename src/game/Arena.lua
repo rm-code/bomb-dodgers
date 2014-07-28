@@ -29,14 +29,10 @@ function Arena.new()
                 -- Add walls.
                 if type == 0 then
                     if love.math.random(0, 3) == 1 then
-                        local wall = SoftWall.new();
-                        wall:init(x, y);
-                        grid[x][y]:addContent(wall);
+                        grid[x][y]:addContent(SoftWall.new());
                     end
                 elseif type == 1 then
-                    local wall = HardWall.new();
-                    wall:init(x, y);
-                    grid[x][y]:addContent(wall);
+                    grid[x][y]:addContent(HardWall.new());
                 end
             end
         end

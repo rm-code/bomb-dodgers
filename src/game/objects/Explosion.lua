@@ -5,14 +5,9 @@ local Explosion = {};
 function Explosion.new()
     local self = {};
 
-    local x, y;
     local tile;
     local type = 'explosion';
     local timer = 1;
-
-    function self:init(nx, ny)
-        x, y = nx, ny;
-    end
 
     function self:update(dt)
         timer = timer - dt;
@@ -21,7 +16,7 @@ function Explosion.new()
         end
     end
 
-    function self:draw()
+    function self:draw(x, y)
         love.graphics.setColor(255, 0, 0);
         love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
         love.graphics.setColor(255, 255, 255);

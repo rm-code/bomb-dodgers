@@ -5,18 +5,13 @@ local SoftWall = {};
 function SoftWall.new()
     local self = {};
 
-    local x, y;
     local tile;
     local type = 'softwall';
-
-    function self:init(nx, ny)
-        x, y = nx, ny;
-    end
 
     function self:update(dt)
     end
 
-    function self:draw()
+    function self:draw(x, y)
         love.graphics.setColor(120, 120, 120);
         love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
         love.graphics.setColor(255, 255, 255);
