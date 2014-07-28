@@ -15,6 +15,7 @@ function Bomb.new()
 
     local timer;
     local strength;
+    local player;
     local tile;
     local type = 'bomb';
 
@@ -27,6 +28,7 @@ function Bomb.new()
         timer = timer - dt;
         if timer <= 0 then
             tile:removeContent();
+            player:removeBomb();
             tile:signal({ name = 'detonate', strength = strength, direction = 'all' });
         end
     end
@@ -34,6 +36,7 @@ function Bomb.new()
     function self:signal(signal)
         if signal.name == 'detonate' then
             tile:removeContent();
+            player:removeBomb();
             tile:signal({ name = 'detonate', strength = strength, direction = 'all' });
         end
     end
@@ -50,6 +53,10 @@ function Bomb.new()
 
     function self:getType()
         return type;
+    end
+
+    function self:setPlayer(nplayer)
+        player = nplayer;
     end
 
     function self:getStrength()

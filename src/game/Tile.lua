@@ -1,4 +1,6 @@
 local Explosion = require('src/game/objects/Explosion');
+local BlastBooster = require('src/game/upgrades/BlastBooster');
+local CarryBooster = require('src/game/upgrades/CarryBooster');
 
 -- ------------------------------------------------
 -- Module
@@ -39,6 +41,15 @@ function Tile.new()
         end
     end
 
+    local function dropUpgrade()
+        local rnd = love.math.random(0, 10);
+        if rnd == 0 then
+            self:addContent(BlastBooster.new());
+        elseif rnd == 1 then
+            self:addContent(CarryBooster.new());
+        end
+    end
+
     local function detonate(detonate)
         -- Place explosion on the current tile.
         if content then
@@ -46,8 +57,12 @@ function Tile.new()
                 content:signal(detonate.name);
             elseif content:getType() == 'softwall' then
                 self:removeContent();
+                dropUpgrade();
                 return;
             elseif content:getType() == 'hardwall' then
+                return;
+            else
+                self:removeContent();
                 return;
             end
         else

@@ -9,9 +9,22 @@ function Player.new()
 
     local x, y;
     local grid;
+    local blastStrength = 1;
+    local bombCapacity = 1;
+    local liveBombs = 0;
 
     local function move(dx, dy)
-        if grid[x + dx][y + dy]:isPassable() then
+        if grid[x + dx][y + dy]:getContentType() == 'blastboost' then
+            x = x + dx;
+            y = y + dy;
+            blastStrength = blastStrength + 1;
+            grid[x][y]:removeContent();
+        elseif grid[x + dx][y + dy]:getContentType() == 'carryboost' then
+            x = x + dx;
+            y = y + dy;
+            bombCapacity = bombCapacity + 1;
+            grid[x][y]:removeContent();
+        elseif grid[x + dx][y + dy]:isPassable() then
             x = x + dx;
             y = y + dy;
         elseif grid[x + dx][y + dy]:getContentType() == 'bomb' then
@@ -30,9 +43,16 @@ function Player.new()
     end
 
     local function plantBomb(x, y)
-        local bomb = Bomb.new();
-        bomb:init(2, 2);
-        grid[x][y]:addContent(bomb);
+        if liveBombs < bombCapacity then
+            local bomb = Bomb.new();
+            bomb:init(2, blastStrength);
+            bomb:setPlayer(self);
+            grid[x][y]:addContent(bomb);
+            liveBombs = liveBombs + 1;
+            return true;
+        else
+            return false;
+        end
     end
 
     function self:init(ngrid, nx, ny)
@@ -64,9 +84,16 @@ function Player.new()
         handleInput(dt);
     end
 
+    function self:removeBomb()
+        liveBombs = liveBombs - 1;
+    end
+
     function self:draw()
         love.graphics.setColor(0, 255, 0);
         love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
+        love.graphics.print('Bombs: ' .. liveBombs, 800, 20);
+        love.graphics.print('Cap: ' .. bombCapacity, 800, 40);
+        love.graphics.print('Blast: ' .. blastStrength, 800, 60);
         love.graphics.setColor(255, 255, 255);
     end
 
