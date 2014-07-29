@@ -1,5 +1,7 @@
 local Config = require('src/Config');
 
+local img = love.graphics.newImage('res/img/blastboost.png');
+
 local BlastBooster = {};
 
 function BlastBooster.new()
@@ -17,9 +19,7 @@ function BlastBooster.new()
     end
 
     function self:draw(x, y)
-        love.graphics.setColor(148, 0, 211);
-        love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
-        love.graphics.setColor(255, 255, 255);
+        love.graphics.draw(img, x * Config.tileSize, y * Config.tileSize);
     end
 
     function self:signal(signal)
