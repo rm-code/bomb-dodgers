@@ -1,5 +1,7 @@
 local Config = require('src/Config');
 
+local img = love.graphics.newImage('res/img/hardwall.png');
+
 local HardWall = {};
 
 function HardWall.new()
@@ -12,8 +14,7 @@ function HardWall.new()
     end
 
     function self:draw(x, y)
-        love.graphics.setColor(200, 200, 200);
-        love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
+        love.graphics.draw(img, x * Config.tileSize, y * Config.tileSize);
         love.graphics.setColor(255, 255, 255);
     end
 

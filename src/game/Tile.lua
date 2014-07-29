@@ -1,3 +1,4 @@
+local Config = require('src/Config');
 local Explosion = require('src/game/objects/Explosion');
 local BlastBooster = require('src/game/upgrades/BlastBooster');
 local CarryBooster = require('src/game/upgrades/CarryBooster');
@@ -7,6 +8,8 @@ local CarryBooster = require('src/game/upgrades/CarryBooster');
 -- ------------------------------------------------
 
 local Tile = {};
+
+local img = love.graphics.newImage('res/img/floor.png');
 
 -- ------------------------------------------------
 -- Constructor
@@ -36,6 +39,7 @@ function Tile.new()
     end
 
     function self:draw()
+        love.graphics.draw(img, x * Config.tileSize, y * Config.tileSize);
         if content then
             content:draw(x, y);
         end

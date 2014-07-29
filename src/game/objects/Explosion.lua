@@ -1,5 +1,7 @@
 local Config = require('src/Config');
 
+local img = love.graphics.newImage('res/img/explosion_01.png');
+
 local Explosion = {};
 
 function Explosion.new()
@@ -17,8 +19,9 @@ function Explosion.new()
     end
 
     function self:draw(x, y)
-        love.graphics.setColor(255, 0, 0);
-        love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
+        -- love.graphics.setColor(255, 0, 0);
+        -- love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
+        love.graphics.draw(img, x * Config.tileSize, y * Config.tileSize);
         love.graphics.setColor(255, 255, 255);
     end
 
