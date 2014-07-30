@@ -210,6 +210,14 @@ function Tile.new()
         end
     end
 
+    function self:getX()
+        return x;
+    end
+
+    function self:getY()
+        return y;
+    end
+
     return self;
 end
 

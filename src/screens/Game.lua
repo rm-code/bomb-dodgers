@@ -27,7 +27,7 @@ function Game.new()
         arena:init();
 
         player = Player.new();
-        player:init(arena:getGrid(), 2, 2);
+        player:init(arena, 2, 2);
     end
 
     function self:update(dt)

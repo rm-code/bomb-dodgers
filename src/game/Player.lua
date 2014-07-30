@@ -10,37 +10,46 @@ function Player.new()
     local self = {};
 
     local x, y;
-    local grid;
+    local arena;
+
+    local tile;
+    local north;
+    local south;
+    local west;
+    local east;
+
     local blastStrength = 1;
     local bombCapacity = 1;
     local liveBombs = 0;
 
-    local function move(dx, dy)
-        if grid[x + dx][y + dy]:getContentType() == 'blastboost' then
-            x = x + dx;
-            y = y + dy;
+    local function move(direction)
+        local target;
+
+        if direction == 'north' then
+            target = north;
+        elseif direction == 'south' then
+            target = south;
+        elseif direction == 'west' then
+            target = west;
+        elseif direction == 'east' then
+            target = east;
+        end
+
+        if target:getContentType() == 'blastboost' then
+            x = target:getX();
+            y = target:getY();
             blastStrength = blastStrength + 1;
-            grid[x][y]:removeContent();
-        elseif grid[x + dx][y + dy]:getContentType() == 'carryboost' then
-            x = x + dx;
-            y = y + dy;
+            target:removeContent();
+        elseif target:getContentType() == 'carryboost' then
+            x = target:getX();
+            y = target:getY();
             bombCapacity = bombCapacity + 1;
-            grid[x][y]:removeContent();
-        elseif grid[x + dx][y + dy]:isPassable() then
-            x = x + dx;
-            y = y + dy;
-        elseif grid[x + dx][y + dy]:getContentType() == 'bomb' then
-            local dir;
-            if dx < 0 then
-                dir = 'west';
-            elseif dx > 0 then
-                dir = 'east';
-            elseif dy < 0 then
-                dir = 'north';
-            elseif dy > 0 then
-                dir = 'south';
-            end
-            grid[x + dx][y + dy]:signal({ name = 'kickbomb', direction = dir });
+            target:removeContent();
+        elseif target:isPassable() then
+            x = target:getX();
+            y = target:getY();
+        elseif target:getContentType() == 'bomb' then
+            target:signal({ name = 'kickbomb', direction = direction });
         end
     end
 
@@ -49,7 +58,7 @@ function Player.new()
             local bomb = Bomb.new();
             bomb:init(2, blastStrength);
             bomb:setPlayer(self);
-            grid[x][y]:addContent(bomb);
+            tile:addContent(bomb);
             liveBombs = liveBombs + 1;
             return true;
         else
@@ -57,24 +66,29 @@ function Player.new()
         end
     end
 
-    function self:init(ngrid, nx, ny)
-        grid = ngrid;
+    function self:init(narena, nx, ny)
+        arena = narena;
         x, y = nx, ny;
+        tile = arena:getTile(x, y);
+        north = arena:getTile(x, y - 1);
+        south = arena:getTile(x, y + 1);
+        west = arena:getTile(x - 1, y);
+        east = arena:getTile(x + 1, y);
     end
 
     local function handleInput(dt)
         -- Vertical movement.
         if InputManager.hasCommand('UP') then
-            move(0, -1);
+            move('north');
         elseif InputManager.hasCommand('DOWN') then
-            move(0, 1);
+            move('south');
         end
 
         if InputManager.hasCommand('LEFT') then
-            move(-1, 0);
+            move('west');
 
         elseif InputManager.hasCommand('RIGHT') then
-            move(1, 0);
+            move('east');
         end
 
         if InputManager.hasCommand('BOMB') then
@@ -83,6 +97,12 @@ function Player.new()
     end
 
     function self:update(dt)
+        tile = arena:getTile(x, y);
+        north = arena:getTile(x, y - 1);
+        south = arena:getTile(x, y + 1);
+        west = arena:getTile(x - 1, y);
+        east = arena:getTile(x + 1, y);
+
         handleInput(dt);
     end
 
