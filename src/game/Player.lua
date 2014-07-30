@@ -115,6 +115,36 @@ function Player.new()
         love.graphics.print('Bombs: ' .. liveBombs, 800, 20);
         love.graphics.print('Cap: ' .. bombCapacity, 800, 40);
         love.graphics.print('Blast: ' .. blastStrength, 800, 60);
+
+        --[[
+        love.graphics.setColor(0, 0, 0);
+        if not north:isPassable() then
+            love.graphics.setColor(255, 0, 0);
+        end
+        love.graphics.rectangle('line', north:getX() * 32, north:getY() * 32, 32, 32);
+        love.graphics.setColor(0, 0, 0);
+
+        if not south:isPassable() then
+            love.graphics.setColor(255, 0, 0);
+        end
+        love.graphics.rectangle('line', south:getX() * 32, south:getY() * 32, 32, 32);
+        love.graphics.setColor(0, 0, 0);
+
+        if not east:isPassable() then
+            love.graphics.setColor(255, 0, 0);
+        end
+        love.graphics.rectangle('line', east:getX() * 32, east:getY() * 32, 32, 32);
+        love.graphics.setColor(0, 0, 0);
+
+        if not west:isPassable() then
+            love.graphics.setColor(255, 0, 0);
+        end
+        love.graphics.rectangle('line', west:getX() * 32, west:getY() * 32, 32, 32);
+        love.graphics.setColor(0, 0, 0);
+
+        love.graphics.rectangle('line', tile:getX() * 32, tile:getY() * 32, 32, 32);
+        love.graphics.setColor(255, 255, 255);
+        --]]
     end
 
     function self:getX()
