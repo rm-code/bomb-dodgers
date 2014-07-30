@@ -4,6 +4,8 @@ local Config = require('src/Config');
 -- Module
 -- ------------------------------------------------
 
+local img = love.graphics.newImage('res/img/bomb.png');
+
 local Bomb = {};
 
 -- ------------------------------------------------
@@ -46,9 +48,7 @@ function Bomb.new()
     end
 
     function self:draw(x, y)
-        love.graphics.setColor(255, 0, 0);
-        love.graphics.circle('fill', x * Config.tileSize + Config.tileSize * 0.5, y * Config.tileSize + Config.tileSize * 0.5, Config.tileSize * 0.5, 20);
-        love.graphics.setColor(255, 255, 255);
+        love.graphics.draw(img, x * Config.tileSize, y * Config.tileSize);
     end
 
     function self:getType()
