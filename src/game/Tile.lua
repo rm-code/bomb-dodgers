@@ -41,7 +41,9 @@ function Tile.new()
 
     function self:draw()
         love.graphics.draw(img, x * Config.tileSize, y * Config.tileSize);
-        -- love.graphics.print(danger, x * Config.tileSize + 16, y * Config.tileSize + 16);
+        love.graphics.setColor(0, 0, 0);
+        love.graphics.print(danger, x * Config.tileSize + 16, y * Config.tileSize + 16);
+        love.graphics.setColor(255, 255, 255);
         if content then
             content:draw(x, y);
         end
@@ -97,8 +99,6 @@ function Tile.new()
             end
         end
 
-        self:setDanger(0);
-
         -- Send the explosion to the neighbouring tiles.
         if detonate.strength > 0 then
             if detonate.direction == 'all' then
@@ -124,11 +124,11 @@ function Tile.new()
                 return;
             elseif content:getType() == 'hardwall' then
                 return;
-            elseif self:getDanger() > signal.strength + 1 then
+            elseif danger > signal.strength + 1 then
                 return;
             end
         end
-        self:setDanger(signal.strength + 1)
+        danger = danger + signal.strength + 1;
 
         -- Send the explosion to the neighbouring tiles.
         if signal.strength > 0 then
@@ -145,6 +145,34 @@ function Tile.new()
                 west:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'west' });
             elseif east and signal.direction == 'east' then
                 east:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'east' });
+            end
+        end
+    end
+
+    local function removedanger(signal)
+        if content and content:getType() == 'softwall' then
+            return;
+        elseif content and content:getType() == 'hardwall' then
+            return;
+        end
+
+        -- Reduce danger value of the tile.
+        danger = danger - signal.strength - 1 < 0 and 0 or danger - signal.strength - 1;
+
+        if signal.strength > 0 then
+            if signal.direction == 'all' then
+                if north then north:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'north' }); end
+                if south then south:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'south' }); end
+                if west then west:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'west' }); end
+                if east then east:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'east' }); end
+            elseif north and signal.direction == 'north' then
+                north:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'north' });
+            elseif south and signal.direction == 'south' then
+                south:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'south' });
+            elseif west and signal.direction == 'west' then
+                west:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'west' });
+            elseif east and signal.direction == 'east' then
+                east:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'east' });
             end
         end
     end
@@ -204,6 +232,8 @@ function Tile.new()
             kickbomb(signal);
         elseif signal.name == 'plantbomb' then
             plantbomb(signal);
+        elseif signal.name == 'removedanger' then
+            removedanger(signal);
         end
 
         -- Signal content.
@@ -218,6 +248,9 @@ function Tile.new()
     end
 
     function self:removeContent()
+        if content and content:getType() == 'bomb' then
+            self:signal({ name = 'removedanger', strength = content:getStrength(), direction = 'all' });
+        end
         content = nil;
     end
 
@@ -229,7 +262,7 @@ function Tile.new()
         if content then
             if content:getType() == 'softwall' or content:getType() == 'bomb' or content:getType() == 'hardwall' then
                 return false;
-            elseif content:getType() == 'explosion' then
+            elseif content:getType() == 'explosion' or content:getType() == 'blastboost' or content:getType() == 'carryboost' then
                 return true;
             end
         else

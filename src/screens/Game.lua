@@ -4,7 +4,8 @@
 
 local Screen = require('lib/screens/Screen');
 local Arena = require('src/game/Arena');
-local Player = require('src/game/Player');
+local NPC = require('src/game/entities/NPC');
+local Player = require('src/game/entities/Player');
 
 -- ------------------------------------------------
 -- Module
@@ -20,24 +21,43 @@ function Game.new()
     local self = Screen.new();
 
     local arena;
-    local player;
+    local players;
+    local npcs;
 
     function self:init()
         arena = Arena.new();
         arena:init();
 
-        player = Player.new();
-        player:init(arena, 2, 2);
+        players = {};
+        players[#players + 1] = Player.new(arena, 2, 2);
+
+        npcs = {};
+        npcs[#npcs + 1] = NPC.new(arena, 2, 20);
+        npcs[#npcs + 1] = NPC.new(arena, 20, 20);
+        npcs[#npcs + 1] = NPC.new(arena, 20, 2);
     end
 
     function self:update(dt)
         arena:update(dt);
-        player:update(dt);
+
+        for i = 1, #npcs do
+            npcs[i]:update(dt);
+        end
+
+        for i = 1, #players do
+            players[i]:update(dt);
+        end
     end
 
     function self:draw()
         arena:draw();
-        player:draw();
+        for i = 1, #npcs do
+            npcs[i]:draw();
+        end
+
+        for i = 1, #players do
+            players[i]:draw();
+        end
     end
 
     return self;

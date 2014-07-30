@@ -44,7 +44,6 @@ function Bomb.new()
     end
 
     function self:setStrength(nstrength)
-        print(nstrength)
         strength = nstrength;
     end
 
