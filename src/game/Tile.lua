@@ -70,7 +70,33 @@ function Tile.new()
                 return;
             end
         else
-            self:addContent(Explosion.new());
+            if detonate.direction == 'all' then
+                self:addContent(Explosion.new('origin'));
+            elseif detonate.direction == 'east' then
+                if detonate.strength == 0 then
+                    self:addContent(Explosion.new('endeast'));
+                else
+                    self:addContent(Explosion.new('horizontal'));
+                end
+            elseif detonate.direction == 'west' then
+                if detonate.strength == 0 then
+                    self:addContent(Explosion.new('endwest'));
+                else
+                    self:addContent(Explosion.new('horizontal'));
+                end
+            elseif detonate.direction == 'north' then
+                if detonate.strength == 0 then
+                    self:addContent(Explosion.new('endnorth'));
+                else
+                    self:addContent(Explosion.new('vertical'));
+                end
+            elseif detonate.direction == 'south' then
+                if detonate.strength == 0 then
+                    self:addContent(Explosion.new('endsouth'));
+                else
+                    self:addContent(Explosion.new('vertical'));
+                end
+            end
         end
 
         -- Send the explosion to the neighbouring tiles.
