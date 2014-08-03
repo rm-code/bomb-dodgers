@@ -15,16 +15,11 @@ local Bomb = {};
 function Bomb.new()
     local self = {};
 
-    local timer;
+    local timer = Config.bombTimer;
     local strength;
     local player;
     local tile;
     local type = 'bomb';
-
-    function self:init(ntimer, nstrength)
-        timer = ntimer;
-        strength = nstrength;
-    end
 
     function self:update(dt)
         timer = timer - dt;
@@ -45,6 +40,12 @@ function Bomb.new()
 
     function self:setTile(ntile)
         tile = ntile;
+        tile:signal({ name = 'plantbomb', strength = strength, direction = 'all' });
+    end
+
+    function self:setStrength(nstrength)
+        print(nstrength)
+        strength = nstrength;
     end
 
     function self:draw(x, y)

@@ -56,7 +56,7 @@ function Player.new()
     local function plantBomb(x, y)
         if liveBombs < bombCapacity then
             local bomb = Bomb.new();
-            bomb:init(2, blastStrength);
+            bomb:setStrength(blastStrength);
             bomb:setPlayer(self);
             tile:addContent(bomb);
             liveBombs = liveBombs + 1;

@@ -1,6 +1,7 @@
 local Config = {};
 
 Config.tileSize = 32;
+Config.bombTimer = 2;
 
 return Config;
 

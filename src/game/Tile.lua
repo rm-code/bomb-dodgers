@@ -24,6 +24,7 @@ function Tile.new()
     local west;
     local east;
 
+    local danger = 0;
     local content;
     local x, y;
 
@@ -40,6 +41,7 @@ function Tile.new()
 
     function self:draw()
         love.graphics.draw(img, x * Config.tileSize, y * Config.tileSize);
+        -- love.graphics.print(danger, x * Config.tileSize + 16, y * Config.tileSize + 16);
         if content then
             content:draw(x, y);
         end
@@ -55,7 +57,6 @@ function Tile.new()
     end
 
     local function detonate(detonate)
-        -- Place explosion on the current tile.
         if content then
             if content:getType() == 'bomb' then
                 content:signal(detonate.name);
@@ -64,9 +65,6 @@ function Tile.new()
                 dropUpgrade();
                 return;
             elseif content:getType() == 'hardwall' then
-                return;
-            else
-                self:removeContent();
                 return;
             end
         else
@@ -99,6 +97,8 @@ function Tile.new()
             end
         end
 
+        self:setDanger(0);
+
         -- Send the explosion to the neighbouring tiles.
         if detonate.strength > 0 then
             if detonate.direction == 'all' then
@@ -114,6 +114,37 @@ function Tile.new()
                 west:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'west' });
             elseif east and detonate.direction == 'east' then
                 east:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'east' });
+            end
+        end
+    end
+
+    local function plantbomb(signal)
+        if content then
+            if content:getType() == 'softwall' then
+                return;
+            elseif content:getType() == 'hardwall' then
+                return;
+            elseif self:getDanger() > signal.strength + 1 then
+                return;
+            end
+        end
+        self:setDanger(signal.strength + 1)
+
+        -- Send the explosion to the neighbouring tiles.
+        if signal.strength > 0 then
+            if signal.direction == 'all' then
+                if north then north:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'north' }); end
+                if south then south:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'south' }); end
+                if west then west:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'west' }); end
+                if east then east:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'east' }); end
+            elseif north and signal.direction == 'north' then
+                north:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'north' });
+            elseif south and signal.direction == 'south' then
+                south:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'south' });
+            elseif west and signal.direction == 'west' then
+                west:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'west' });
+            elseif east and signal.direction == 'east' then
+                east:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'east' });
             end
         end
     end
@@ -171,6 +202,8 @@ function Tile.new()
             detonate(signal);
         elseif signal.name == 'kickbomb' then
             kickbomb(signal);
+        elseif signal.name == 'plantbomb' then
+            plantbomb(signal);
         end
 
         -- Signal content.
@@ -212,6 +245,14 @@ function Tile.new()
 
     function self:getX()
         return x;
+    end
+
+    function self:setDanger(d)
+        danger = d;
+    end
+
+    function self:getDanger()
+        return danger;
     end
 
     function self:getY()
