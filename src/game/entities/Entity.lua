@@ -43,21 +43,12 @@ function Entity.new(arena, x, y)
     -- ------------------------------------------------
 
     function self:move(direction)
-        local dx, dy;
-        if direction == 'north' then
-            dx, dy = 0, -1;
-        elseif direction == 'south' then
-            dx, dy = 0, 1;
-        elseif direction == 'west' then
-            dx, dy = -1, 0;
-        elseif direction == 'east' then
-            dx, dy = 1, 0;
-        end
+        local adjTiles = arena:getAdjacentTiles(x, y);
+        local target = adjTiles[direction];
 
-        local target = arena:getTile(x + dx, y + dy);
         if target:isPassable() then
-            x = x + dx;
-            y = y + dy;
+            x = target:getX();
+            y = target:getY();
             takeUpgrade(x, y);
         elseif target:getContentType() == 'bomb' then
             target:signal({ name = 'kickbomb', direction = direction });
