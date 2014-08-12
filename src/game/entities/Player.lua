@@ -42,16 +42,10 @@ function Player.new(arena, x, y)
         end
     end
 
-    local delay = 0;
     function self:update(dt)
         north, south, east, west = self:getAdjacentTiles(self:getX(), self:getY());
 
-        delay = delay + dt;
         handleInput();
-
-        if delay > 0.2 then
-            delay = 0;
-        end
 
         if self:getTile():getContentType() == 'explosion' then
             self:kill();
