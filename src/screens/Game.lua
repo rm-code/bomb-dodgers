@@ -41,22 +41,30 @@ function Game.new()
         arena:update(dt);
 
         for i = 1, #npcs do
-            npcs[i]:update(dt);
+            if not npcs[i]:isDead() then
+                npcs[i]:update(dt);
+            end
         end
 
         for i = 1, #players do
-            players[i]:update(dt);
+            if not players[i]:isDead() then
+                players[i]:update(dt);
+            end
         end
     end
 
     function self:draw()
         arena:draw();
         for i = 1, #npcs do
-            npcs[i]:draw();
+            if not npcs[i]:isDead() then
+                npcs[i]:draw();
+            end
         end
 
         for i = 1, #players do
-            players[i]:draw();
+            if not players[i]:isDead() then
+                players[i]:draw();
+            end
         end
     end
 

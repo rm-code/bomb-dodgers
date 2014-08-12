@@ -21,8 +21,10 @@ function Entity.new(arena, x, y)
     local bombCapacity = 1; -- The total amount of bombs the player can carry.
     local blastRadius = 1; -- The blast radius of a bomb.
 
+    local dead = false;
+
     -- ------------------------------------------------
-    -- Function
+    -- Private Functions
     -- ------------------------------------------------
 
     local function takeUpgrade(x, y)
@@ -35,6 +37,10 @@ function Entity.new(arena, x, y)
             target:removeContent();
         end
     end
+
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
 
     function self:move(direction)
         local dx, dy;
@@ -73,6 +79,10 @@ function Entity.new(arena, x, y)
         liveBombs = liveBombs - 1;
     end
 
+    function self:kill()
+        dead = true;
+    end
+
     -- ------------------------------------------------
     -- Getters
     -- ------------------------------------------------
@@ -83,6 +93,10 @@ function Entity.new(arena, x, y)
 
     function self:getY()
         return y;
+    end
+
+    function self:isDead()
+        return dead;
     end
 
     function self:getTile()

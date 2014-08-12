@@ -117,6 +117,10 @@ function NPC.new(arena, x, y)
             generateInput();
             delay = 0;
         end
+
+        if self:getTile():getContentType() == 'explosion' then
+            self:kill();
+        end
     end
 
     function self:draw()

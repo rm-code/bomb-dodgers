@@ -52,6 +52,10 @@ function Player.new(arena, x, y)
         if delay > 0.2 then
             delay = 0;
         end
+
+        if self:getTile():getContentType() == 'explosion' then
+            self:kill();
+        end
     end
 
     function self:draw()
