@@ -19,10 +19,7 @@ function Tile.new()
     local self = {};
 
     -- The neighbouring tiles.
-    local north;
-    local south;
-    local west;
-    local east;
+    local adjTiles = {};
 
     local danger = 0;
     local content;
@@ -58,10 +55,10 @@ function Tile.new()
         end
     end
 
-    local function detonate(detonate)
+    local function detonate(signal)
         if content then
             if content:getType() == 'bomb' then
-                content:signal(detonate.name);
+                content:signal(signal.name);
             elseif content:getType() == 'softwall' then
                 self:removeContent();
                 dropUpgrade();
@@ -70,50 +67,26 @@ function Tile.new()
                 return;
             end
         else
-            if detonate.direction == 'all' then
+            if signal.direction == 'all' then
                 self:addContent(Explosion.new('origin'));
-            elseif detonate.direction == 'east' then
-                if detonate.strength == 0 then
-                    self:addContent(Explosion.new('endeast'));
+            else
+                if signal.strength == 0 then
+                    self:addContent(Explosion.new('end' .. signal.direction));
                 else
-                    self:addContent(Explosion.new('horizontal'));
-                end
-            elseif detonate.direction == 'west' then
-                if detonate.strength == 0 then
-                    self:addContent(Explosion.new('endwest'));
-                else
-                    self:addContent(Explosion.new('horizontal'));
-                end
-            elseif detonate.direction == 'north' then
-                if detonate.strength == 0 then
-                    self:addContent(Explosion.new('endnorth'));
-                else
-                    self:addContent(Explosion.new('vertical'));
-                end
-            elseif detonate.direction == 'south' then
-                if detonate.strength == 0 then
-                    self:addContent(Explosion.new('endsouth'));
-                else
-                    self:addContent(Explosion.new('vertical'));
+                    self:addContent(Explosion.new(signal.direction));
                 end
             end
         end
 
         -- Send the explosion to the neighbouring tiles.
-        if detonate.strength > 0 then
-            if detonate.direction == 'all' then
-                if north then north:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'north' }); end
-                if south then south:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'south' }); end
-                if west then west:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'west' }); end
-                if east then east:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'east' }); end
-            elseif north and detonate.direction == 'north' then
-                north:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'north' });
-            elseif south and detonate.direction == 'south' then
-                south:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'south' });
-            elseif west and detonate.direction == 'west' then
-                west:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'west' });
-            elseif east and detonate.direction == 'east' then
-                east:signal({ name = 'detonate', strength = detonate.strength - 1, direction = 'east' });
+        if signal.strength > 0 then
+            if signal.direction == 'all' then
+                if adjTiles.north then adjTiles.north:signal({ name = 'detonate', strength = signal.strength - 1, direction = 'north' }); end
+                if adjTiles.south then adjTiles.south:signal({ name = 'detonate', strength = signal.strength - 1, direction = 'south' }); end
+                if adjTiles.west then adjTiles.west:signal({ name = 'detonate', strength = signal.strength - 1, direction = 'west' }); end
+                if adjTiles.east then adjTiles.east:signal({ name = 'detonate', strength = signal.strength - 1, direction = 'east' }); end
+            else
+                adjTiles[signal.direction]:signal({ name = 'detonate', strength = signal.strength - 1, direction = signal.direction });
             end
         end
     end
@@ -133,18 +106,12 @@ function Tile.new()
         -- Send the explosion to the neighbouring tiles.
         if signal.strength > 0 then
             if signal.direction == 'all' then
-                if north then north:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'north' }); end
-                if south then south:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'south' }); end
-                if west then west:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'west' }); end
-                if east then east:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'east' }); end
-            elseif north and signal.direction == 'north' then
-                north:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'north' });
-            elseif south and signal.direction == 'south' then
-                south:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'south' });
-            elseif west and signal.direction == 'west' then
-                west:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'west' });
-            elseif east and signal.direction == 'east' then
-                east:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'east' });
+                if adjTiles.north then adjTiles.north:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'north' }); end
+                if adjTiles.south then adjTiles.south:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'south' }); end
+                if adjTiles.west then adjTiles.west:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'west' }); end
+                if adjTiles.east then adjTiles.east:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'east' }); end
+            else
+                adjTiles[signal.direction]:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = signal.direction });
             end
         end
     end
@@ -161,67 +128,25 @@ function Tile.new()
 
         if signal.strength > 0 then
             if signal.direction == 'all' then
-                if north then north:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'north' }); end
-                if south then south:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'south' }); end
-                if west then west:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'west' }); end
-                if east then east:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'east' }); end
-            elseif north and signal.direction == 'north' then
-                north:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'north' });
-            elseif south and signal.direction == 'south' then
-                south:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'south' });
-            elseif west and signal.direction == 'west' then
-                west:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'west' });
-            elseif east and signal.direction == 'east' then
-                east:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'east' });
+                if adjTiles.north then adjTiles.north:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'north' }); end
+                if adjTiles.south then adjTiles.south:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'south' }); end
+                if adjTiles.west then adjTiles.west:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'west' }); end
+                if adjTiles.east then adjTiles.east:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'east' }); end
+            else
+                adjTiles[signal.direction]:signal({ name = 'removedanger', strength = signal.strength - 1, direction = signal.direction });
             end
         end
     end
 
     local function kickbomb(signal)
-        if signal.direction == 'north' then
-            if north and north:getContentType() == 'explosion' then
-                local strength = content:getStrength();
-                north:addContent(content);
-                self:removeContent();
-                north:signal({ name = 'detonate', strength = strength, direction = 'all' });
-            elseif north and north:isPassable() then
-                north:addContent(content);
-                self:removeContent();
-                north:signal(signal);
-            end
-        elseif signal.direction == 'south' then
-            if south and south:getContentType() == 'explosion' then
-                local strength = content:getStrength();
-                south:addContent(content);
-                self:removeContent();
-                south:signal({ name = 'detonate', strength = strength, direction = 'all' });
-            elseif south and south:isPassable() then
-                south:addContent(content);
-                self:removeContent();
-                south:signal(signal);
-            end
-        elseif signal.direction == 'west' then
-            if west and west:getContentType() == 'explosion' then
-                local strength = content:getStrength();
-                west:addContent(content);
-                self:removeContent();
-                west:signal({ name = 'detonate', strength = strength, direction = 'all' });
-            elseif west and west:isPassable() then
-                west:addContent(content);
-                self:removeContent();
-                west:signal(signal);
-            end
-        elseif signal.direction == 'east' then
-            if east and east:getContentType() == 'explosion' then
-                local strength = content:getStrength();
-                east:addContent(content);
-                self:removeContent();
-                east:signal({ name = 'detonate', strength = strength, direction = 'all' });
-            elseif east and east:isPassable() then
-                east:addContent(content);
-                self:removeContent();
-                east:signal(signal);
-            end
+        if adjTiles[signal.direction] and adjTiles[signal.direction]:getContentType() == 'explosion' then
+            adjTiles[signal.direction]:addContent(content);
+            self:removeContent();
+            adjTiles[signal.direction]:signal({ name = 'detonate', strength = content:getStrength(), direction = 'all' });
+        elseif adjTiles[signal.direction] and adjTiles[signal.direction]:isPassable() then
+            adjTiles[signal.direction]:addContent(content);
+            self:removeContent();
+            adjTiles[signal.direction]:signal(signal);
         end
     end
 
@@ -255,7 +180,7 @@ function Tile.new()
     end
 
     function self:setNeighbours(n, s, w, e)
-        north, south, west, east = n, s, w, e;
+        adjTiles.north, adjTiles.south, adjTiles.west, adjTiles.east = n, s, w, e;
     end
 
     function self:isPassable()

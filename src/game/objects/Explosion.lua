@@ -20,9 +20,9 @@ function Explosion.new(dir)
 
     if dir == 'origin' then
         sprite = origin;
-    elseif dir == 'horizontal' then
+    elseif dir == 'east' or dir == 'west' then
         sprite = horizontal;
-    elseif dir == 'vertical' then
+    elseif dir == 'north' or dir == 'south' then
         sprite = vertical;
     elseif dir == 'endnorth' then
         sprite = endnorth;
