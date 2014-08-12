@@ -2,6 +2,7 @@ local Config = require('src/Config');
 local Explosion = require('src/game/objects/Explosion');
 local BlastBooster = require('src/game/upgrades/BlastBooster');
 local CarryBooster = require('src/game/upgrades/CarryBooster');
+local UpgradeManager = require('src/game/upgrades/UpgradeManager');
 
 -- ------------------------------------------------
 -- Module
@@ -49,9 +50,11 @@ function Tile.new()
     local function dropUpgrade()
         local rnd = love.math.random(0, 10);
         if rnd == 0 then
-            self:addContent(BlastBooster.new());
+            local id = UpgradeManager.register(x, y);
+            self:addContent(BlastBooster.new(id));
         elseif rnd == 1 then
-            self:addContent(CarryBooster.new());
+            local id = UpgradeManager.register(x, y);
+            self:addContent(CarryBooster.new(id));
         end
     end
 
@@ -181,8 +184,14 @@ function Tile.new()
     end
 
     function self:removeContent()
-        if content and content:getType() == 'bomb' then
+        if not content then
+            return;
+        end
+
+        if content:getType() == 'bomb' then
             self:signal({ name = 'removedanger', strength = content:getStrength(), direction = 'all' });
+        elseif content:getType() == 'carryboost' or content:getType() == 'blastboost' then
+            UpgradeManager.remove(content:getId());
         end
         content = nil;
     end

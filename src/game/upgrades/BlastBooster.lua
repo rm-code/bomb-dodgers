@@ -4,12 +4,13 @@ local img = love.graphics.newImage('res/img/blastboost.png');
 
 local BlastBooster = {};
 
-function BlastBooster.new()
+function BlastBooster.new(id)
     local self = {};
 
     local tile;
     local type = 'blastboost';
     local timer = 15;
+    local id = id;
 
     function self:update(dt)
         timer = timer - dt;
@@ -33,6 +34,9 @@ function BlastBooster.new()
         return type;
     end
 
+    function self:getId()
+        return id;
+    end
 
     return self;
 end

@@ -1,5 +1,6 @@
 local Config = require('src/Config');
 local Entity = require('src/game/entities/Entity');
+local UpgradeManager = require('src/game/upgrades/UpgradeManager');
 
 -- ------------------------------------------------
 -- Module
@@ -92,6 +93,10 @@ function NPC.new(arena, x, y)
         end
     end
 
+    local function findTarget()
+        return UpgradeManager.getClosestUpgrade(self:getY(), self:getY());
+    end
+
     -- This is the brain of our AI which decides what the
     -- character should do next.
     local function generateInput(curTile, adjTiles)
@@ -109,9 +114,12 @@ function NPC.new(arena, x, y)
         end
 
         -- Do basic pathfind to 10, 10 (Test coordinates).
-        local targetDir = findDirection(self:getX(), self:getY(), 10, 10);
-        if walk(targetDir, adjTiles) then
-            return;
+        local target = findTarget();
+        if target then
+            local targetDir = findDirection(self:getX(), self:getY(), target.x, target.y);
+            if walk(targetDir, adjTiles) then
+                return;
+            end
         end
     end
 

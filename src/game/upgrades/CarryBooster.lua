@@ -4,12 +4,13 @@ local img = love.graphics.newImage('res/img/carryboost.png');
 
 local CarryBooster = {};
 
-function CarryBooster.new()
+function CarryBooster.new(id)
     local self = {};
 
     local tile;
     local type = 'carryboost';
     local timer = 15;
+    local id = id;
 
     function self:update(dt)
         timer = timer - dt;
@@ -33,6 +34,9 @@ function CarryBooster.new()
         return type;
     end
 
+    function self:getId()
+        return id;
+    end
 
     return self;
 end
