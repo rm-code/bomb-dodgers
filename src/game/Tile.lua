@@ -138,15 +138,23 @@ function Tile.new()
         end
     end
 
+    ---
+    -- Moves a bomb along the grid. If it hits an explosion tile it will explode.
+    -- If it hits another solid tile it will stop moving.
+    -- @param signal
+    --
     local function kickbomb(signal)
-        if adjTiles[signal.direction] and adjTiles[signal.direction]:getContentType() == 'explosion' then
-            adjTiles[signal.direction]:addContent(content);
+        local content = self:getContent();
+        local tile = adjTiles[signal.direction];
+
+        if tile:getContentType() == 'explosion' then
             self:removeContent();
-            adjTiles[signal.direction]:signal({ name = 'detonate', strength = content:getStrength(), direction = 'all' });
-        elseif adjTiles[signal.direction] and adjTiles[signal.direction]:isPassable() then
-            adjTiles[signal.direction]:addContent(content);
+            tile:addContent(content);
+            tile:signal({ name = 'detonate', strength = content:getStrength(), direction = 'all' });
+        elseif tile:isPassable() then
             self:removeContent();
-            adjTiles[signal.direction]:signal(signal);
+            tile:addContent(content);
+            tile:signal(signal);
         end
     end
 
@@ -215,6 +223,10 @@ function Tile.new()
 
     function self:getDanger()
         return danger;
+    end
+
+    function self:getContent()
+        return content;
     end
 
     function self:getY()
