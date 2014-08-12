@@ -20,38 +20,44 @@ local img = love.graphics.newImage('res/img/dodger.png');
 function NPC.new(arena, x, y)
     local self = Entity.new(arena, x, y);
 
-    local adjTiles = {};
-    adjTiles.north, adjTiles.south, adjTiles.east, adjTiles.west = self:getAdjacentTiles(self:getX(), self:getY());
+    local adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
 
-    local function findDirection(tarX, tarY)
-        if tarX == self:getX() and tarY == self:getY() then
+    ---
+    -- This determines where the target is in regard to the current position of the
+    -- npc. If the target is at a diagonal location then we decide randomly which direction
+    -- the npc picks.
+    -- @param curX
+    -- @param curY
+    -- @param tarX
+    -- @param tarY
+    --
+    local function findDirection(curX, curY, tarX, tarY)
+        if curX == tarX and curY == tarY then
             return;
-        elseif tarX == self:getX() and tarY < self:getY() then
+        elseif curX == tarX and curY > tarY then
             return 'north';
-        elseif tarX == self:getX() and tarY > self:getY() then
+        elseif curX == tarX and curY < tarY then
             return 'south';
-        elseif tarX < self:getX() and tarY == self:getY() then
+        elseif curX > tarX and curY == tarY then
             return 'west';
-        elseif tarX > self:getX() and tarY == self:getY() then
+        elseif curX < tarX and curY == tarY then
             return 'east';
+        elseif tarX < curX and tarY < curY then
+            return love.math.random(0, 1) == 0 and 'north' or 'west';
+        elseif tarX > curX and tarY < curY then
+            return love.math.random(0, 1) == 0 and 'north' or 'east';
+        elseif tarX < curX and tarY > curY then
+            return love.math.random(0, 1) == 0 and 'south' or 'west';
+        elseif tarX > curX and tarY > curY then
+            return love.math.random(0, 1) == 0 and 'south' or 'east';
         end
     end
 
-    local function walk(adjTiles)
-        local moveDir = 'north';
-        for dir, tile in pairs(adjTiles) do
-            if tile:isPassable()
-                    and tile:getDanger() == 0
-                    and tile:getContentType() ~= 'explosion' then
-
-                if love.math.random(0, 1) == 0 then
-                    moveDir = dir;
-                end
-            end
-        end
-
-        if moveDir then
-            self:move(moveDir);
+    local function walk(dir, adjTiles)
+        if dir and adjTiles[dir]:isPassable()
+                and adjTiles[dir]:getDanger() == 0
+                and adjTiles[dir]:getContentType() ~= 'explosion' then
+            self:move(dir);
             return true;
         end
     end
@@ -88,23 +94,23 @@ function NPC.new(arena, x, y)
 
     -- This is the brain of our AI which decides what the
     -- character should do next.
-    local function generateInput()
-        local curTile = self:getTile();
-
-        -- Update adjacent tiles.
-        adjTiles.north, adjTiles.south, adjTiles.east, adjTiles.west = self:getAdjacentTiles(self:getX(), self:getY());
-
+    local function generateInput(curTile, adjTiles)
         -- Evade bombs.
         if curTile:getDanger() > 0 then
             evadeBomb(curTile, adjTiles);
             return;
         end
 
+        -- Plant bomb -> return to the top of input handling
+        -- which means we now are on a bomb tile and
+        -- the npc is going to evade that bomb.
         if plantBomb(adjTiles) then
             return;
         end
 
-        if walk(adjTiles) then
+        -- Do basic pathfind to 10, 10 (Test coordinates).
+        local targetDir = findDirection(self:getX(), self:getY(), 10, 10);
+        if walk(targetDir, adjTiles) then
             return;
         end
     end
@@ -113,8 +119,10 @@ function NPC.new(arena, x, y)
     function self:update(dt)
         delay = delay + dt;
 
+        adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
+
         if delay > 0.2 then
-            generateInput();
+            generateInput(self:getTile(), adjTiles);
             delay = 0;
         end
 
@@ -127,37 +135,14 @@ function NPC.new(arena, x, y)
         love.graphics.draw(img, self:getX() * Config.tileSize, self:getY() * Config.tileSize);
 
         love.graphics.setColor(0, 0, 0);
-        if adjTiles.north then
-            if not adjTiles.north:isPassable() then
+        for dir, tile in pairs(adjTiles) do
+            if not tile:isPassable() then
                 love.graphics.setColor(255, 0, 0);
             end
-            love.graphics.rectangle('line', adjTiles.north:getX() * 32, adjTiles.north:getY() * 32, 32, 32);
+            love.graphics.rectangle('line', tile:getX() * 32, tile:getY() * 32, 32, 32);
             love.graphics.setColor(0, 0, 0);
         end
-
-        if adjTiles.south then
-            if not adjTiles.south:isPassable() then
-                love.graphics.setColor(255, 0, 0);
-            end
-            love.graphics.rectangle('line', adjTiles.south:getX() * 32, adjTiles.south:getY() * 32, 32, 32);
-            love.graphics.setColor(0, 0, 0);
-        end
-
-        if adjTiles.east then
-            if not adjTiles.east:isPassable() then
-                love.graphics.setColor(255, 0, 0);
-            end
-            love.graphics.rectangle('line', adjTiles.east:getX() * 32, adjTiles.east:getY() * 32, 32, 32);
-            love.graphics.setColor(0, 0, 0);
-        end
-
-        if adjTiles.west then
-            if not adjTiles.west:isPassable() then
-                love.graphics.setColor(255, 0, 0);
-            end
-            love.graphics.rectangle('line', adjTiles.west:getX() * 32, adjTiles.west:getY() * 32, 32, 32);
-            love.graphics.setColor(255, 255, 255);
-        end
+        love.graphics.setColor(255, 255, 255);
     end
 
     return self;

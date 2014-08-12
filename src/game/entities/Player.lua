@@ -21,8 +21,7 @@ local img = love.graphics.newImage('res/img/dodger.png');
 function Player.new(arena, x, y)
     local self = Entity.new(arena, x, y);
 
-    local north, south, east, west;
-    north, south, east, west = self:getAdjacentTiles(self:getX(), self:getY());
+    local adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
 
     local function handleInput()
         if InputManager.hasCommand('UP') then
@@ -43,7 +42,7 @@ function Player.new(arena, x, y)
     end
 
     function self:update(dt)
-        north, south, east, west = self:getAdjacentTiles(self:getX(), self:getY());
+        adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
 
         handleInput();
 
@@ -56,37 +55,14 @@ function Player.new(arena, x, y)
         love.graphics.draw(img, self:getX() * Config.tileSize, self:getY() * Config.tileSize);
 
         love.graphics.setColor(0, 0, 0);
-        if north then
-            if not north:isPassable() then
+        for dir, tile in pairs(adjTiles) do
+            if not tile:isPassable() then
                 love.graphics.setColor(255, 0, 0);
             end
-            love.graphics.rectangle('line', north:getX() * 32, north:getY() * 32, 32, 32);
+            love.graphics.rectangle('line', tile:getX() * 32, tile:getY() * 32, 32, 32);
             love.graphics.setColor(0, 0, 0);
         end
-
-        if south then
-            if not south:isPassable() then
-                love.graphics.setColor(255, 0, 0);
-            end
-            love.graphics.rectangle('line', south:getX() * 32, south:getY() * 32, 32, 32);
-            love.graphics.setColor(0, 0, 0);
-        end
-
-        if east then
-            if not east:isPassable() then
-                love.graphics.setColor(255, 0, 0);
-            end
-            love.graphics.rectangle('line', east:getX() * 32, east:getY() * 32, 32, 32);
-            love.graphics.setColor(0, 0, 0);
-        end
-
-        if west then
-            if not west:isPassable() then
-                love.graphics.setColor(255, 0, 0);
-            end
-            love.graphics.rectangle('line', west:getX() * 32, west:getY() * 32, 32, 32);
-            love.graphics.setColor(255, 255, 255);
-        end
+        love.graphics.setColor(255, 255, 255);
 
         love.graphics.print('Bombs: ' .. self:getLivingBombs(), 800, 20);
         love.graphics.print('Cap: ' .. self:getBombCapacity(), 800, 40);

@@ -104,10 +104,7 @@ function Entity.new(arena, x, y)
     end
 
     function self:getAdjacentTiles(x, y)
-        return arena:getTile(x, y - 1),
-        arena:getTile(x, y + 1),
-        arena:getTile(x + 1, y),
-        arena:getTile(x - 1, y);
+        return arena:getAdjacentTiles(x, y);
     end
 
     function self:getLivingBombs()

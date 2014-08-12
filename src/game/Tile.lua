@@ -201,6 +201,10 @@ function Tile.new()
         end
     end
 
+    function self:getNeighbours()
+        return adjTiles;
+    end
+
     function self:getX()
         return x;
     end

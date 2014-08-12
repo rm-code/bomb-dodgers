@@ -73,6 +73,10 @@ function Arena.new()
         return grid[x] and grid[x][y] or false;
     end
 
+    function self:getAdjacentTiles(x, y)
+        return self:getTile(x, y):getNeighbours();
+    end
+
     return self;
 end
 
