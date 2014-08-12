@@ -35,6 +35,10 @@ function Game.new()
         npcs[#npcs + 1] = NPC.new(arena, 2, 20);
         npcs[#npcs + 1] = NPC.new(arena, 20, 20);
         npcs[#npcs + 1] = NPC.new(arena, 20, 2);
+
+        -- Clear the spawn points from softwalls.
+        arena:clearSpawns(players);
+        arena:clearSpawns(npcs);
     end
 
     function self:update(dt)

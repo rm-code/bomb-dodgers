@@ -17,6 +17,37 @@ function Arena.new()
 
     local grid;
 
+    ---
+    -- Removes a softwall from the given tile.
+    -- @param tile
+    --
+    local function removeSoftWalls(tile)
+        if tile:getContentType() == 'softwall' then
+            tile:removeContent();
+            print('Removed wall at: ' .. tile:getX() .. ':' .. tile:getY());
+        end
+    end
+
+    ---
+    -- Removes any softwalls that might have been created
+    -- at the character spawn points.
+    -- @param entities
+    --
+    function self:clearSpawns(entities)
+        for i = 1, #entities do
+            local tile = entities[i]:getTile();
+            local adjTiles = tile:getNeighbours();
+
+            -- Remove soft wall from current tile.
+            removeSoftWalls(tile);
+
+            -- Remove soft walls from adjacent tiles.
+            for _, tile in pairs(adjTiles) do
+                removeSoftWalls(tile);
+            end
+        end
+    end
+
     function self:init()
         grid = love.filesystem.load('res/grid.lua')();
 
