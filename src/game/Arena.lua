@@ -29,21 +29,6 @@ function Arena.new()
     local grid;
 
     -- ------------------------------------------------
-    -- Private Functions
-    -- ------------------------------------------------
-
-    ---
-    -- Removes a softwall from the given tile.
-    -- @param tile
-    --
-    local function removeSoftWalls(tile)
-        if tile:getContentType() == CONTENT.SOFTWALL then
-            tile:removeContent();
-            print('Removed wall at: ' .. tile:getX() .. ':' .. tile:getY());
-        end
-    end
-
-    -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
 
@@ -58,11 +43,11 @@ function Arena.new()
             local adjTiles = tile:getNeighbours();
 
             -- Remove soft wall from current tile.
-            removeSoftWalls(tile);
+            tile:removeContent();
 
             -- Remove soft walls from adjacent tiles.
             for _, tile in pairs(adjTiles) do
-                removeSoftWalls(tile);
+                tile:removeContent();
             end
         end
     end

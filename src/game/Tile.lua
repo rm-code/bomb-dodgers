@@ -252,6 +252,11 @@ function Tile.new()
             return;
         end
 
+        -- Hard walls can never be removed.
+        if content:getType() == CONTENT.HARDWALL then
+            return;
+        end
+
         -- If the content was a bomb then remove the danger based on that bomb
         -- from the current and adjacent tiles.
         if content:getType() == CONTENT.BOMB then
