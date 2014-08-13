@@ -29,12 +29,6 @@ function Player.new(arena, x, y)
     local self = Entity.new(arena, x, y);
 
     -- ------------------------------------------------
-    -- Private Variables
-    -- ------------------------------------------------
-
-    local adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
-
-    -- ------------------------------------------------
     -- Private Functions
     -- ------------------------------------------------
 
@@ -61,8 +55,6 @@ function Player.new(arena, x, y)
     -- ------------------------------------------------
 
     function self:update(dt)
-        adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
-
         handleInput();
 
         if self:getTile():getContentType() == CONTENT.EXPLOSION then
@@ -72,16 +64,6 @@ function Player.new(arena, x, y)
 
     function self:draw()
         love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
-
-        love.graphics.setColor(0, 0, 0);
-        for dir, tile in pairs(adjTiles) do
-            if not tile:isPassable() then
-                love.graphics.setColor(255, 0, 0);
-            end
-            love.graphics.rectangle('line', tile:getX() * TILESIZE, tile:getY() * TILESIZE, TILESIZE, TILESIZE);
-            love.graphics.setColor(0, 0, 0);
-        end
-        love.graphics.setColor(255, 255, 255);
 
         love.graphics.print('Bombs: ' .. self:getLivingBombs(), 800, 20);
         love.graphics.print('Cap: ' .. self:getBombCapacity(), 800, 40);

@@ -1,6 +1,8 @@
 local Constants = require('src/Constants');
 local Entity = require('src/game/entities/Entity');
-local UpgradeManager = require('src/game/upgrades/UpgradeManager');
+local StateManager = require('src/game/entities/states/StateManager');
+local Walk = require('src/game/entities/states/Walk');
+local Evade = require('src/game/entities/states/Evade');
 
 -- ------------------------------------------------
 -- Module
@@ -12,7 +14,6 @@ local NPC = {};
 -- Constants
 -- ------------------------------------------------
 
-local CONTENT = Constants.CONTENT;
 local TILESIZE = Constants.TILESIZE;
 
 -- ------------------------------------------------
@@ -32,140 +33,36 @@ function NPC.new(arena, x, y)
     -- Private Variables
     -- ------------------------------------------------
 
-    local adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
-    local reactionDelay = 0;
+    local fsm = StateManager.new();
 
-    -- ------------------------------------------------
-    -- Private Functions
-    -- ------------------------------------------------
+    local states = {};
+    states.walk = Walk.new(fsm, self);
+    states.evade = Evade.new(fsm, self);
 
-    ---
-    -- This determines where the target is in regard to the current position of the
-    -- npc. If the target is at a diagonal location then we decide randomly which direction
-    -- the npc picks.
-    -- @param curX
-    -- @param curY
-    -- @param tarX
-    -- @param tarY
-    --
-    local function findDirection(curX, curY, tarX, tarY)
-        if curX == tarX and curY == tarY then
-            return;
-        elseif curX == tarX and curY > tarY then
-            return 'north';
-        elseif curX == tarX and curY < tarY then
-            return 'south';
-        elseif curX > tarX and curY == tarY then
-            return 'west';
-        elseif curX < tarX and curY == tarY then
-            return 'east';
-        elseif tarX < curX and tarY < curY then
-            return love.math.random(0, 1) == 0 and 'north' or 'west';
-        elseif tarX > curX and tarY < curY then
-            return love.math.random(0, 1) == 0 and 'north' or 'east';
-        elseif tarX < curX and tarY > curY then
-            return love.math.random(0, 1) == 0 and 'south' or 'west';
-        elseif tarX > curX and tarY > curY then
-            return love.math.random(0, 1) == 0 and 'south' or 'east';
-        end
-    end
-
-    local function walk(dir, adjTiles)
-        if dir and adjTiles[dir]:isPassable()
-                and adjTiles[dir]:getDanger() == 0
-                and adjTiles[dir]:getContentType() ~= CONTENT.EXPLOSION then
-            self:move(dir);
-            return true;
-        end
-    end
-
-    local function evadeBomb(curTile, adjTiles)
-        -- If the current tile is in a bomb's radius.
-        local safestTile = curTile;
-        local direction = 'north';
-
-        -- Look for the tile with the lowest danger value.
-        for dir, tile in pairs(adjTiles) do
-            if tile:isPassable()
-                    and tile:getDanger() <= safestTile:getDanger()
-                    and tile:getContentType() ~= CONTENT.EXPLOSION then
-                safestTile = tile;
-                direction = dir;
-                if safestTile:getDanger() == 0 then
-                    break;
-                end
-            end
-        end
-
-        self:move(direction);
-    end
-
-    local function plantBomb(adjTiles)
-        for _, tile in pairs(adjTiles) do
-            if tile:getContentType() == CONTENT.SOFTWALL then
-                self:plantBomb();
-                return true;
-            end
-        end
-    end
-
-    local function findTarget()
-        return UpgradeManager.getClosestUpgrade(self:getY(), self:getY());
-    end
-
-    -- This is the brain of our AI which decides what the
-    -- character should do next.
-    local function generateInput(curTile, adjTiles)
-
-        if curTile:getDanger() > 0 then
-            evadeBomb(curTile, adjTiles);
-            return;
-        end
-
-        if plantBomb(adjTiles) then
-            return;
-        end
-
-        local target = findTarget();
-        if target then
-            local targetDir = findDirection(self:getX(), self:getY(), target.x, target.y);
-            if walk(targetDir, adjTiles) then
-                return;
-            end
-        end
-    end
+    fsm:initStates(states);
+    fsm:switch('walk');
 
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
 
+    local delay = 0;
     function self:update(dt)
-        reactionDelay = reactionDelay + dt;
+        delay = delay + dt;
 
-        adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
-
-        if reactionDelay > 0.2 then
-            generateInput(self:getTile(), adjTiles);
-            reactionDelay = 0;
+        if delay > 0.2 then
+            fsm:update(dt);
+            delay = 0;
         end
 
-        if self:getTile():getContentType() == CONTENT.EXPLOSION then
+        if self:getTile():getContentType() == Constants.CONTENT.EXPLOSION then
             self:kill();
         end
     end
 
     function self:draw()
+        fsm:draw();
         love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
-
-        love.graphics.setColor(0, 0, 0);
-        for dir, tile in pairs(adjTiles) do
-            if not tile:isPassable() then
-                love.graphics.setColor(255, 0, 0);
-            end
-            love.graphics.rectangle('line', tile:getX() * TILESIZE, tile:getY() * TILESIZE, TILESIZE, TILESIZE);
-            love.graphics.setColor(0, 0, 0);
-        end
-        love.graphics.setColor(255, 255, 255);
     end
 
     return self;

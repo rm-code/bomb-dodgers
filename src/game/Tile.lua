@@ -205,8 +205,8 @@ function Tile.new()
     --
     function self:draw()
         love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
-        -- love.graphics.setColor(0, 0, 0);
-        -- love.graphics.print(danger, x * TILESIZE + 16, y * TILESIZE + 16);
+        love.graphics.setColor(0, 0, 0);
+--        love.graphics.print(danger, x * TILESIZE + 16, y * TILESIZE + 16);
         love.graphics.setColor(255, 255, 255);
         if content then
             content:draw(x, y);
@@ -306,6 +306,14 @@ function Tile.new()
             return content:isPassable()
         else
             return true;
+        end
+    end
+
+    function self:isSafe()
+        if not content then
+            return danger == 0;
+        else
+            return danger == 0 and content:getType() ~= CONTENT.EXPLOSION;
         end
     end
 

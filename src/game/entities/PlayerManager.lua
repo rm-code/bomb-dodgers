@@ -2,35 +2,35 @@
 -- Module
 -- ------------------------------------------------
 
-local UpgradeManager = {};
+local PlayerManager = {};
 
 -- ------------------------------------------------
 -- Local Variables
 -- ------------------------------------------------
 
-local upgrades = {};
+local players = {};
 local uniqueID = 0;
 
 -- ------------------------------------------------
 -- Public Functions
 -- ------------------------------------------------
 
-function UpgradeManager.register(x, y)
+function PlayerManager.register(player)
     uniqueID = uniqueID + 1;
-    upgrades[uniqueID] = { x = x, y = y };
+    players[uniqueID] = player;
     return uniqueID;
 end
 
-function UpgradeManager.remove(id)
-    upgrades[id] = nil;
+function PlayerManager.remove(id)
+    players[id] = nil;
 end
 
-function UpgradeManager.getClosestUpgrade(x, y)
+function PlayerManager.getClosestPlayer(x, y)
     local distance;
     local targetId;
 
-    for id, target in pairs(upgrades) do
-        local td = math.abs(x - target.x) + math.abs(y - target.y);
+    for id, target in pairs(players) do
+        local td = math.abs(x - target:getX()) + math.abs(y - target:getY());
 
         if not distance then
             distance = td;
@@ -41,18 +41,14 @@ function UpgradeManager.getClosestUpgrade(x, y)
         end
     end
 
-    if upgrades[targetId] then
-        return upgrades[targetId].x, upgrades[targetId].y;
-    else
-        return 1000, 1000;
-    end
+    return players[targetId]:getX(), players[targetId]:getY();
 end
 
 -- ------------------------------------------------
 -- Return Module
 -- ------------------------------------------------
 
-return UpgradeManager;
+return PlayerManager;
 
 --==================================================================================================
 -- Created 13.08.14 - 00:55                                                                        =

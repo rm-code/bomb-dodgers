@@ -50,6 +50,10 @@ function Entity.new(arena, x, y)
     -- ------------------------------------------------
 
     function self:move(direction)
+        if not direction then
+            return;
+        end
+
         local adjTiles = arena:getAdjacentTiles(x, y);
         local target = adjTiles[direction];
 
@@ -63,7 +67,7 @@ function Entity.new(arena, x, y)
     end
 
     function self:plantBomb()
-        if liveBombs < bombCapacity then
+        if liveBombs < bombCapacity and arena:getTile(x, y):isPassable() then
             local bomb = Bomb.new();
             bomb:setStrength(blastRadius);
             bomb:setPlayer(self);
@@ -101,7 +105,7 @@ function Entity.new(arena, x, y)
         return arena:getTile(x, y);
     end
 
-    function self:getAdjacentTiles(x, y)
+    function self:getAdjacentTiles()
         return arena:getAdjacentTiles(x, y);
     end
 

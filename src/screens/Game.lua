@@ -6,6 +6,7 @@ local Screen = require('lib/screens/Screen');
 local Arena = require('src/game/Arena');
 local NPC = require('src/game/entities/NPC');
 local Player = require('src/game/entities/Player');
+local PlayerManager = require('src/game/entities/PlayerManager');
 
 -- ------------------------------------------------
 -- Module
@@ -30,6 +31,10 @@ function Game.new()
 
         players = {};
         players[#players + 1] = Player.new(arena, 2, 2);
+
+        for i = 1, #players do
+            PlayerManager.register(players[i]);
+        end
 
         npcs = {};
         npcs[#npcs + 1] = NPC.new(arena, 2, 20);
