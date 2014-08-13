@@ -74,6 +74,10 @@ function Bomb.new()
         return strength;
     end
 
+    function self:isPassable()
+        return false;
+    end
+
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------

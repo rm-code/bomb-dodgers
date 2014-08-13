@@ -55,6 +55,10 @@ function HardWall.new()
         return type;
     end
 
+    function self:isPassable()
+        return false;
+    end
+
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------

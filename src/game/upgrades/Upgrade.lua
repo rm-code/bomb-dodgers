@@ -67,6 +67,10 @@ function Upgrade.new()
         return id;
     end
 
+    function self:isPassable()
+        return true;
+    end
+
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------

@@ -58,6 +58,10 @@ function SoftWall.new()
         return type;
     end
 
+    function self:isPassable()
+        return false;
+    end
+
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------

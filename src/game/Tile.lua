@@ -297,17 +297,9 @@ function Tile.new()
     end
 
     function self:isPassable()
-        if not content then
-            return true;
-        end
-
-        if content:getType() == CONTENT.SOFTWALL
-                or content:getType() == CONTENT.BOMB
-                or content:getType() == CONTENT.HARDWALL then
-            return false;
-        elseif content:getType() == CONTENT.EXPLOSION
-                or content:getType() == CONTENT.FIREUP
-                or content:getType() == CONTENT.BOMBUP then
+        if content then
+            return content:isPassable()
+        else
             return true;
         end
     end

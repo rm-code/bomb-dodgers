@@ -83,6 +83,10 @@ function Explosion.new(dir)
         return type;
     end
 
+    function self:isPassable()
+        return true;
+    end
+
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
