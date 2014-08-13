@@ -11,6 +11,10 @@ Constants.CONTENT.BOMBUP = 'bombup';
 Constants.TILESIZE = 32;
 Constants.BOMBTIMER = 2;
 
+Constants.UPGRADES = {};
+Constants.UPGRADES.TIMER = 30;
+Constants.UPGRADES.DROPCHANCE = 5;
+
 return Constants;
 --==================================================================================================
 -- Created 13.08.14 - 01:48                                                                        =

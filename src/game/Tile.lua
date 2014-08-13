@@ -1,7 +1,6 @@
 local Constants = require('src/Constants');
 local Explosion = require('src/game/objects/Explosion');
-local BlastBooster = require('src/game/upgrades/BlastBooster');
-local CarryBooster = require('src/game/upgrades/CarryBooster');
+local Upgrade = require('src/game/upgrades/Upgrade');
 local UpgradeManager = require('src/game/upgrades/UpgradeManager');
 
 -- ------------------------------------------------
@@ -51,13 +50,19 @@ function Tile.new()
     end
 
     local function dropUpgrade()
-        local rnd = love.math.random(0, 10);
+        local rnd = love.math.random(0, Constants.UPGRADES.DROPCHANCE);
         if rnd == 0 then
             local id = UpgradeManager.register(x, y);
-            self:addContent(BlastBooster.new(id));
+            local upgrade = Upgrade.new();
+            upgrade:setId(id);
+            upgrade:setType(CONTENT.FIREUP);
+            self:addContent(upgrade);
         elseif rnd == 1 then
             local id = UpgradeManager.register(x, y);
-            self:addContent(CarryBooster.new(id));
+            local upgrade = Upgrade.new();
+            upgrade:setId(id);
+            upgrade:setType(CONTENT.BOMBUP);
+            self:addContent(upgrade);
         end
     end
 
