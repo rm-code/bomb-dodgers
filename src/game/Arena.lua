@@ -22,7 +22,15 @@ local CONTENT = Constants.CONTENT;
 function Arena.new()
     local self = {};
 
+    -- ------------------------------------------------
+    -- Private Variables
+    -- ------------------------------------------------
+
     local grid;
+
+    -- ------------------------------------------------
+    -- Private Functions
+    -- ------------------------------------------------
 
     ---
     -- Removes a softwall from the given tile.
@@ -34,6 +42,10 @@ function Arena.new()
             print('Removed wall at: ' .. tile:getX() .. ':' .. tile:getY());
         end
     end
+
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
 
     ---
     -- Removes any softwalls that might have been created
@@ -87,6 +99,14 @@ function Arena.new()
         end
     end
 
+    function self:update(dt)
+        for x = 1, #grid do
+            for y = 1, #grid[x] do
+                grid[x][y]:update(dt);
+            end
+        end
+    end
+
     function self:draw()
         for x = 1, #grid do
             for y = 1, #grid[x] do
@@ -95,13 +115,9 @@ function Arena.new()
         end
     end
 
-    function self:update(dt)
-        for x = 1, #grid do
-            for y = 1, #grid[x] do
-                grid[x][y]:update(dt);
-            end
-        end
-    end
+    -- ------------------------------------------------
+    -- Getters
+    -- ------------------------------------------------
 
     function self:getGrid()
         return grid;

@@ -28,7 +28,16 @@ local img = love.graphics.newImage('res/img/dodger.png');
 function NPC.new(arena, x, y)
     local self = Entity.new(arena, x, y);
 
+    -- ------------------------------------------------
+    -- Private Variables
+    -- ------------------------------------------------
+
     local adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
+    local reactionDelay = 0;
+
+    -- ------------------------------------------------
+    -- Private Functions
+    -- ------------------------------------------------
 
     ---
     -- This determines where the target is in regard to the current position of the
@@ -107,20 +116,16 @@ function NPC.new(arena, x, y)
     -- This is the brain of our AI which decides what the
     -- character should do next.
     local function generateInput(curTile, adjTiles)
-        -- Evade bombs.
+
         if curTile:getDanger() > 0 then
             evadeBomb(curTile, adjTiles);
             return;
         end
 
-        -- Plant bomb -> return to the top of input handling
-        -- which means we now are on a bomb tile and
-        -- the npc is going to evade that bomb.
         if plantBomb(adjTiles) then
             return;
         end
 
-        -- Do basic pathfind to 10, 10 (Test coordinates).
         local target = findTarget();
         if target then
             local targetDir = findDirection(self:getX(), self:getY(), target.x, target.y);
@@ -130,18 +135,21 @@ function NPC.new(arena, x, y)
         end
     end
 
-    local delay = 0;
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
+
     function self:update(dt)
-        delay = delay + dt;
+        reactionDelay = reactionDelay + dt;
 
         adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
 
-        if delay > 0.2 then
+        if reactionDelay > 0.2 then
             generateInput(self:getTile(), adjTiles);
-            delay = 0;
+            reactionDelay = 0;
         end
 
-        if self:getTile():getContentType() == 'explosion' then
+        if self:getTile():getContentType() == CONTENT.EXPLOSION then
             self:kill();
         end
     end
@@ -154,7 +162,7 @@ function NPC.new(arena, x, y)
             if not tile:isPassable() then
                 love.graphics.setColor(255, 0, 0);
             end
-            love.graphics.rectangle('line', tile:getX() * 32, tile:getY() * 32, 32, 32);
+            love.graphics.rectangle('line', tile:getX() * TILESIZE, tile:getY() * TILESIZE, TILESIZE, TILESIZE);
             love.graphics.setColor(0, 0, 0);
         end
         love.graphics.setColor(255, 255, 255);

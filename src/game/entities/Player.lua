@@ -28,7 +28,15 @@ local TILESIZE = Constants.TILESIZE;
 function Player.new(arena, x, y)
     local self = Entity.new(arena, x, y);
 
+    -- ------------------------------------------------
+    -- Private Variables
+    -- ------------------------------------------------
+
     local adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
+
+    -- ------------------------------------------------
+    -- Private Functions
+    -- ------------------------------------------------
 
     local function handleInput()
         if InputManager.hasCommand('UP') then
@@ -48,6 +56,10 @@ function Player.new(arena, x, y)
         end
     end
 
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
+
     function self:update(dt)
         adjTiles = self:getAdjacentTiles(self:getX(), self:getY());
 
@@ -66,7 +78,7 @@ function Player.new(arena, x, y)
             if not tile:isPassable() then
                 love.graphics.setColor(255, 0, 0);
             end
-            love.graphics.rectangle('line', tile:getX() * 32, tile:getY() * 32, 32, 32);
+            love.graphics.rectangle('line', tile:getX() * TILESIZE, tile:getY() * TILESIZE, TILESIZE, TILESIZE);
             love.graphics.setColor(0, 0, 0);
         end
         love.graphics.setColor(255, 255, 255);

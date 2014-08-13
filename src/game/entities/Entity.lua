@@ -1,11 +1,15 @@
-local Bomb = require('src/game/objects/Bomb');
 local Constants = require('src/Constants');
+local Bomb = require('src/game/objects/Bomb');
 
 -- ------------------------------------------------
 -- Module
 -- ------------------------------------------------
 
 local Entity = {};
+
+-- ------------------------------------------------
+-- Constants
+-- ------------------------------------------------
 
 local CONTENT = Constants.CONTENT;
 

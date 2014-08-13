@@ -4,11 +4,15 @@
 
 local UpgradeManager = {};
 
+-- ------------------------------------------------
+-- Local Variables
+-- ------------------------------------------------
+
 local upgrades = {};
 local uniqueID = 0;
 
 -- ------------------------------------------------
--- Constructor
+-- Public Functions
 -- ------------------------------------------------
 
 function UpgradeManager.register(x, y)

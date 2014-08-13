@@ -1,26 +1,47 @@
 local Constants = require('src/Constants');
 
-local img = love.graphics.newImage('res/img/softwall.png');
+-- ------------------------------------------------
+-- Module
+-- ------------------------------------------------
 
 local SoftWall = {};
+
+-- ------------------------------------------------
+-- Constants
+-- ------------------------------------------------
 
 local CONTENT = Constants.CONTENT;
 local TILESIZE = Constants.TILESIZE;
 
+-- ------------------------------------------------
+-- Local Variables
+-- ------------------------------------------------
+
+local img = love.graphics.newImage('res/img/softwall.png');
+
+-- ------------------------------------------------
+-- Constructor
+-- ------------------------------------------------
+
 function SoftWall.new()
     local self = {};
 
-    local tile;
-    local type = CONTENT.SOFTWALL;
+    -- ------------------------------------------------
+    -- Private Variables
+    -- ------------------------------------------------
 
-    function self:update(dt)
+    local type = CONTENT.SOFTWALL;
+    local tile;
+
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
+
+    function self:update(_)
     end
 
     function self:draw(x, y)
---        love.graphics.setColor(120, 120, 120);
---        love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
         love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
-        love.graphics.setColor(255, 255, 255);
     end
 
     function self:signal(signal)
@@ -29,12 +50,20 @@ function SoftWall.new()
         end
     end
 
-    function self:setTile(ntile)
-        tile = ntile;
-    end
+    -- ------------------------------------------------
+    -- Getters
+    -- ------------------------------------------------
 
     function self:getType()
         return type;
+    end
+
+    -- ------------------------------------------------
+    -- Setters
+    -- ------------------------------------------------
+
+    function self:setTile(ntile)
+        tile = ntile;
     end
 
     return self;

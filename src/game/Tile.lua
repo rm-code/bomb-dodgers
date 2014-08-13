@@ -9,8 +9,16 @@ local UpgradeManager = require('src/game/upgrades/UpgradeManager');
 
 local Tile = {};
 
+-- ------------------------------------------------
+-- Constants
+-- ------------------------------------------------
+
 local CONTENT = Constants.CONTENT;
 local TILESIZE = Constants.TILESIZE;
+
+-- ------------------------------------------------
+-- Local Variables
+-- ------------------------------------------------
 
 local img = love.graphics.newImage('res/img/floor.png');
 
@@ -21,34 +29,24 @@ local img = love.graphics.newImage('res/img/floor.png');
 function Tile.new()
     local self = {};
 
-    -- The neighbouring tiles.
-    local adjTiles = {};
+    -- ------------------------------------------------
+    -- Private Variables
+    -- ------------------------------------------------
 
+    local adjTiles = {};
     local danger = 0;
     local content;
     local x, y;
 
-    function self:init(nx, ny)
-        x = nx;
-        y = ny;
-    end
+    -- ------------------------------------------------
+    -- Private Functions
+    -- ------------------------------------------------
 
-    function self:update(dt)
-        if content then
-            content:update(dt);
-        end
-    end
-
-    function self:draw()
-        love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
-        love.graphics.setColor(0, 0, 0);
-        love.graphics.print(danger, x * TILESIZE + 16, y * TILESIZE + 16);
-        love.graphics.setColor(255, 255, 255);
-        if content then
-            content:draw(x, y);
-        end
-    end
-
+    ---
+    -- Randomly decides wether or not to drop an upgrade.
+    -- It registers the dropped upgrade with at the UpgradeManager
+    -- sets its type and then adds it to the current tile.
+    --
     local function dropUpgrade()
         local rnd = love.math.random(0, Constants.UPGRADES.DROPCHANCE);
         if rnd == 0 then
@@ -66,6 +64,9 @@ function Tile.new()
         end
     end
 
+    ---
+    -- @param signal
+    --
     local function detonate(signal)
         if content then
             if content:getType() == CONTENT.BOMB then
@@ -102,6 +103,9 @@ function Tile.new()
         end
     end
 
+    ---
+    -- @param signal
+    --
     local function plantbomb(signal)
         if content then
             if content:getType() == CONTENT.SOFTWALL then
@@ -127,6 +131,9 @@ function Tile.new()
         end
     end
 
+    ---
+    -- @param signal
+    --
     local function removedanger(signal)
         if content and content:getType() == CONTENT.SOFTWALL then
             return;
@@ -169,6 +176,48 @@ function Tile.new()
         end
     end
 
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
+
+    ---
+    -- Initialises the tile at the given coordinates.
+    -- @param nx
+    -- @param ny
+    --
+    function self:init(nx, ny)
+        x = nx;
+        y = ny;
+    end
+
+    ---
+    -- Updates the tile and its content.
+    -- @param dt
+    --
+    function self:update(dt)
+        if content then
+            content:update(dt);
+        end
+    end
+
+    ---
+    -- Draws the tile and its content.
+    --
+    function self:draw()
+        love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
+        -- love.graphics.setColor(0, 0, 0);
+        -- love.graphics.print(danger, x * TILESIZE + 16, y * TILESIZE + 16);
+        love.graphics.setColor(255, 255, 255);
+        if content then
+            content:draw(x, y);
+        end
+    end
+
+    ---
+    -- Receives a signal, decides what to do with it and then sends it to
+    -- its own content.
+    -- @param signal
+    --
     function self:signal(signal)
         if signal.name == 'detonate' then
             detonate(signal);
@@ -180,63 +229,46 @@ function Tile.new()
             removedanger(signal);
         end
 
-        -- Signal content.
+        -- Signal the content.
         if content then
             content:signal(signal);
         end
     end
 
+    ---
+    -- Adds content to the current tile.
+    -- @param ncontent
+    --
     function self:addContent(ncontent)
         content = ncontent;
         content:setTile(self);
     end
 
+    ---
+    -- Removes current content from the tile.
+    --
     function self:removeContent()
         if not content then
             return;
         end
 
+        -- If the content was a bomb then remove the danger based on that bomb
+        -- from the current and adjacent tiles.
         if content:getType() == CONTENT.BOMB then
             self:signal({ name = 'removedanger', strength = content:getStrength(), direction = 'all' });
-        elseif content:getType() == CONTENT.BOMBUP or content:getType() == CONTENT.FIREUP then
+        end
+
+        -- If the content was an upgrade then remove that upgrade from the upgrade manager aswell.
+        if content:getType() == CONTENT.BOMBUP or content:getType() == CONTENT.FIREUP then
             UpgradeManager.remove(content:getId());
         end
+
         content = nil;
     end
 
-    function self:setNeighbours(n, s, w, e)
-        adjTiles.north, adjTiles.south, adjTiles.west, adjTiles.east = n, s, w, e;
-    end
-
-    function self:isPassable()
-        if content then
-            if content:getType() == CONTENT.SOFTWALL or content:getType() == CONTENT.BOMB or content:getType() == CONTENT.HARDWALL then
-                return false;
-            elseif content:getType() == CONTENT.EXPLOSION or content:getType() == CONTENT.FIREUP or content:getType() == CONTENT.BOMBUP then
-                return true;
-            end
-        else
-            return true;
-        end
-    end
-
-    function self:getContentType()
-        if content then
-            return content:getType();
-        end
-    end
-
-    function self:getNeighbours()
-        return adjTiles;
-    end
-
-    function self:getX()
-        return x;
-    end
-
-    function self:setDanger(d)
-        danger = d;
-    end
+    -- ------------------------------------------------
+    -- Getters
+    -- ------------------------------------------------
 
     function self:getDanger()
         return danger;
@@ -246,8 +278,50 @@ function Tile.new()
         return content;
     end
 
+    function self:getX()
+        return x;
+    end
+
     function self:getY()
         return y;
+    end
+
+    function self:getNeighbours()
+        return adjTiles;
+    end
+
+    function self:getContentType()
+        if content then
+            return content:getType();
+        end
+    end
+
+    function self:isPassable()
+        if not content then
+            return true;
+        end
+
+        if content:getType() == CONTENT.SOFTWALL
+                or content:getType() == CONTENT.BOMB
+                or content:getType() == CONTENT.HARDWALL then
+            return false;
+        elseif content:getType() == CONTENT.EXPLOSION
+                or content:getType() == CONTENT.FIREUP
+                or content:getType() == CONTENT.BOMBUP then
+            return true;
+        end
+    end
+
+    -- ------------------------------------------------
+    -- Setters
+    -- ------------------------------------------------
+
+    function self:setNeighbours(n, s, w, e)
+        adjTiles.north, adjTiles.south, adjTiles.west, adjTiles.east = n, s, w, e;
+    end
+
+    function self:setDanger(d)
+        danger = d;
     end
 
     return self;

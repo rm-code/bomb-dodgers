@@ -1,4 +1,22 @@
 local Constants = require('src/Constants');
+
+-- ------------------------------------------------
+-- Module
+-- ------------------------------------------------
+
+local Explosion = {};
+
+-- ------------------------------------------------
+-- Constants
+-- ------------------------------------------------
+
+local CONTENT = Constants.CONTENT;
+local TILESIZE = Constants.TILESIZE;
+
+-- ------------------------------------------------
+-- Local Variables
+-- ------------------------------------------------
+
 local origin = love.graphics.newImage('res/img/explosion/origin.png');
 local horizontal = love.graphics.newImage('res/img/explosion/middle_hor.png');
 local vertical = love.graphics.newImage('res/img/explosion/middle_vert.png');
@@ -7,16 +25,19 @@ local endsouth = love.graphics.newImage('res/img/explosion/end_down.png');
 local endeast = love.graphics.newImage('res/img/explosion/end_right.png');
 local endwest = love.graphics.newImage('res/img/explosion/end_left.png');
 
-local Explosion = {};
-
-local CONTENT = Constants.CONTENT;
-local TILESIZE = Constants.TILESIZE;
+-- ------------------------------------------------
+-- Constructor
+-- ------------------------------------------------
 
 function Explosion.new(dir)
     local self = {};
 
-    local tile;
+    -- ------------------------------------------------
+    -- Private Variables
+    -- ------------------------------------------------
+
     local type = CONTENT.EXPLOSION;
+    local tile;
     local timer = 1;
     local sprite;
 
@@ -36,6 +57,10 @@ function Explosion.new(dir)
         sprite = endwest;
     end
 
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
+
     function self:update(dt)
         timer = timer - dt;
         if timer <= 0 then
@@ -50,12 +75,20 @@ function Explosion.new(dir)
     function self:signal(signal)
     end
 
-    function self:setTile(ntile)
-        tile = ntile;
-    end
+    -- ------------------------------------------------
+    -- Getters
+    -- ------------------------------------------------
 
     function self:getType()
         return type;
+    end
+
+    -- ------------------------------------------------
+    -- Setters
+    -- ------------------------------------------------
+
+    function self:setTile(ntile)
+        tile = ntile;
     end
 
     return self;
