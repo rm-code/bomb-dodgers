@@ -1,14 +1,17 @@
-local Config = require('src/Config');
+local Constants = require('src/Constants');
 
 local img = love.graphics.newImage('res/img/carryboost.png');
 
 local CarryBooster = {};
 
+local CONTENT = Constants.CONTENT;
+local TILESIZE = Constants.TILESIZE;
+
 function CarryBooster.new(id)
     local self = {};
 
     local tile;
-    local type = 'carryboost';
+    local type = CONTENT.BOMBUP;
     local timer = 15;
     local id = id;
 
@@ -20,7 +23,7 @@ function CarryBooster.new(id)
     end
 
     function self:draw(x, y)
-        love.graphics.draw(img, x * Config.tileSize, y * Config.tileSize);
+        love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
     end
 
     function self:signal(signal)

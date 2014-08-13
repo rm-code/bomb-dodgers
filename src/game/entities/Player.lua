@@ -1,4 +1,4 @@
-local Config = require('src/Config');
+local Constants = require('src/Constants');
 local Entity = require('src/game/entities/Entity');
 local InputManager = require('lib/InputManager');
 
@@ -13,6 +13,13 @@ local Player = {};
 -- ------------------------------------------------
 
 local img = love.graphics.newImage('res/img/dodger.png');
+
+-- ------------------------------------------------
+-- Constants
+-- ------------------------------------------------
+
+local CONTENT = Constants.CONTENT;
+local TILESIZE = Constants.TILESIZE;
 
 -- ------------------------------------------------
 -- Constructor
@@ -46,13 +53,13 @@ function Player.new(arena, x, y)
 
         handleInput();
 
-        if self:getTile():getContentType() == 'explosion' then
+        if self:getTile():getContentType() == CONTENT.EXPLOSION then
             self:kill();
         end
     end
 
     function self:draw()
-        love.graphics.draw(img, self:getX() * Config.tileSize, self:getY() * Config.tileSize);
+        love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
 
         love.graphics.setColor(0, 0, 0);
         for dir, tile in pairs(adjTiles) do

@@ -1,4 +1,4 @@
-local Config = require('src/Config');
+local Constants = require('src/Constants');
 local Explosion = require('src/game/objects/Explosion');
 local BlastBooster = require('src/game/upgrades/BlastBooster');
 local CarryBooster = require('src/game/upgrades/CarryBooster');
@@ -9,6 +9,9 @@ local UpgradeManager = require('src/game/upgrades/UpgradeManager');
 -- ------------------------------------------------
 
 local Tile = {};
+
+local CONTENT = Constants.CONTENT;
+local TILESIZE = Constants.TILESIZE;
 
 local img = love.graphics.newImage('res/img/floor.png');
 
@@ -38,9 +41,9 @@ function Tile.new()
     end
 
     function self:draw()
-        love.graphics.draw(img, x * Config.tileSize, y * Config.tileSize);
+        love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
         love.graphics.setColor(0, 0, 0);
-        love.graphics.print(danger, x * Config.tileSize + 16, y * Config.tileSize + 16);
+        love.graphics.print(danger, x * TILESIZE + 16, y * TILESIZE + 16);
         love.graphics.setColor(255, 255, 255);
         if content then
             content:draw(x, y);
@@ -60,13 +63,13 @@ function Tile.new()
 
     local function detonate(signal)
         if content then
-            if content:getType() == 'bomb' then
+            if content:getType() == CONTENT.BOMB then
                 content:signal(signal.name);
-            elseif content:getType() == 'softwall' then
+            elseif content:getType() == CONTENT.SOFTWALL then
                 self:removeContent();
                 dropUpgrade();
                 return;
-            elseif content:getType() == 'hardwall' then
+            elseif content:getType() == CONTENT.HARDWALL then
                 return;
             end
         else
@@ -96,9 +99,9 @@ function Tile.new()
 
     local function plantbomb(signal)
         if content then
-            if content:getType() == 'softwall' then
+            if content:getType() == CONTENT.SOFTWALL then
                 return;
-            elseif content:getType() == 'hardwall' then
+            elseif content:getType() == CONTENT.HARDWALL then
                 return;
             elseif danger > signal.strength + 1 then
                 return;
@@ -120,9 +123,9 @@ function Tile.new()
     end
 
     local function removedanger(signal)
-        if content and content:getType() == 'softwall' then
+        if content and content:getType() == CONTENT.SOFTWALL then
             return;
-        elseif content and content:getType() == 'hardwall' then
+        elseif content and content:getType() == CONTENT.HARDWALL then
             return;
         end
 
@@ -150,7 +153,7 @@ function Tile.new()
         local content = self:getContent();
         local tile = adjTiles[signal.direction];
 
-        if tile:getContentType() == 'explosion' then
+        if tile:getContentType() == CONTENT.EXPLOSION then
             self:removeContent();
             tile:addContent(content);
             tile:signal({ name = 'detonate', strength = content:getStrength(), direction = 'all' });
@@ -188,9 +191,9 @@ function Tile.new()
             return;
         end
 
-        if content:getType() == 'bomb' then
+        if content:getType() == CONTENT.BOMB then
             self:signal({ name = 'removedanger', strength = content:getStrength(), direction = 'all' });
-        elseif content:getType() == 'carryboost' or content:getType() == 'blastboost' then
+        elseif content:getType() == CONTENT.BOMBUP or content:getType() == CONTENT.FIREUP then
             UpgradeManager.remove(content:getId());
         end
         content = nil;
@@ -202,9 +205,9 @@ function Tile.new()
 
     function self:isPassable()
         if content then
-            if content:getType() == 'softwall' or content:getType() == 'bomb' or content:getType() == 'hardwall' then
+            if content:getType() == CONTENT.SOFTWALL or content:getType() == CONTENT.BOMB or content:getType() == CONTENT.HARDWALL then
                 return false;
-            elseif content:getType() == 'explosion' or content:getType() == 'blastboost' or content:getType() == 'carryboost' then
+            elseif content:getType() == CONTENT.EXPLOSION or content:getType() == CONTENT.FIREUP or content:getType() == CONTENT.BOMBUP then
                 return true;
             end
         else

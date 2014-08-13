@@ -1,10 +1,13 @@
 local Bomb = require('src/game/objects/Bomb');
+local Constants = require('src/Constants');
 
 -- ------------------------------------------------
 -- Module
 -- ------------------------------------------------
 
 local Entity = {};
+
+local CONTENT = Constants.CONTENT;
 
 -- ------------------------------------------------
 -- Constructor
@@ -29,10 +32,10 @@ function Entity.new(arena, x, y)
 
     local function takeUpgrade(x, y)
         local target = arena:getTile(x, y);
-        if target:getContentType() == 'blastboost' then
+        if target:getContentType() == CONTENT.FIREUP then
             blastRadius = blastRadius + 1;
             target:removeContent();
-        elseif target:getContentType() == 'carryboost' then
+        elseif target:getContentType() == CONTENT.BOMBUP then
             bombCapacity = bombCapacity + 1;
             target:removeContent();
         end
@@ -50,7 +53,7 @@ function Entity.new(arena, x, y)
             x = target:getX();
             y = target:getY();
             takeUpgrade(x, y);
-        elseif target:getContentType() == 'bomb' then
+        elseif target:getContentType() == CONTENT.BOMB then
             target:signal({ name = 'kickbomb', direction = direction });
         end
     end

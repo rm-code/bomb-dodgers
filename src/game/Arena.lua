@@ -1,3 +1,4 @@
+local Constants = require('src/Constants');
 local Tile = require('src/game/Tile');
 local SoftWall = require('src/game/objects/SoftWall');
 local HardWall = require('src/game/objects/HardWall');
@@ -7,6 +8,12 @@ local HardWall = require('src/game/objects/HardWall');
 -- ------------------------------------------------
 
 local Arena = {}
+
+-- ------------------------------------------------
+-- Constants
+-- ------------------------------------------------
+
+local CONTENT = Constants.CONTENT;
 
 -- ------------------------------------------------
 -- Constructor
@@ -22,7 +29,7 @@ function Arena.new()
     -- @param tile
     --
     local function removeSoftWalls(tile)
-        if tile:getContentType() == 'softwall' then
+        if tile:getContentType() == CONTENT.SOFTWALL then
             tile:removeContent();
             print('Removed wall at: ' .. tile:getX() .. ':' .. tile:getY());
         end

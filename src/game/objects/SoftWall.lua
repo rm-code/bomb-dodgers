@@ -1,14 +1,17 @@
-local Config = require('src/Config');
+local Constants = require('src/Constants');
 
 local img = love.graphics.newImage('res/img/softwall.png');
 
 local SoftWall = {};
 
+local CONTENT = Constants.CONTENT;
+local TILESIZE = Constants.TILESIZE;
+
 function SoftWall.new()
     local self = {};
 
     local tile;
-    local type = 'softwall';
+    local type = CONTENT.SOFTWALL;
 
     function self:update(dt)
     end
@@ -16,7 +19,7 @@ function SoftWall.new()
     function self:draw(x, y)
 --        love.graphics.setColor(120, 120, 120);
 --        love.graphics.rectangle('fill', x * Config.tileSize, y * Config.tileSize, Config.tileSize, Config.tileSize);
-        love.graphics.draw(img, x * Config.tileSize, y * Config.tileSize);
+        love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
         love.graphics.setColor(255, 255, 255);
     end
 

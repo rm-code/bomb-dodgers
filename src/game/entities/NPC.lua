@@ -1,4 +1,4 @@
-local Config = require('src/Config');
+local Constants = require('src/Constants');
 local Entity = require('src/game/entities/Entity');
 local UpgradeManager = require('src/game/upgrades/UpgradeManager');
 
@@ -7,6 +7,13 @@ local UpgradeManager = require('src/game/upgrades/UpgradeManager');
 -- ------------------------------------------------
 
 local NPC = {};
+
+-- ------------------------------------------------
+-- Constants
+-- ------------------------------------------------
+
+local CONTENT = Constants.CONTENT;
+local TILESIZE = Constants.TILESIZE;
 
 -- ------------------------------------------------
 -- Local Variables
@@ -57,7 +64,7 @@ function NPC.new(arena, x, y)
     local function walk(dir, adjTiles)
         if dir and adjTiles[dir]:isPassable()
                 and adjTiles[dir]:getDanger() == 0
-                and adjTiles[dir]:getContentType() ~= 'explosion' then
+                and adjTiles[dir]:getContentType() ~= CONTENT.EXPLOSION then
             self:move(dir);
             return true;
         end
@@ -72,7 +79,7 @@ function NPC.new(arena, x, y)
         for dir, tile in pairs(adjTiles) do
             if tile:isPassable()
                     and tile:getDanger() <= safestTile:getDanger()
-                    and tile:getContentType() ~= 'explosion' then
+                    and tile:getContentType() ~= CONTENT.EXPLOSION then
                 safestTile = tile;
                 direction = dir;
                 if safestTile:getDanger() == 0 then
@@ -86,7 +93,7 @@ function NPC.new(arena, x, y)
 
     local function plantBomb(adjTiles)
         for _, tile in pairs(adjTiles) do
-            if tile:getContentType() == 'softwall' then
+            if tile:getContentType() == CONTENT.SOFTWALL then
                 self:plantBomb();
                 return true;
             end
@@ -140,7 +147,7 @@ function NPC.new(arena, x, y)
     end
 
     function self:draw()
-        love.graphics.draw(img, self:getX() * Config.tileSize, self:getY() * Config.tileSize);
+        love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
 
         love.graphics.setColor(0, 0, 0);
         for dir, tile in pairs(adjTiles) do

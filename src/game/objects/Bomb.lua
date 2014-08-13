@@ -1,4 +1,4 @@
-local Config = require('src/Config');
+local Constants = require('src/Constants');
 
 -- ------------------------------------------------
 -- Module
@@ -8,6 +8,10 @@ local img = love.graphics.newImage('res/img/bomb.png');
 
 local Bomb = {};
 
+local CONTENT = Constants.CONTENT;
+local TILESIZE = Constants.TILESIZE;
+local BOMBTIMER = Constants.BOMBTIMER;
+
 -- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
@@ -15,11 +19,11 @@ local Bomb = {};
 function Bomb.new()
     local self = {};
 
-    local timer = Config.bombTimer;
+    local timer = BOMBTIMER;
     local strength;
     local player;
     local tile;
-    local type = 'bomb';
+    local type = CONTENT.BOMB;
 
     function self:update(dt)
         timer = timer - dt;
@@ -48,7 +52,7 @@ function Bomb.new()
     end
 
     function self:draw(x, y)
-        love.graphics.draw(img, x * Config.tileSize, y * Config.tileSize);
+        love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
     end
 
     function self:getType()

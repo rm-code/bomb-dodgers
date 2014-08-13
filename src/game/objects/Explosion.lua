@@ -1,5 +1,4 @@
-local Config = require('src/Config');
-
+local Constants = require('src/Constants');
 local origin = love.graphics.newImage('res/img/explosion/origin.png');
 local horizontal = love.graphics.newImage('res/img/explosion/middle_hor.png');
 local vertical = love.graphics.newImage('res/img/explosion/middle_vert.png');
@@ -10,11 +9,14 @@ local endwest = love.graphics.newImage('res/img/explosion/end_left.png');
 
 local Explosion = {};
 
+local CONTENT = Constants.CONTENT;
+local TILESIZE = Constants.TILESIZE;
+
 function Explosion.new(dir)
     local self = {};
 
     local tile;
-    local type = 'explosion';
+    local type = CONTENT.EXPLOSION;
     local timer = 1;
     local sprite;
 
@@ -42,7 +44,7 @@ function Explosion.new(dir)
     end
 
     function self:draw(x, y)
-        love.graphics.draw(sprite, x * Config.tileSize, y * Config.tileSize);
+        love.graphics.draw(sprite, x * TILESIZE, y * TILESIZE);
     end
 
     function self:signal(signal)
