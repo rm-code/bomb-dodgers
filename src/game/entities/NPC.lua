@@ -19,7 +19,7 @@ local TILESIZE = Constants.TILESIZE;
 -- Local Variables
 -- ------------------------------------------------
 
-local img = love.graphics.newImage('res/img/dodger.png');
+local img = love.graphics.newImage('res/img/enemy.png');
 
 -- ------------------------------------------------
 -- Constructor
