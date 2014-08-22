@@ -71,6 +71,9 @@ function Tile.new()
         if content then
             if content:getType() == CONTENT.BOMB then
                 content:signal(signal.name);
+            elseif content:getType() == CONTENT.FIREUP or content:getType() == CONTENT.BOMBUP then
+                self:removeContent();
+                return;
             elseif content:getType() == CONTENT.SOFTWALL then
                 self:removeContent();
                 dropUpgrade();
@@ -206,7 +209,7 @@ function Tile.new()
     function self:draw()
         love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
         love.graphics.setColor(0, 0, 0);
---        love.graphics.print(danger, x * TILESIZE + 16, y * TILESIZE + 16);
+        --        love.graphics.print(danger, x * TILESIZE + 16, y * TILESIZE + 16);
         love.graphics.setColor(255, 255, 255);
         if content then
             content:draw(x, y);
