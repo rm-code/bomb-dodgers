@@ -48,18 +48,11 @@ function Tile.new()
     -- sets its type and then adds it to the current tile.
     --
     local function dropUpgrade()
-        local rnd = love.math.random(0, Constants.UPGRADES.DROPCHANCE);
-        if rnd == 0 then
+        if love.math.random(0, Constants.UPGRADES.DROPCHANCE) == 0 then
             local id = UpgradeManager.register(x, y);
             local upgrade = Upgrade.new();
+            upgrade:init();
             upgrade:setId(id);
-            upgrade:setType(CONTENT.FIREUP);
-            self:addContent(upgrade);
-        elseif rnd == 1 then
-            local id = UpgradeManager.register(x, y);
-            local upgrade = Upgrade.new();
-            upgrade:setId(id);
-            upgrade:setType(CONTENT.BOMBUP);
             self:addContent(upgrade);
         end
     end

@@ -37,6 +37,15 @@ function Upgrade.new()
     -- Public functions
     -- ------------------------------------------------
 
+    function self:init()
+        local rnd = love.math.random(0, 1);
+        if rnd == 0 then
+            type = CONTENT.BOMBUP;
+        elseif rnd == 1 then
+            type = CONTENT.FIREUP;
+        end
+    end
+
     function self:update(dt)
         decayTimer = decayTimer - dt;
         if decayTimer <= 0 then
@@ -74,10 +83,6 @@ function Upgrade.new()
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
-
-    function self:setType(ntype)
-        type = ntype;
-    end
 
     function self:setTile(ntile)
         tile = ntile;
