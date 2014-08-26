@@ -74,7 +74,7 @@ function Evade.new(manager, npc)
     end
 
     function self:enter()
-        print("Enter state: Evade");
+        -- print("Enter state: Evade");
     end
 
     function self:update()
@@ -87,7 +87,7 @@ function Evade.new(manager, npc)
     end
 
     function self:exit()
-        print("Exit state: Evade");
+        -- print("Exit state: Evade");
     end
 
     return self;

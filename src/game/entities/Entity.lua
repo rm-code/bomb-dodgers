@@ -121,6 +121,10 @@ function Entity.new(arena, x, y)
         return blastRadius;
     end
 
+    function self:getPosition()
+        return x, y;
+    end
+
     return self;
 end
 

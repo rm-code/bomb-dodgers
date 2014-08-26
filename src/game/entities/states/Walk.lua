@@ -23,22 +23,52 @@ function Walk.new(manager, npc)
     -- Private Functions
     -- ------------------------------------------------
 
-    local function findGoodBombPlace(npc)
-        local adjTiles = npc:getAdjacentTiles();
-
+    ---
+    -- This function returns true, if the current tile is a good
+    -- place to plant a bomb.
+    -- @param npc
+    --
+    local function isGoodToPlant(adjTiles, x, y, blastRadius)
+        -- Plant bombs next to soft walls.
         for _, tile in pairs(adjTiles) do
             if tile:getContentType() == Constants.CONTENT.SOFTWALL then
                 return true;
             end
         end
 
-        -- TODO check if player is in reach (ignore blocks in between?)
+        -- Plant bombs if player is in bomb's blast radius.
+        local playerX, playerY = PlayerManager.getClosestPlayer(x, y);
+        if playerX == x then
+            if math.abs(playerY - y) <= blastRadius then
+                return true;
+            end
+        elseif playerY == y then
+            if math.abs(playerX - x) <= blastRadius then
+                return true;
+            end
+        end
     end
 
-    local function findSafeBombPlace(npc)
-        return true;
+    ---
+    -- This function returns true, if it is safe to place a bomb on the
+    -- current tile. Currently it only checks if at least one of the
+    -- adjacent tiles is safe and therefore offers an escape route.
+    -- @param npc
+    --
+    local function isSafeToPlant(adjTiles)
+        for _, tile in pairs(adjTiles) do
+            if tile:isSafe() and tile:isPassable() then
+                return true;
+            end
+        end
     end
 
+    ---
+    -- This function returns the coordinates of a nearby player or upgrade,
+    -- which can then be used to find a path for walking to that target.
+    -- @param x
+    -- @param y
+    --
     local function aquireTarget(x, y)
         local playerX, playerY = PlayerManager.getClosestPlayer(x, y);
         local upgradeX, upgradeY = UpgradeManager.getClosestUpgrade(x, y);
@@ -79,28 +109,33 @@ function Walk.new(manager, npc)
     -- ------------------------------------------------
 
     function self:enter()
-        print("Enter state: Walk");
+        -- print("Enter state: Walk");
     end
 
     function self:update(dt)
-        if not npc:getTile():isSafe() then
+        local tile = npc:getTile();
+        local adjTiles = npc:getAdjacentTiles();
+        local x, y = npc:getPosition();
+        local radius = npc:getBlastRadius();
+
+        if not tile:isSafe() then
             manager:switch('evade');
         end
 
-        if findGoodBombPlace(npc) and findSafeBombPlace(npc) then
+        if isGoodToPlant(adjTiles, x, y, radius) and isSafeToPlant(adjTiles) then
             npc:plantBomb();
             return;
         end
 
-        local tarX, tarY = aquireTarget(npc:getX(), npc:getY());
-        local direction = getDirection(npc:getX(), npc:getY(), tarX, tarY);
-        if direction and npc:getAdjacentTiles()[direction]:isSafe() then
+        local tarX, tarY = aquireTarget(x, y);
+        local direction = getDirection(x, y, tarX, tarY);
+        if direction and adjTiles[direction]:isSafe() then
             npc:move(direction);
         end
     end
 
     function self:exit()
-        print("Exit state: Walk");
+        -- print("Exit state: Walk");
     end
 
     return self;
