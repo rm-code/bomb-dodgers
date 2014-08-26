@@ -1,5 +1,6 @@
 local Constants = require('src/Constants');
 local Entity = require('src/game/entities/Entity');
+local PlayerManager = require('src/game/entities/PlayerManager');
 local InputManager = require('lib/InputManager');
 
 -- ------------------------------------------------
@@ -27,6 +28,8 @@ local TILESIZE = Constants.TILESIZE;
 
 function Player.new(arena, x, y)
     local self = Entity.new(arena, x, y);
+
+    local id;
 
     -- ------------------------------------------------
     -- Private Functions
@@ -59,6 +62,7 @@ function Player.new(arena, x, y)
 
         if self:getTile():getContentType() == CONTENT.EXPLOSION then
             self:kill();
+            PlayerManager.remove(id);
         end
     end
 
@@ -68,6 +72,10 @@ function Player.new(arena, x, y)
         love.graphics.print('Bombs: ' .. self:getLivingBombs(), 800, 20);
         love.graphics.print('Cap: ' .. self:getBombCapacity(), 800, 40);
         love.graphics.print('Blast: ' .. self:getBlastRadius(), 800, 60);
+    end
+
+    function self:setId(nid)
+        id = nid;
     end
 
     return self;

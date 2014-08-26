@@ -44,6 +44,14 @@ function PlayerManager.getClosestPlayer(x, y)
     return players[targetId]:getX(), players[targetId]:getY();
 end
 
+function PlayerManager.getPlayerCount()
+    local i = 0;
+    for _, _ in pairs(players) do
+        i = i + 1;
+    end
+    return i;
+end
+
 -- ------------------------------------------------
 -- Return Module
 -- ------------------------------------------------

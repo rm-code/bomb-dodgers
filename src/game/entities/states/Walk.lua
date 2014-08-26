@@ -40,17 +40,16 @@ function Walk.new(manager, npc)
     end
 
     local function aquireTarget(x, y)
-        local upgradeX, upgradeY = UpgradeManager.getClosestUpgrade(x, y);
         local playerX, playerY = PlayerManager.getClosestPlayer(x, y);
+        local upgradeX, upgradeY = UpgradeManager.getClosestUpgrade(x, y);
 
-        local distPlayer = math.abs(x - playerX) + math.abs(y - playerY);
-        local distUpgrade = math.abs(x - upgradeX) + math.abs(y - upgradeY);
-
-        if distPlayer < distUpgrade then
-            return playerX, playerY;
-        else
-            return upgradeX, upgradeY;
+        if upgradeX and upgradeY then
+            if math.abs(x - upgradeX) + math.abs(y - upgradeY) < math.abs(x - playerX) + math.abs(y - playerY) then
+                return upgradeX, upgradeY;
+            end
         end
+
+        return playerX, playerY;
     end
 
     local function getDirection(curX, curY, tarX, tarY)

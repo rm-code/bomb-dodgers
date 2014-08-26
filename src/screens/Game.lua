@@ -33,7 +33,8 @@ function Game.new()
         players[#players + 1] = Player.new(arena, 2, 2);
 
         for i = 1, #players do
-            PlayerManager.register(players[i]);
+            local id = PlayerManager.register(players[i]);
+            players[i]:setId(id);
         end
 
         npcs = {};
@@ -48,6 +49,10 @@ function Game.new()
 
     function self:update(dt)
         arena:update(dt);
+
+        if PlayerManager.getPlayerCount() == 0 then
+            return;
+        end
 
         for i = 1, #npcs do
             if not npcs[i]:isDead() then

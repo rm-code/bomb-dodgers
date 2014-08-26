@@ -43,8 +43,6 @@ function UpgradeManager.getClosestUpgrade(x, y)
 
     if upgrades[targetId] then
         return upgrades[targetId].x, upgrades[targetId].y;
-    else
-        return 1000, 1000;
     end
 end
 
