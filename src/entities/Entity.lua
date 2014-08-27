@@ -20,8 +20,10 @@ function Entity.new(arena, x, y)
     local self = {};
 
     local arena = arena;
-    local x = x;
-    local y = y;
+    local gridX = x;
+    local gridY = y;
+    local realX = gridX * Constants.TILESIZE;
+    local realY = gridY * Constants.TILESIZE;
 
     local liveBombs = 0; -- The amount of bombs currently on the field.
     local bombCapacity = 1; -- The total amount of bombs the player can carry.
@@ -33,13 +35,16 @@ function Entity.new(arena, x, y)
     local counters = {};
 
     local alpha = 255; -- The current alpha of the entity.
-    local pulse = 0;   -- The pulse which will be used to create a pulsating effect.
+    local pulse = 0; -- The pulse which will be used to create a pulsating effect.
+
+    local prevMovementDir; -- The direction in which the player moved previously.
 
     -- ------------------------------------------------
     -- Private Functions
     -- ------------------------------------------------
 
-    local function takeUpgrade(target)
+    local function takeUpgrade(x, y)
+        local target = arena:getTile(x, y);
         if target:getContentType() == CONTENT.UPGRADE then
             local upgrade = target:getContent();
             if upgrade:getUpgradeType() == 'fireup' then
@@ -57,6 +62,10 @@ function Entity.new(arena, x, y)
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
+    local speed = 2;
+    local function lerp(a, b, t)
+        return (1 - t) * a + t * b;
+    end
 
     function self:updateCounters(dt)
         if bombdown then
@@ -83,16 +92,83 @@ function Entity.new(arena, x, y)
         end
     end
 
-    function self:move(direction)
-        local adjTiles = arena:getAdjacentTiles(x, y);
-        local target = adjTiles[direction];
+    ---
+    --
+    -- @param prefDir - The preferred direction to walk to.
+    -- @param altDir - The alternative direction to walk to if the first one is not valid.
+    --
+    local function updatePlayerPosition(prefDir, altDir)
+        local adjTiles = arena:getAdjacentTiles(gridX, gridY);
+        local direction;
 
-        if target:isPassable() then
-            x = target:getX();
-            y = target:getY();
-            takeUpgrade(target);
-        elseif target:getContentType() == CONTENT.BOMB then
-            target:kickBomb(direction);
+        -- If the preferred direction is valid we'll use it to move the
+        -- player. If the preferred direction is invalid we check the
+        -- passability of the alternative direction. If that one is
+        -- invalid to, we lerp the players position to the current tile.
+        if adjTiles[prefDir]:isPassable() then
+            direction = prefDir;
+        elseif altDir and adjTiles[altDir]:isPassable() then
+            direction = altDir;
+        else
+            realX = lerp(realX, gridX * Constants.TILESIZE, 0.2);
+            realY = lerp(realY, gridY * Constants.TILESIZE, 0.2);
+        end
+
+        -- Lerp the player's position into the direction we have
+        -- determined above.
+        if direction == 'n' then
+            realY = realY - 1 * speed;
+            realX = lerp(realX, gridX * Constants.TILESIZE, 0.2);
+        elseif direction == 's' then
+            realY = realY + 1 * speed;
+            realX = lerp(realX, gridX * Constants.TILESIZE, 0.2);
+        elseif direction == 'e' then
+            realX = realX + 1 * speed;
+            realY = lerp(realY, gridY * Constants.TILESIZE, 0.2);
+        elseif direction == 'w' then
+            realX = realX - 1 * speed;
+            realY = lerp(realY, gridY * Constants.TILESIZE, 0.2);
+        end
+
+        -- Calculate the grid coordinates, by dividing the real
+        -- coordinates by the tile size of the grid and rounding it
+        -- to the next integer.
+        gridX = math.floor((realX / Constants.TILESIZE) + 0.5);
+        gridY = math.floor((realY / Constants.TILESIZE) + 0.5);
+
+        -- Take upgrade.
+        takeUpgrade(gridX, gridY);
+    end
+
+    function self:move(dirA, dirB)
+        local adjTiles = arena:getAdjacentTiles(gridX, gridY);
+
+        -- If no direction keys have been pressed reset the previous
+        -- direction to nil.
+        if not dirA and not dirB then
+            prevMovementDir = nil;
+            return;
+        end
+
+        -- If only one key is pressed store the direction
+        -- as the previous direction.
+        if dirA and not dirB then
+            prevMovementDir = dirA;
+            updatePlayerPosition(dirA);
+            return;
+        end
+
+        -- If two keys are pressed, check if one of them was
+        -- previously pressed and then try to move into the other
+        -- direction.
+        if dirA and dirB then
+            if dirA == prevMovementDir then
+                updatePlayerPosition(dirB, dirA);
+            elseif dirB == prevMovementDir then
+                updatePlayerPosition(dirA, dirB);
+            else
+                return;
+            end
         end
     end
 
@@ -123,11 +199,19 @@ function Entity.new(arena, x, y)
     end
 
     function self:getX()
-        return x;
+        return gridX;
     end
 
     function self:getY()
-        return y;
+        return gridY;
+    end
+
+    function self:getRealX()
+        return realX;
+    end
+
+    function self:getRealY()
+        return realY;
     end
 
     function self:isDead()
@@ -135,11 +219,11 @@ function Entity.new(arena, x, y)
     end
 
     function self:getTile()
-        return arena:getTile(x, y);
+        return arena:getTile(gridX, gridY);
     end
 
     function self:getAdjacentTiles()
-        return arena:getAdjacentTiles(x, y);
+        return arena:getAdjacentTiles(gridX, gridY);
     end
 
     function self:getLivingBombs()
@@ -155,7 +239,7 @@ function Entity.new(arena, x, y)
     end
 
     function self:getPosition()
-        return x, y;
+        return gridX, gridY;
     end
 
     return self;

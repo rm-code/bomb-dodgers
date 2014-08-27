@@ -18,6 +18,12 @@ function Walk.new(manager, npc)
     local npc = npc;
     local manager = manager;
 
+    local curTile;
+    local tarTile;
+    local curX, curY;
+    local tarX, tarY;
+    local tarDir;
+
     -- ------------------------------------------------
     -- Private Functions
     -- ------------------------------------------------
@@ -85,13 +91,13 @@ function Walk.new(manager, npc)
         if curX == tarX and curY == tarY then
             return;
         elseif curX == tarX and curY > tarY then
-            return love.math.random(0, 1) == 0 and 'n' or love.math.random(0, 1) == 0 and 'e' or 'w';
+            return 'n';
         elseif curX == tarX and curY < tarY then
-            return love.math.random(0, 1) == 0 and 's' or love.math.random(0, 1) == 0 and 'e' or 'w';
+            return 's';
         elseif curX > tarX and curY == tarY then
-            return love.math.random(0, 1) == 0 and 'w' or love.math.random(0, 1) == 0 and 'n' or 's';
+            return 'e';
         elseif curX < tarX and curY == tarY then
-            return love.math.random(0, 1) == 0 and 'e' or love.math.random(0, 1) == 0 and 'n' or 's';
+            return 'w';
         elseif tarX < curX and tarY < curY then
             return love.math.random(0, 1) == 0 and 'n' or 'w';
         elseif tarX > curX and tarY < curY then
@@ -109,24 +115,42 @@ function Walk.new(manager, npc)
 
     function self:update(dt)
         local tile = npc:getTile();
-        local adjTiles = npc:getAdjacentTiles();
-        local x, y = npc:getPosition();
-        local radius = npc:getBlastRadius();
 
         if not tile:isSafe() then
+            tarTile = nil;
             manager:switch('evade');
             return;
         end
+
+        local adjTiles = npc:getAdjacentTiles();
+        local x, y = npc:getPosition();
+        local radius = npc:getBlastRadius();
 
         if isGoodToPlant(adjTiles, x, y, radius) and isSafeToPlant(adjTiles) then
             npc:plantBomb();
             return;
         end
 
-        local tarX, tarY = aquireTarget(x, y);
-        local direction = getDirection(x, y, tarX, tarY);
-        if direction and adjTiles[direction]:isSafe() then
-            npc:move(direction);
+
+        -- If we haven't got a target yet, calculate a new one.
+        if not tarTile then
+            local tarX, tarY = aquireTarget(x, y);
+            local direction = getDirection(x, y, tarX, tarY);
+
+            -- Save the current and the target tile.
+            curTile = tile;
+            tarTile = adjTiles[direction];
+            tarDir = direction;
+
+            if tarTile:isSafe() then
+                npc:move(tarDir);
+                return;
+            end
+        elseif tarTile ~= curTile and tarTile:isSafe() then
+            npc:move(tarDir);
+            return;
+        elseif tarTile == curTile then
+            tarTile = nil;
         end
     end
 

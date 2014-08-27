@@ -20,10 +20,10 @@ Controls.GAME.gamepad.buttons = {};
 Controls.GAME.gamepad.buttons.a      = { cmd = 'BOMB',     rep = false, locked = false };
 
 Controls.GAME.keyboard = {};
-Controls.GAME.keyboard.right         = { cmd = 'RIGHT',   rep = false, locked = false };
-Controls.GAME.keyboard.left          = { cmd = 'LEFT',    rep = false, locked = false };
-Controls.GAME.keyboard.up            = { cmd = 'UP',      rep = false, locked = false };
-Controls.GAME.keyboard.down          = { cmd = 'DOWN',    rep = false, locked = false };
+Controls.GAME.keyboard.right         = { cmd = 'RIGHT',   rep = true, locked = false };
+Controls.GAME.keyboard.left          = { cmd = 'LEFT',    rep = true, locked = false };
+Controls.GAME.keyboard.up            = { cmd = 'UP',      rep = true, locked = false };
+Controls.GAME.keyboard.down          = { cmd = 'DOWN',    rep = true, locked = false };
 Controls.GAME.keyboard[' ']          = { cmd = 'BOMB',    rep = false, locked = false };
 
 return Controls;

@@ -36,16 +36,24 @@ function Player.new(arena, x, y)
     -- ------------------------------------------------
 
     local function handleInput()
-        if InputManager.hasCommand('UP') then
+        if InputManager.hasCommand('UP') and InputManager.hasCommand('RIGHT') then
+            self:move('n', 'e');
+        elseif InputManager.hasCommand('UP') and InputManager.hasCommand('LEFT') then
+            self:move('n', 'w');
+        elseif InputManager.hasCommand('DOWN') and InputManager.hasCommand('RIGHT') then
+            self:move('s', 'e');
+        elseif InputManager.hasCommand('DOWN') and InputManager.hasCommand('LEFT') then
+            self:move('s', 'w');
+        elseif InputManager.hasCommand('UP') then
             self:move('n');
         elseif InputManager.hasCommand('DOWN') then
             self:move('s');
-        end
-
-        if InputManager.hasCommand('RIGHT') then
+        elseif InputManager.hasCommand('RIGHT') then
             self:move('e');
         elseif InputManager.hasCommand('LEFT') then
             self:move('w');
+        else
+--            self:move('s', 'e');
         end
 
         if InputManager.hasCommand('BOMB') then
@@ -70,12 +78,15 @@ function Player.new(arena, x, y)
 
     function self:draw()
         love.graphics.setColor(255, 255, 255, self:getAlpha());
-        love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        love.graphics.draw(img, self:getRealX(), self:getRealY());
         love.graphics.setColor(255, 255, 255, 255);
 
         love.graphics.print('Bombs: ' .. self:getLivingBombs(), 800, 20);
         love.graphics.print('Cap: ' .. self:getBombCapacity(), 800, 40);
         love.graphics.print('Blast: ' .. self:getBlastRadius(), 800, 60);
+
+        love.graphics.print('RealX: ' .. self:getRealX() .. ' RealY: ' .. self:getRealY(), 800, 100);
+        love.graphics.print('GridX: ' .. self:getX() .. ' GridY: ' .. self:getY(), 800, 120);
     end
 
     function self:setId(nid)

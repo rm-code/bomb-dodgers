@@ -46,14 +46,8 @@ function NPC.new(arena, x, y)
     -- Public Functions
     -- ------------------------------------------------
 
-    local delay = 0;
     function self:update(dt)
-        delay = delay + dt;
-
-        if delay > 0.2 then
-            fsm:update(dt);
-            delay = 0;
-        end
+        fsm:update(dt);
 
         if self:getTile():getContentType() == Constants.CONTENT.EXPLOSION then
             self:kill();
@@ -64,7 +58,7 @@ function NPC.new(arena, x, y)
 
     function self:draw()
         love.graphics.setColor(255, 255, 255, self:getAlpha());
-        love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        love.graphics.draw(img, self:getRealX(), self:getRealY());
         love.graphics.setColor(255, 255, 255, 255);
     end
 
