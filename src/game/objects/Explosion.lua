@@ -38,7 +38,7 @@ function Explosion.new(direction, strength)
 
     local type = CONTENT.EXPLOSION;
     local tile;
-    local timer = 1;
+    local timer = Constants.EXPLOSIONTIMER;
     local sprite;
     local direction = direction;
     local strength = strength;

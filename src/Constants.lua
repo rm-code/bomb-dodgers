@@ -10,6 +10,7 @@ Constants.CONTENT.BOMBUP = 'bombup';
 
 Constants.TILESIZE = 32;
 Constants.BOMBTIMER = 2;
+Constants.EXPLOSIONTIMER = 1.5;
 
 Constants.UPGRADES = {};
 Constants.UPGRADES.TIMER = 30;
