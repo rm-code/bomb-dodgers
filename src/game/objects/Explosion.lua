@@ -40,20 +40,21 @@ function Explosion.new(dir)
     local tile;
     local timer = 1;
     local sprite;
+    local direction = dir;
 
-    if dir == 'origin' then
+    if direction == 'origin' then
         sprite = origin;
-    elseif dir == 'east' or dir == 'west' then
+    elseif direction == 'east' or direction == 'west' then
         sprite = horizontal;
-    elseif dir == 'north' or dir == 'south' then
+    elseif direction == 'north' or direction == 'south' then
         sprite = vertical;
-    elseif dir == 'endnorth' then
+    elseif direction == 'endnorth' then
         sprite = endnorth;
-    elseif dir == 'endsouth' then
+    elseif direction == 'endsouth' then
         sprite = endsouth;
-    elseif dir == 'endeast' then
+    elseif direction == 'endeast' then
         sprite = endeast;
-    elseif dir == 'endwest' then
+    elseif direction == 'endwest' then
         sprite = endwest;
     end
 
@@ -78,6 +79,10 @@ function Explosion.new(dir)
     -- ------------------------------------------------
     -- Getters
     -- ------------------------------------------------
+
+    function self:getDirection()
+        return direction;
+    end
 
     function self:getType()
         return type;

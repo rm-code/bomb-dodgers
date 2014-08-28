@@ -64,6 +64,7 @@ function Tile.new()
         if content then
             if content:getType() == CONTENT.BOMB then
                 content:signal(signal.name);
+                return;
             elseif content:getType() == CONTENT.FIREUP or content:getType() == CONTENT.BOMBUP then
                 self:removeContent();
                 return;
@@ -73,6 +74,14 @@ function Tile.new()
                 return;
             elseif content:getType() == CONTENT.HARDWALL then
                 return;
+            elseif content:getType() == CONTENT.EXPLOSION then
+                if (signal.direction == 'north' or signal.direction == 'south')
+                        and (content:getDirection() == 'east' or content:getDirection() == 'west') then
+                    self:addContent(Explosion.new('origin'));
+                elseif (signal.direction == 'east' or signal.direction == 'west')
+                        and (content:getDirection() == 'north' or content:getDirection() == 'south') then
+                    self:addContent(Explosion.new('origin'));
+                end
             end
         else
             if signal.direction == 'all' then
