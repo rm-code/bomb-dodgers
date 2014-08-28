@@ -5,6 +5,7 @@
 local ScreenManager = require('lib/screens/ScreenManager');
 local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
+local PaletteSwitcher = require('lib/PaletteSwitcher');
 
 -- ------------------------------------------------
 -- Screens
@@ -47,6 +48,8 @@ end
 -- Loading
 -- ------------------------------------------------
 
+local shader;
+local activeShader = false;
 function love.load()
     print("===================")
     print(string.format("Title: '%s'", getTitle()));
@@ -61,9 +64,11 @@ function love.load()
 
     -- Set the default control map.
     InputManager.setMap(Controls.GAME);
-    
+
     -- ZeroBrane Debugging Hook
     if arg[#arg] == "-debug" then require("mobdebug").start() end
+
+    shader = love.graphics.newShader('res/shaders/gb.fs');
 end
 
 -- ------------------------------------------------
@@ -76,6 +81,7 @@ function love.update(dt)
 end
 
 function love.draw()
+    PaletteSwitcher.set();
     local lg = love.graphics;
     local lt = love.timer;
     local format = string.format;
@@ -83,6 +89,8 @@ function love.draw()
     ScreenManager:draw();
 
     -- InputManager.draw();
+
+    PaletteSwitcher.unset();
 
     if info then
         lg.print(format("FT: %.3f ms", 1000 * lt.getAverageDelta()), 10, love.window.getHeight() - 60);
@@ -114,6 +122,10 @@ end
 function love.keypressed(key)
     if key == 'f1' then
         info = not info;
+    end
+
+    if key == 'tab' then
+        PaletteSwitcher.nextPalette();
     end
 
     ScreenManager:keypressed(key);
