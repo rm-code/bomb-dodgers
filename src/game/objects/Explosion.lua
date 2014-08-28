@@ -29,7 +29,7 @@ local endwest = love.graphics.newImage('res/img/explosion/end_left.png');
 -- Constructor
 -- ------------------------------------------------
 
-function Explosion.new(dir)
+function Explosion.new(direction, strength)
     local self = {};
 
     -- ------------------------------------------------
@@ -40,37 +40,59 @@ function Explosion.new(dir)
     local tile;
     local timer = 1;
     local sprite;
-    local direction = dir;
-
-    if direction == 'origin' then
-        sprite = origin;
-    elseif direction == 'east' or direction == 'west' then
-        sprite = horizontal;
-    elseif direction == 'north' or direction == 'south' then
-        sprite = vertical;
-    elseif direction == 'endnorth' then
-        sprite = endnorth;
-    elseif direction == 'endsouth' then
-        sprite = endsouth;
-    elseif direction == 'endeast' then
-        sprite = endeast;
-    elseif direction == 'endwest' then
-        sprite = endwest;
-    end
+    local direction = direction;
+    local strength = strength;
 
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
+
+    local function pickSprite(direction, strength, adjTiles)
+        local n, s, e, w = adjTiles.north, adjTiles.south, adjTiles.east, adjTiles.west;
+
+        -- Sprite for explosion's center.
+        if direction == 'all' then
+            return origin;
+        end
+
+        -- End sprites.
+        if direction == 'north' and strength == 0 and n:getContentType() ~= CONTENT.EXPLOSION then
+            return endnorth;
+        elseif direction == 'south' and strength == 0 and s:getContentType() ~= CONTENT.EXPLOSION then
+            return endsouth;
+        elseif direction == 'east' and strength == 0 and e:getContentType() ~= CONTENT.EXPLOSION then
+            return endeast;
+        elseif direction == 'west' and strength == 0 and w:getContentType() ~= CONTENT.EXPLOSION then
+            return endwest;
+        end
+
+        -- Middle sprites. Create intersections if multiple middle tiles collide.
+        if (direction == 'north' or direction == 'south')
+                and (e:getContentType() == CONTENT.EXPLOSION or w:getContentType() == CONTENT.EXPLOSION) then
+            return origin;
+        elseif (direction == 'east' or direction == 'west')
+                and (n:getContentType() == CONTENT.EXPLOSION or s:getContentType() == CONTENT.EXPLOSION) then
+            return origin;
+        elseif direction == 'north' or direction == 'south' then
+            return vertical;
+        elseif direction == 'east' or direction == 'west' then
+            return horizontal;
+        end
+    end
 
     function self:update(dt)
         timer = timer - dt;
         if timer <= 0 then
             tile:removeContent();
         end
+
+        sprite = pickSprite(direction, strength, tile:getNeighbours());
     end
 
     function self:draw(x, y)
-        love.graphics.draw(sprite, x * TILESIZE, y * TILESIZE);
+        if sprite then
+            love.graphics.draw(sprite, x * TILESIZE, y * TILESIZE);
+        end
     end
 
     function self:signal(signal)

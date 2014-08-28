@@ -75,24 +75,10 @@ function Tile.new()
             elseif content:getType() == CONTENT.HARDWALL then
                 return;
             elseif content:getType() == CONTENT.EXPLOSION then
-                if (signal.direction == 'north' or signal.direction == 'south')
-                        and (content:getDirection() == 'east' or content:getDirection() == 'west') then
-                    self:addContent(Explosion.new('origin'));
-                elseif (signal.direction == 'east' or signal.direction == 'west')
-                        and (content:getDirection() == 'north' or content:getDirection() == 'south') then
-                    self:addContent(Explosion.new('origin'));
-                end
+                self:addContent(Explosion.new(signal.direction, signal.strength));
             end
-        else
-            if signal.direction == 'all' then
-                self:addContent(Explosion.new('origin'));
-            else
-                if signal.strength == 0 then
-                    self:addContent(Explosion.new('end' .. signal.direction));
-                else
-                    self:addContent(Explosion.new(signal.direction));
-                end
-            end
+        elseif signal.strength >= 0 then
+            self:addContent(Explosion.new(signal.direction, signal.strength));
         end
 
         -- Send the explosion to the neighbouring tiles.
