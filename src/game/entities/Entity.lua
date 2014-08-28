@@ -1,5 +1,4 @@
 local Constants = require('src/Constants');
-local Bomb = require('src/game/objects/Bomb');
 
 -- ------------------------------------------------
 -- Module
@@ -26,7 +25,7 @@ function Entity.new(arena, x, y)
 
     local liveBombs = 0; -- The amount of bombs currently on the field.
     local bombCapacity = 1; -- The total amount of bombs the player can carry.
-    local blastRadius = 1; -- The blast radius of a bomb.
+    local blastRadius = 2; -- The blast radius of a bomb.
 
     local dead = false;
 
@@ -34,14 +33,15 @@ function Entity.new(arena, x, y)
     -- Private Functions
     -- ------------------------------------------------
 
-    local function takeUpgrade(x, y)
-        local target = arena:getTile(x, y);
-        if target:getContentType() == CONTENT.FIREUP then
-            blastRadius = blastRadius + 1;
-            target:removeContent();
-        elseif target:getContentType() == CONTENT.BOMBUP then
-            bombCapacity = bombCapacity + 1;
-            target:removeContent();
+    local function takeUpgrade(target)
+        if target:getContentType() == CONTENT.UPGRADE then
+            local upgrade = target:getContent();
+            if upgrade:getUpgradeType() == 'fireup' then
+                blastRadius = blastRadius + 1;
+            elseif upgrade:getUpgradeType() == 'bombup' then
+                bombCapacity = bombCapacity + 1;
+            end
+            upgrade:remove();
         end
     end
 
@@ -50,28 +50,23 @@ function Entity.new(arena, x, y)
     -- ------------------------------------------------
 
     function self:move(direction)
-        if not direction then
-            return;
-        end
-
         local adjTiles = arena:getAdjacentTiles(x, y);
         local target = adjTiles[direction];
 
         if target:isPassable() then
             x = target:getX();
             y = target:getY();
-            takeUpgrade(x, y);
+            takeUpgrade(target);
         elseif target:getContentType() == CONTENT.BOMB then
-            target:signal({ name = 'kickbomb', direction = direction });
+            target:kickBomb(direction);
         end
     end
 
     function self:plantBomb()
-        if liveBombs < bombCapacity and arena:getTile(x, y):isPassable() then
-            local bomb = Bomb.new();
-            bomb:setStrength(blastRadius);
-            bomb:setPlayer(self);
-            arena:getTile(x, y):addContent(bomb);
+        if liveBombs < bombCapacity then
+            if self:getTile():isPassable() then
+                self:getTile():plantBomb(blastRadius, self);
+            end
 
             liveBombs = liveBombs + 1;
         end

@@ -86,21 +86,21 @@ function Walk.new(manager, npc)
         if curX == tarX and curY == tarY then
             return;
         elseif curX == tarX and curY > tarY then
-            return love.math.random(0, 1) == 0 and 'north' or love.math.random(0, 1) == 0 and 'east' or 'west';
+            return love.math.random(0, 1) == 0 and 'n' or love.math.random(0, 1) == 0 and 'e' or 'w';
         elseif curX == tarX and curY < tarY then
-            return love.math.random(0, 1) == 0 and 'south' or love.math.random(0, 1) == 0 and 'east' or 'west';
+            return love.math.random(0, 1) == 0 and 's' or love.math.random(0, 1) == 0 and 'e' or 'w';
         elseif curX > tarX and curY == tarY then
-            return love.math.random(0, 1) == 0 and 'west' or love.math.random(0, 1) == 0 and 'north' or 'south';
+            return love.math.random(0, 1) == 0 and 'w' or love.math.random(0, 1) == 0 and 'n' or 's';
         elseif curX < tarX and curY == tarY then
-            return love.math.random(0, 1) == 0 and 'east' or love.math.random(0, 1) == 0 and 'north' or 'south';
+            return love.math.random(0, 1) == 0 and 'e' or love.math.random(0, 1) == 0 and 'n' or 's';
         elseif tarX < curX and tarY < curY then
-            return love.math.random(0, 1) == 0 and 'north' or 'west';
+            return love.math.random(0, 1) == 0 and 'n' or 'w';
         elseif tarX > curX and tarY < curY then
-            return love.math.random(0, 1) == 0 and 'north' or 'east';
+            return love.math.random(0, 1) == 0 and 'n' or 'e';
         elseif tarX < curX and tarY > curY then
-            return love.math.random(0, 1) == 0 and 'south' or 'west';
+            return love.math.random(0, 1) == 0 and 's' or 'w';
         elseif tarX > curX and tarY > curY then
-            return love.math.random(0, 1) == 0 and 'south' or 'east';
+            return love.math.random(0, 1) == 0 and 's' or 'e';
         end
     end
 
@@ -120,6 +120,7 @@ function Walk.new(manager, npc)
 
         if not tile:isSafe() then
             manager:switch('evade');
+            return;
         end
 
         if isGoodToPlant(adjTiles, x, y, radius) and isSafeToPlant(adjTiles) then

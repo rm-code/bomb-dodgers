@@ -21,9 +21,9 @@ function Evade.new(manager, npc)
     -- Private Function
     -- ------------------------------------------------
 
-    local function checkNeighbours(neighbours)
-        for _, neighbour in pairs(neighbours) do
-            if neighbour:isPassable() and neighbour:isSafe() then
+    local function checkAdjacentTiles(adjTiles)
+        for _, tile in pairs(adjTiles) do
+            if tile:isPassable() and tile:isSafe() then
                 return true;
             end
         end
@@ -35,35 +35,36 @@ function Evade.new(manager, npc)
         local bestDirection;
         local shortest = 10000;
 
+        -- Look for a path to a safe tile.
         for dir, tile in pairs(adjTiles) do
             -- Ignore impassable tiles.
             if tile:isPassable() then
                 local checkedTiles = 1;
 
-                local currentTile = tile;
-                local neighbours = currentTile:getNeighbours();
-                local nextTile = neighbours[dir];
+                local currentlyCheckedTile = tile;
+                local adjTiles = currentlyCheckedTile:getAdjacentTiles();
+                local nextTile = adjTiles[dir];
 
                 -- Check the next tile in the same direction.
-                while not currentTile:isSafe() do
+                while not currentlyCheckedTile:isSafe() do
 
                     -- Check the adjacent tiles of the current tile to see if there
                     -- is a quick escape outside of the direct bomb path.
-                    if checkNeighbours(neighbours) then
+                    if checkAdjacentTiles(adjTiles) then
                         break;
                     else
                         checkedTiles = checkedTiles + 1;
 
-                        currentTile = nextTile;
-                        neighbours = currentTile:getNeighbours();
-                        nextTile = neighbours[dir];
+                        currentlyCheckedTile = nextTile;
+                        adjTiles = currentlyCheckedTile:getAdjacentTiles();
+                        nextTile = adjTiles[dir];
                     end
                 end
 
                 -- If the tile is passable and not dangerous compare it
                 -- to previously checked tiles and see if it would provide
                 -- a shorter way.
-                if currentTile:isPassable() and checkedTiles < shortest then
+                if currentlyCheckedTile:isPassable() and checkedTiles < shortest then
                     shortest = checkedTiles;
                     bestDirection = dir;
                 end
@@ -79,7 +80,9 @@ function Evade.new(manager, npc)
 
     function self:update()
         local direction = evadeBombs(npc);
-        npc:move(direction);
+        if direction then
+            npc:move(direction);
+        end
 
         if npc:getTile():isSafe() then
             manager:switch('walk');

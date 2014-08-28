@@ -1,3 +1,4 @@
+local Content = require('src/game/objects/Content');
 local Constants = require('src/Constants');
 
 -- ------------------------------------------------
@@ -29,98 +30,88 @@ local endwest = love.graphics.newImage('res/img/explosion/end_left.png');
 -- Constructor
 -- ------------------------------------------------
 
-function Explosion.new(direction, strength)
-    local self = {};
+function Explosion.new(x, y)
+    local self = Content.new(CONTENT.EXPLOSION, true, x, y);
 
     -- ------------------------------------------------
     -- Private Variables
     -- ------------------------------------------------
 
-    local type = CONTENT.EXPLOSION;
-    local tile;
     local timer = Constants.EXPLOSIONTIMER;
-    local sprite;
-    local direction = direction;
-    local strength = strength;
+    local sprite = origin;
+
+    -- ------------------------------------------------
+    -- Private Functions
+    -- ------------------------------------------------
+
+    local function pickSprite(adjTiles)
+        local n = adjTiles.n;
+        local s = adjTiles.s;
+        local e = adjTiles.e;
+        local w = adjTiles.w;
+
+        if n:getContentType() == CONTENT.EXPLOSION
+                and s:getContentType() == CONTENT.EXPLOSION
+                and e:getContentType() == CONTENT.EXPLOSION
+                and w:getContentType() == CONTENT.EXPLOSION then
+            return origin;
+        elseif (not n:getContentType() == CONTENT.EXPLOSION or not s:getContentType() == CONTENT.EXPLOSION)
+                and e:getContentType() == CONTENT.EXPLOSION
+                and w:getContentType() == CONTENT.EXPLOSION then
+            return horizontal;
+        elseif (not e:getContentType() == CONTENT.EXPLOSION or not w:getContentType() == CONTENT.EXPLOSION)
+                and n:getContentType() == CONTENT.EXPLOSION
+                and s:getContentType() == CONTENT.EXPLOSION then
+            return vertical;
+        else
+            return origin;
+        end
+    end
 
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
 
-    local function pickSprite(direction, strength, adjTiles)
-        local n, s, e, w = adjTiles.north, adjTiles.south, adjTiles.east, adjTiles.west;
-
-        -- Sprite for explosion's center.
-        if direction == 'all' then
-            return origin;
-        end
-
-        -- End sprites.
-        if direction == 'north' and strength == 0 and n:getContentType() ~= CONTENT.EXPLOSION then
-            return endnorth;
-        elseif direction == 'south' and strength == 0 and s:getContentType() ~= CONTENT.EXPLOSION then
-            return endsouth;
-        elseif direction == 'east' and strength == 0 and e:getContentType() ~= CONTENT.EXPLOSION then
-            return endeast;
-        elseif direction == 'west' and strength == 0 and w:getContentType() ~= CONTENT.EXPLOSION then
-            return endwest;
-        end
-
-        -- Middle sprites. Create intersections if multiple middle tiles collide.
-        if (direction == 'north' or direction == 'south')
-                and (e:getContentType() == CONTENT.EXPLOSION or w:getContentType() == CONTENT.EXPLOSION) then
-            return origin;
-        elseif (direction == 'east' or direction == 'west')
-                and (n:getContentType() == CONTENT.EXPLOSION or s:getContentType() == CONTENT.EXPLOSION) then
-            return origin;
-        elseif direction == 'north' or direction == 'south' then
-            return vertical;
-        elseif direction == 'east' or direction == 'west' then
-            return horizontal;
-        end
-    end
-
     function self:update(dt)
         timer = timer - dt;
         if timer <= 0 then
-            tile:removeContent();
+            self:getParent():clearContent();
         end
 
-        sprite = pickSprite(direction, strength, tile:getNeighbours());
+        sprite = pickSprite(self:getParent():getAdjacentTiles());
     end
 
-    function self:draw(x, y)
-        if sprite then
-            love.graphics.draw(sprite, x * TILESIZE, y * TILESIZE);
+    function self:draw()
+        -- love.graphics.setColor(255, 255, 255, 100);
+        love.graphics.draw(sprite, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        -- love.graphics.setColor(255, 255, 255, 255);
+    end
+
+    function self:explode(radius, direction, adjTiles)
+        -- Replace with newer explosion.
+        self:getParent():addContent(Explosion.new(self:getX(), self:getY()));
+
+        -- Notify neighbour.
+        adjTiles[direction]:explode(radius - 1, direction);
+    end
+
+    function self:increaseDanger(radius, direction, adjTiles)
+        if radius > 0 then
+            self:getParent():setDanger(radius);
+            adjTiles[direction]:increaseDanger(radius - 1, direction);
         end
     end
 
-    function self:signal(signal)
-    end
-
-    -- ------------------------------------------------
-    -- Getters
-    -- ------------------------------------------------
-
-    function self:getDirection()
-        return direction;
-    end
-
-    function self:getType()
-        return type;
-    end
-
-    function self:isPassable()
-        return true;
+    function self:decreaseDanger(radius, direction, adjTiles)
+        if radius > 0 then
+            self:getParent():setDanger(-radius);
+            adjTiles[direction]:decreaseDanger(radius - 1, direction);
+        end
     end
 
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
-
-    function self:setTile(ntile)
-        tile = ntile;
-    end
 
     return self;
 end

@@ -1,4 +1,6 @@
+local Content = require('src/game/objects/Content');
 local Constants = require('src/Constants');
+local Upgrade = require('src/game/objects/Upgrade');
 
 -- ------------------------------------------------
 -- Module
@@ -23,51 +25,49 @@ local img = love.graphics.newImage('res/img/softwall.png');
 -- Constructor
 -- ------------------------------------------------
 
-function SoftWall.new()
-    local self = {};
+function SoftWall.new(x, y)
+    local self = Content.new(CONTENT.SOFTWALL, false, x, y);
 
     -- ------------------------------------------------
-    -- Private Variables
+    -- Private Functions
     -- ------------------------------------------------
 
-    local type = CONTENT.SOFTWALL;
-    local tile;
+    ---
+    -- Randomly decides wether or not to drop an upgrade.
+    -- It registers the dropped upgrade with at the UpgradeManager
+    -- sets its type and then adds it to the current tile.
+    --
+    local function dropUpgrade(x, y)
+        if love.math.random(0, Constants.UPGRADES.DROPCHANCE) == 0 then
+            local upgrade = Upgrade.new(x, y);
+            upgrade:init();
+            self:getParent():addContent(upgrade);
+        end
+    end
+
+    function self:explode(_, _, _)
+        -- Remove the softwall from the tile.
+        -- TODO replace with burning animation.
+        self:getParent():clearContent();
+
+        -- Randomly drop upgrades.
+        dropUpgrade(self:getX(), self:getY());
+    end
+
+    function self:increaseDanger(_, _, _)
+        return;
+    end
+
+    function self:decreaseDanger(_, _, _)
+        return;
+    end
 
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
 
-    function self:update(_)
-    end
-
-    function self:draw(x, y)
-        love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
-    end
-
-    function self:signal(signal)
-        if signal == 'explode' then
-            tile:removeContent();
-        end
-    end
-
-    -- ------------------------------------------------
-    -- Getters
-    -- ------------------------------------------------
-
-    function self:getType()
-        return type;
-    end
-
-    function self:isPassable()
-        return false;
-    end
-
-    -- ------------------------------------------------
-    -- Setters
-    -- ------------------------------------------------
-
-    function self:setTile(ntile)
-        tile = ntile;
+    function self:draw()
+        love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
     end
 
     return self;

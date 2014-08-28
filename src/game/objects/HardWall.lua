@@ -1,3 +1,4 @@
+local Content = require('src/game/objects/Content');
 local Constants = require('src/Constants');
 
 -- ------------------------------------------------
@@ -23,48 +24,23 @@ local img = love.graphics.newImage('res/img/hardwall.png');
 -- Constructor
 -- ------------------------------------------------
 
-function HardWall.new()
-    local self = {};
+function HardWall.new(x, y)
+    local self = Content.new(CONTENT.HARDWALL, false, x, y);
 
-    -- ------------------------------------------------
-    -- Private Variables
-    -- ------------------------------------------------
-
-    local type = CONTENT.HARDWALL;
-    local tile;
-
-    -- ------------------------------------------------
-    -- Public Functions
-    -- ------------------------------------------------
-
-    function self:update(_)
+    function self:explode(_, _, _)
+        return;
     end
 
-    function self:draw(x, y)
-        love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
+    function self:draw()
+        love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
     end
 
-    function self:signal(_)
+    function self:increaseDanger(_, _, _)
+        return;
     end
 
-    -- ------------------------------------------------
-    -- Getters
-    -- ------------------------------------------------
-
-    function self:getType()
-        return type;
-    end
-
-    function self:isPassable()
-        return false;
-    end
-
-    -- ------------------------------------------------
-    -- Setters
-    -- ------------------------------------------------
-
-    function self:setTile(ntile)
-        tile = ntile;
+    function self:decreaseDanger(_, _, _)
+        return;
     end
 
     return self;

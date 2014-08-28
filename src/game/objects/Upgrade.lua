@@ -1,4 +1,6 @@
+local Content = require('src/game/objects/Content');
 local Constants = require('src/Constants');
+local UpgradeManager = require('src/game/upgrades/UpgradeManager');
 
 -- ------------------------------------------------
 -- Module
@@ -12,7 +14,7 @@ local Upgrade = {};
 
 local CONTENT = Constants.CONTENT;
 local TILESIZE = Constants.TILESIZE;
-local TIMER = Constants.UPGRADES.TIMER;
+local TYPES = { 'fireup', 'bombup' };
 
 -- ------------------------------------------------
 -- Local Variables
@@ -25,71 +27,72 @@ local imgBombUp = love.graphics.newImage('res/img/upgrades/bombup.png');
 -- Constructor
 -- ------------------------------------------------
 
-function Upgrade.new()
-    local self = {};
+function Upgrade.new(x, y)
+    local self = Content.new(CONTENT.UPGRADE, true, x, y);
 
-    local type;
-    local tile;
+    -- ------------------------------------------------
+    -- Private Variables
+    -- ------------------------------------------------
+
+    local upgradeType;
     local id;
-    local decayTimer = TIMER;
+
+    -- ------------------------------------------------
+    -- Private Functions
+    -- ------------------------------------------------
+
+    local function assignUpgradeType()
+        local rnd = love.math.random(1, #TYPES);
+        return TYPES[rnd];
+    end
 
     -- ------------------------------------------------
     -- Public functions
     -- ------------------------------------------------
 
     function self:init()
-        local rnd = love.math.random(0, 1);
-        if rnd == 0 then
-            type = CONTENT.BOMBUP;
-        elseif rnd == 1 then
-            type = CONTENT.FIREUP;
+        -- Save the id used in the upgrade manager.
+        id = UpgradeManager.register(self:getX(), self:getY());
+
+        -- Select a random type of upgrade.
+        upgradeType = assignUpgradeType();
+    end
+
+    function self:update(_)
+        return;
+    end
+
+    function self:draw()
+        if upgradeType == TYPES[1] then
+            love.graphics.draw(imgFireUp, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        elseif upgradeType == TYPES[2] then
+            love.graphics.draw(imgBombUp, self:getX() * TILESIZE, self:getY() * TILESIZE);
         end
     end
 
-    function self:update(dt)
-        decayTimer = decayTimer - dt;
-        if decayTimer <= 0 then
-            tile:removeContent();
-        end
+    function self:explode()
+        self:getParent():clearContent();
     end
 
-    function self:draw(x, y)
-        if type == CONTENT.FIREUP then
-            love.graphics.draw(imgFireUp, x * TILESIZE, y * TILESIZE);
-        elseif type == CONTENT.BOMBUP then
-            love.graphics.draw(imgBombUp, x * TILESIZE, y * TILESIZE);
-        end
+    function self:remove()
+        UpgradeManager.remove(id);
+        self:getParent():clearContent();
     end
 
-    function self:signal(signal)
+    function self:increaseDanger(_, _, _)
+        return;
+    end
+
+    function self:decreaseDanger(_, _, _)
+        return;
     end
 
     -- ------------------------------------------------
     -- Getters
     -- ------------------------------------------------
 
-    function self:getType()
-        return type;
-    end
-
-    function self:getId()
-        return id;
-    end
-
-    function self:isPassable()
-        return true;
-    end
-
-    -- ------------------------------------------------
-    -- Setters
-    -- ------------------------------------------------
-
-    function self:setTile(ntile)
-        tile = ntile;
-    end
-
-    function self:setId(nid)
-        id = nid;
+    function self:getUpgradeType()
+        return upgradeType;
     end
 
     return self;

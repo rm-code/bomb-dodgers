@@ -40,14 +40,18 @@ function Arena.new()
     function self:clearSpawns(entities)
         for i = 1, #entities do
             local tile = entities[i]:getTile();
-            local adjTiles = tile:getNeighbours();
+            local adjTiles = tile:getAdjacentTiles();
 
             -- Remove soft wall from current tile.
-            tile:removeContent();
+            if tile:getContentType() == CONTENT.SOFTWALL then
+                tile:clearContent();
+            end
 
             -- Remove soft walls from adjacent tiles.
             for _, tile in pairs(adjTiles) do
-                tile:removeContent();
+                if tile:getContentType() == CONTENT.SOFTWALL then
+                    tile:clearContent();
+                end
             end
         end
     end
@@ -58,28 +62,28 @@ function Arena.new()
         for x = 1, #grid do
             for y = 1, #grid[x] do
                 local type = grid[x][y];
-                grid[x][y] = Tile.new();
-                grid[x][y]:init(x, y, type, type);
+                grid[x][y] = Tile.new(x, y);
 
                 -- Add walls.
                 if type == 0 then
                     if love.math.random(0, 3) == 1 then
-                        grid[x][y]:addContent(SoftWall.new());
+                        grid[x][y]:addContent(SoftWall.new(x, y));
                     end
                 elseif type == 1 then
-                    grid[x][y]:addContent(HardWall.new());
+                    grid[x][y]:addContent(HardWall.new(x, y));
                 end
             end
         end
 
         -- Set neighbours.
+        local n, s, e, w;
         for x = 1, #grid do
             for y = 1, #grid[x] do
-                local n = self:getTile(x, y - 1);
-                local s = self:getTile(x, y + 1);
-                local w = self:getTile(x - 1, y);
-                local e = self:getTile(x + 1, y);
-                grid[x][y]:setNeighbours(n, s, w, e);
+                n = self:getTile(x, y - 1);
+                s = self:getTile(x, y + 1);
+                e = self:getTile(x + 1, y);
+                w = self:getTile(x - 1, y);
+                grid[x][y]:setAdjacentTiles(n, s, e, w);
             end
         end
     end
@@ -109,11 +113,11 @@ function Arena.new()
     end
 
     function self:getTile(x, y)
-        return grid[x] and grid[x][y] or false;
+        return grid[x] and grid[x][y];
     end
 
     function self:getAdjacentTiles(x, y)
-        return self:getTile(x, y):getNeighbours();
+        return grid[x][y]:getAdjacentTiles();
     end
 
     return self;

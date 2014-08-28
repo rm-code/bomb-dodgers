@@ -37,19 +37,19 @@ function Player.new(arena, x, y)
 
     local function handleInput()
         if InputManager.hasCommand('UP') then
-            self:move('north');
+            self:move('n');
         elseif InputManager.hasCommand('DOWN') then
-            self:move('south');
+            self:move('s');
         end
 
-        if InputManager.hasCommand('LEFT') then
-            self:move('west');
-        elseif InputManager.hasCommand('RIGHT') then
-            self:move('east');
+        if InputManager.hasCommand('RIGHT') then
+            self:move('e');
+        elseif InputManager.hasCommand('LEFT') then
+            self:move('w');
         end
 
         if InputManager.hasCommand('BOMB') then
-            self:plantBomb(self.x, self.y);
+            self:plantBomb();
         end
     end
 

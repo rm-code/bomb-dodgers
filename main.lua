@@ -61,6 +61,9 @@ function love.load()
 
     -- Set the default control map.
     InputManager.setMap(Controls.GAME);
+    
+    -- ZeroBrane Debugging Hook
+    if arg[#arg] == "-debug" then require("mobdebug").start() end
 end
 
 -- ------------------------------------------------

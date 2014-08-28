@@ -37,11 +37,11 @@ function love.conf(t)
     t.window.resizable = true;
     t.window.minwidth = 800;
     t.window.minheight = 600;
-    t.window.fullscreen = true;
+    t.window.fullscreen = false;
     t.window.fullscreentype = "desktop";
     t.window.vsync = true;
     t.window.fsaa = 0;
-    t.window.display = 1;
+    t.window.display = 2;
     t.window.highdpi = false;
     t.window.srgb = false;
 

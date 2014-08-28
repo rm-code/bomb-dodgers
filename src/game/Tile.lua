@@ -1,7 +1,6 @@
 local Constants = require('src/Constants');
 local Explosion = require('src/game/objects/Explosion');
-local Upgrade = require('src/game/upgrades/Upgrade');
-local UpgradeManager = require('src/game/upgrades/UpgradeManager');
+local Bomb = require('src/game/objects/Bomb');
 
 -- ------------------------------------------------
 -- Module
@@ -26,253 +25,95 @@ local img = love.graphics.newImage('res/img/floor.png');
 -- Constructor
 -- ------------------------------------------------
 
-function Tile.new()
+function Tile.new(x, y)
     local self = {};
 
     -- ------------------------------------------------
     -- Private Variables
     -- ------------------------------------------------
 
-    local adjTiles = {};
-    local danger = 0;
+    local x = x;
+    local y = y;
+    local adjTiles;
     local content;
-    local x, y;
-
-    -- ------------------------------------------------
-    -- Private Functions
-    -- ------------------------------------------------
-
-    ---
-    -- Randomly decides wether or not to drop an upgrade.
-    -- It registers the dropped upgrade with at the UpgradeManager
-    -- sets its type and then adds it to the current tile.
-    --
-    local function dropUpgrade()
-        if love.math.random(0, Constants.UPGRADES.DROPCHANCE) == 0 then
-            local id = UpgradeManager.register(x, y);
-            local upgrade = Upgrade.new();
-            upgrade:init();
-            upgrade:setId(id);
-            self:addContent(upgrade);
-        end
-    end
-
-    ---
-    -- @param signal
-    --
-    local function detonate(signal)
-        if content then
-            if content:getType() == CONTENT.BOMB then
-                content:signal(signal.name);
-                return;
-            elseif content:getType() == CONTENT.FIREUP or content:getType() == CONTENT.BOMBUP then
-                self:removeContent();
-                return;
-            elseif content:getType() == CONTENT.SOFTWALL then
-                self:removeContent();
-                dropUpgrade();
-                return;
-            elseif content:getType() == CONTENT.HARDWALL then
-                return;
-            elseif content:getType() == CONTENT.EXPLOSION then
-                self:addContent(Explosion.new(signal.direction, signal.strength));
-            end
-        elseif signal.strength >= 0 then
-            self:addContent(Explosion.new(signal.direction, signal.strength));
-        end
-
-        -- Send the explosion to the neighbouring tiles.
-        if signal.strength > 0 then
-            if signal.direction == 'all' then
-                if adjTiles.north then adjTiles.north:signal({ name = 'detonate', strength = signal.strength - 1, direction = 'north' }); end
-                if adjTiles.south then adjTiles.south:signal({ name = 'detonate', strength = signal.strength - 1, direction = 'south' }); end
-                if adjTiles.west then adjTiles.west:signal({ name = 'detonate', strength = signal.strength - 1, direction = 'west' }); end
-                if adjTiles.east then adjTiles.east:signal({ name = 'detonate', strength = signal.strength - 1, direction = 'east' }); end
-            else
-                adjTiles[signal.direction]:signal({ name = 'detonate', strength = signal.strength - 1, direction = signal.direction });
-            end
-        end
-    end
-
-    ---
-    -- @param signal
-    --
-    local function plantbomb(signal)
-        if content then
-            if content:getType() == CONTENT.SOFTWALL then
-                return;
-            elseif content:getType() == CONTENT.HARDWALL then
-                return;
-            elseif danger > signal.strength + 1 then
-                return;
-            end
-        end
-        danger = danger + signal.strength + 1;
-
-        -- Send the explosion to the neighbouring tiles.
-        if signal.strength > 0 then
-            if signal.direction == 'all' then
-                if adjTiles.north then adjTiles.north:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'north' }); end
-                if adjTiles.south then adjTiles.south:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'south' }); end
-                if adjTiles.west then adjTiles.west:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'west' }); end
-                if adjTiles.east then adjTiles.east:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = 'east' }); end
-            else
-                adjTiles[signal.direction]:signal({ name = 'plantbomb', strength = signal.strength - 1, direction = signal.direction });
-            end
-        end
-    end
-
-    ---
-    -- @param signal
-    --
-    local function removedanger(signal)
-        if content and content:getType() == CONTENT.SOFTWALL then
-            return;
-        elseif content and content:getType() == CONTENT.HARDWALL then
-            return;
-        end
-
-        -- Reduce danger value of the tile.
-        danger = danger - signal.strength - 1 < 0 and 0 or danger - signal.strength - 1;
-
-        if signal.strength > 0 then
-            if signal.direction == 'all' then
-                if adjTiles.north then adjTiles.north:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'north' }); end
-                if adjTiles.south then adjTiles.south:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'south' }); end
-                if adjTiles.west then adjTiles.west:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'west' }); end
-                if adjTiles.east then adjTiles.east:signal({ name = 'removedanger', strength = signal.strength - 1, direction = 'east' }); end
-            else
-                adjTiles[signal.direction]:signal({ name = 'removedanger', strength = signal.strength - 1, direction = signal.direction });
-            end
-        end
-    end
-
-    ---
-    -- Moves a bomb along the grid. If it hits an explosion tile it will explode.
-    -- If it hits another solid tile it will stop moving.
-    -- @param signal
-    --
-    local function kickbomb(signal)
-        local content = self:getContent();
-        local tile = adjTiles[signal.direction];
-
-        if tile:getContentType() == CONTENT.EXPLOSION then
-            self:removeContent();
-            tile:addContent(content);
-            tile:signal({ name = 'detonate', strength = content:getStrength(), direction = 'all' });
-        elseif tile:isPassable() then
-            self:removeContent();
-            tile:addContent(content);
-            tile:signal(signal);
-        end
-    end
+    local danger = 0;
 
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
 
-    ---
-    -- Initialises the tile at the given coordinates.
-    -- @param nx
-    -- @param ny
-    --
-    function self:init(nx, ny)
-        x = nx;
-        y = ny;
+    function self:draw()
+        love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
+
+        if content then
+            content:draw();
+        end
+
+        -- love.graphics.setColor(255, 0, 0);
+        -- love.graphics.print(danger, x * TILESIZE + 16, y * TILESIZE + 16);
+        -- love.graphics.setColor(255, 255, 255);
     end
 
-    ---
-    -- Updates the tile and its content.
-    -- @param dt
-    --
     function self:update(dt)
         if content then
             content:update(dt);
         end
     end
 
-    ---
-    -- Draws the tile and its content.
-    --
-    function self:draw()
-        love.graphics.draw(img, x * TILESIZE, y * TILESIZE);
-        love.graphics.setColor(0, 0, 0);
-        --        love.graphics.print(danger, x * TILESIZE + 16, y * TILESIZE + 16);
-        love.graphics.setColor(255, 255, 255);
-        if content then
-            content:draw(x, y);
-        end
-    end
-
-    ---
-    -- Receives a signal, decides what to do with it and then sends it to
-    -- its own content.
-    -- @param signal
-    --
-    function self:signal(signal)
-        if signal.name == 'detonate' then
-            detonate(signal);
-        elseif signal.name == 'kickbomb' then
-            kickbomb(signal);
-        elseif signal.name == 'plantbomb' then
-            plantbomb(signal);
-        elseif signal.name == 'removedanger' then
-            removedanger(signal);
-        end
-
-        -- Signal the content.
-        if content then
-            content:signal(signal);
-        end
-    end
-
-    ---
-    -- Adds content to the current tile.
-    -- @param ncontent
-    --
     function self:addContent(ncontent)
         content = ncontent;
-        content:setTile(self);
+        content:setParent(self);
     end
 
-    ---
-    -- Removes current content from the tile.
-    --
-    function self:removeContent()
-        if not content then
-            return;
-        end
-
-        -- Hard walls can never be removed.
-        if content:getType() == CONTENT.HARDWALL then
-            return;
-        end
-
-        -- If the content was a bomb then remove the danger based on that bomb
-        -- from the current and adjacent tiles.
-        if content:getType() == CONTENT.BOMB then
-            self:signal({ name = 'removedanger', strength = content:getStrength(), direction = 'all' });
-        end
-
-        -- If the content was an upgrade then remove that upgrade from the upgrade manager aswell.
-        if content:getType() == CONTENT.BOMBUP or content:getType() == CONTENT.FIREUP then
-            UpgradeManager.remove(content:getId());
-        end
-
+    function self:clearContent()
         content = nil;
+    end
+
+    function self:explode(radius, direction)
+        if not content then
+            if radius > 0 then
+                self:addContent(Explosion.new(x, y));
+                adjTiles[direction]:explode(radius - 1, direction);
+            end
+        else
+            content:explode(radius, direction, adjTiles);
+        end
+    end
+
+    function self:increaseDanger(radius, direction)
+        if content and radius > 0 then
+            content:increaseDanger(radius, direction, adjTiles);
+        elseif radius > 0 then
+            self:setDanger(radius);
+            adjTiles[direction]:increaseDanger(radius - 1, direction);
+        end
+    end
+
+    function self:decreaseDanger(radius, direction)
+        if content and radius > 0 then
+            content:decreaseDanger(radius, direction, adjTiles);
+        elseif radius > 0 then
+            self:setDanger(-radius);
+            adjTiles[direction]:decreaseDanger(radius - 1, direction);
+        end
+    end
+
+    function self:plantBomb(radius, entity)
+        local bomb = Bomb.new(x, y);
+        bomb:setBlastRadius(radius);
+        bomb:setOwner(entity);
+        self:addContent(bomb);
+
+        content:increaseDanger(radius, 'all', adjTiles);
+    end
+
+    function self:kickBomb(direction)
+        content:move(direction);
     end
 
     -- ------------------------------------------------
     -- Getters
     -- ------------------------------------------------
-
-    function self:getDanger()
-        return danger;
-    end
-
-    function self:getContent()
-        return content;
-    end
 
     function self:getX()
         return x;
@@ -282,42 +123,44 @@ function Tile.new()
         return y;
     end
 
-    function self:getNeighbours()
+    function self:getAdjacentTiles()
         return adjTiles;
     end
 
-    function self:getContentType()
-        if content then
-            return content:getType();
-        end
+    function self:isPassable()
+        return not content or content:isPassable();
     end
 
-    function self:isPassable()
-        if content then
-            return content:isPassable()
+    function self:isSafe()
+        if danger > 0 or (content and content:getType() == CONTENT.EXPLOSION) then
+            return false;
         else
             return true;
         end
     end
 
-    function self:isSafe()
-        if not content then
-            return danger == 0;
-        else
-            return danger == 0 and content:getType() ~= CONTENT.EXPLOSION;
-        end
+    function self:getContentType()
+        return not content or content:getType();
+    end
+
+    function self:getContent()
+        return content;
     end
 
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
 
-    function self:setNeighbours(n, s, w, e)
-        adjTiles.north, adjTiles.south, adjTiles.west, adjTiles.east = n, s, w, e;
+    function self:setAdjacentTiles(n, s, e, w)
+        adjTiles = adjTiles or {};
+        adjTiles['n'] = n;
+        adjTiles['s'] = s;
+        adjTiles['e'] = e;
+        adjTiles['w'] = w;
     end
 
-    function self:setDanger(d)
-        danger = d;
+    function self:setDanger(nd)
+        danger = danger + nd;
     end
 
     return self;

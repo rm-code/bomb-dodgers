@@ -5,8 +5,7 @@ Constants.CONTENT.SOFTWALL = 'softwall';
 Constants.CONTENT.HARDWALL = 'hardwall';
 Constants.CONTENT.BOMB = 'bomb';
 Constants.CONTENT.EXPLOSION = 'explosion';
-Constants.CONTENT.FIREUP = 'fireup';
-Constants.CONTENT.BOMBUP = 'bombup';
+Constants.CONTENT.UPGRADE = 'upgrade';
 
 Constants.TILESIZE = 32;
 Constants.BOMBTIMER = 2;
