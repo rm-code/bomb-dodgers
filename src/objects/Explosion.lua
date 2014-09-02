@@ -30,7 +30,7 @@ local endwest = love.graphics.newImage('res/img/explosion/end_left.png');
 -- Constructor
 -- ------------------------------------------------
 
-function Explosion.new(x, y)
+function Explosion.new(strength, x, y)
     local self = Content.new(CONTENT.EXPLOSION, true, x, y);
 
     -- ------------------------------------------------
@@ -38,33 +38,38 @@ function Explosion.new(x, y)
     -- ------------------------------------------------
 
     local timer = Constants.EXPLOSIONTIMER;
-    local sprite = origin;
+    local sprite;
 
     -- ------------------------------------------------
     -- Private Functions
     -- ------------------------------------------------
 
     local function pickSprite(adjTiles)
-        local n = adjTiles.n;
-        local s = adjTiles.s;
-        local e = adjTiles.e;
-        local w = adjTiles.w;
+        local n = adjTiles.n:getContentType() == CONTENT.EXPLOSION;
+        local s = adjTiles.s:getContentType() == CONTENT.EXPLOSION;
+        local e = adjTiles.e:getContentType() == CONTENT.EXPLOSION;
+        local w = adjTiles.w:getContentType() == CONTENT.EXPLOSION;
 
-        if n:getContentType() == CONTENT.EXPLOSION
-                and s:getContentType() == CONTENT.EXPLOSION
-                and e:getContentType() == CONTENT.EXPLOSION
-                and w:getContentType() == CONTENT.EXPLOSION then
+        if (n or s) and (e or w) then
             return origin;
-        elseif (not n:getContentType() == CONTENT.EXPLOSION or not s:getContentType() == CONTENT.EXPLOSION)
-                and e:getContentType() == CONTENT.EXPLOSION
-                and w:getContentType() == CONTENT.EXPLOSION then
-            return horizontal;
-        elseif (not e:getContentType() == CONTENT.EXPLOSION or not w:getContentType() == CONTENT.EXPLOSION)
-                and n:getContentType() == CONTENT.EXPLOSION
-                and s:getContentType() == CONTENT.EXPLOSION then
-            return vertical;
+        elseif e or w then
+            if strength == 1 and e and not w then
+                return endwest;
+            elseif strength == 1 and w and not e then
+                return endeast;
+            else
+                return horizontal;
+            end
+        elseif n or s then
+            if strength == 1 and n and not s then
+                return endsouth;
+            elseif strength == 1 and s and not n then
+                return endnorth;
+            else
+                return vertical;
+            end
         else
-            return origin;
+            return missing;
         end
     end
 
@@ -83,13 +88,15 @@ function Explosion.new(x, y)
 
     function self:draw()
         -- love.graphics.setColor(255, 255, 255, 100);
-        love.graphics.draw(sprite, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        if sprite then
+            love.graphics.draw(sprite, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        end
         -- love.graphics.setColor(255, 255, 255, 255);
     end
 
     function self:explode(radius, direction, adjTiles)
         -- Replace with newer explosion.
-        self:getParent():addContent(Explosion.new(self:getX(), self:getY()));
+        self:getParent():addContent(Explosion.new(radius, self:getX(), self:getY()));
 
         -- Notify neighbour.
         adjTiles[direction]:explode(radius - 1, direction);

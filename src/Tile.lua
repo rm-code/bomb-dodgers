@@ -71,7 +71,7 @@ function Tile.new(x, y)
 
     function self:explode(radius, direction)
         if not content and radius > 0 then
-            self:addContent(Explosion.new(x, y));
+            self:addContent(Explosion.new(radius, x, y));
             adjTiles[direction]:explode(radius - 1, direction);
         elseif radius > 0 then
             content:explode(radius, direction, adjTiles);

@@ -56,7 +56,7 @@ function Bomb.new(x, y)
 
     function self:explode(_, _, adjTiles)
         self:decreaseDanger(blastRadius, 'all', self:getParent():getAdjacentTiles(self:getX(), self:getY()));
-        self:getParent():addContent(Explosion.new(self:getX(), self:getY()));
+        self:getParent():addContent(Explosion.new(blastRadius, self:getX(), self:getY()));
 
         -- Notify neighbours.
         adjTiles['n']:explode(blastRadius - 1, 'n');
