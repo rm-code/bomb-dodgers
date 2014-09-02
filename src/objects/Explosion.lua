@@ -1,4 +1,4 @@
-local Content = require('src/game/objects/Content');
+local Content = require('src/objects/Content');
 local Constants = require('src/Constants');
 
 -- ------------------------------------------------

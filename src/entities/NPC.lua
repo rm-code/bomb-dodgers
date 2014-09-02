@@ -1,8 +1,8 @@
 local Constants = require('src/Constants');
-local Entity = require('src/game/entities/Entity');
-local StateManager = require('src/game/entities/states/StateManager');
-local Walk = require('src/game/entities/states/Walk');
-local Evade = require('src/game/entities/states/Evade');
+local Entity = require('src/entities/Entity');
+local StateManager = require('src/entities/states/StateManager');
+local Walk = require('src/entities/states/Walk');
+local Evade = require('src/entities/states/Evade');
 
 -- ------------------------------------------------
 -- Module

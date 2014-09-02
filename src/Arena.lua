@@ -1,7 +1,7 @@
 local Constants = require('src/Constants');
-local Tile = require('src/game/Tile');
-local SoftWall = require('src/game/objects/SoftWall');
-local HardWall = require('src/game/objects/HardWall');
+local Tile = require('src/Tile');
+local SoftWall = require('src/objects/SoftWall');
+local HardWall = require('src/objects/HardWall');
 
 -- ------------------------------------------------
 -- Module

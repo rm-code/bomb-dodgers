@@ -1,6 +1,6 @@
 local Constants = require('src/Constants');
-local Entity = require('src/game/entities/Entity');
-local PlayerManager = require('src/game/entities/PlayerManager');
+local Entity = require('src/entities/Entity');
+local PlayerManager = require('src/entities/PlayerManager');
 local InputManager = require('lib/InputManager');
 
 -- ------------------------------------------------

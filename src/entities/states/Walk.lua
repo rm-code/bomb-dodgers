@@ -1,7 +1,7 @@
 local Constants = require('src/Constants');
-local State = require('src/game/entities/states/State');
-local UpgradeManager = require('src/game/upgrades/UpgradeManager');
-local PlayerManager = require('src/game/entities/PlayerManager');
+local State = require('src/entities/states/State');
+local UpgradeManager = require('src/upgrades/UpgradeManager');
+local PlayerManager = require('src/entities/PlayerManager');
 
 -- ------------------------------------------------
 -- Module

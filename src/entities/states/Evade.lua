@@ -1,5 +1,5 @@
 local Constants = require('src/Constants');
-local State = require('src/game/entities/states/State');
+local State = require('src/entities/states/State');
 
 -- ------------------------------------------------
 -- Module

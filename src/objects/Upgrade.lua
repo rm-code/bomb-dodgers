@@ -1,6 +1,6 @@
-local Content = require('src/game/objects/Content');
+local Content = require('src/objects/Content');
 local Constants = require('src/Constants');
-local UpgradeManager = require('src/game/upgrades/UpgradeManager');
+local UpgradeManager = require('src/upgrades/UpgradeManager');
 
 -- ------------------------------------------------
 -- Module
