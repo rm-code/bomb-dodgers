@@ -6,6 +6,7 @@ vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords 
 {
     vec4 tex = Texel(texture, texture_coords);
 
+    // Replace the greyscale colours with the colours of the given palette.
     if (tex.r == 0 && tex.g == 0 && tex.b == 0) {                   // Black
         tex.r = PALETTE[0][0];
         tex.g = PALETTE[0][1];
@@ -23,6 +24,9 @@ vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords 
         tex.g = PALETTE[3][1];
         tex.b = PALETTE[3][2];
     }
+
+    // Make sure the texture's alpha channel is affected by love.graphics.setColor(...).
+    tex.a *= color.a;
 
     return tex;
 }
