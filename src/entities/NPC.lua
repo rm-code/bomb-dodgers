@@ -58,11 +58,15 @@ function NPC.new(arena, x, y)
         if self:getTile():getContentType() == Constants.CONTENT.EXPLOSION then
             self:kill();
         end
+
+        self:updateCounters(dt);
     end
 
     function self:draw()
         fsm:draw();
+        love.graphics.setColor(255, 255, 255, self:getAlpha());
         love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        love.graphics.setColor(255, 255, 255, 255);
     end
 
     return self;

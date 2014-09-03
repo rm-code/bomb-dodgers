@@ -29,6 +29,12 @@ function Entity.new(arena, x, y)
 
     local dead = false;
 
+    local bombdown;
+    local counters = {};
+
+    local alpha = 255; -- The current alpha of the entity.
+    local pulse = 0;   -- The pulse which will be used to create a pulsating effect.
+
     -- ------------------------------------------------
     -- Private Functions
     -- ------------------------------------------------
@@ -40,6 +46,9 @@ function Entity.new(arena, x, y)
                 blastRadius = blastRadius + 1;
             elseif upgrade:getUpgradeType() == 'bombup' then
                 bombCapacity = bombCapacity + 1;
+            elseif upgrade:getUpgradeType() == 'bombdown' then
+                bombdown = true;
+                counters.bombdown = 5;
             end
             upgrade:remove();
         end
@@ -48,6 +57,31 @@ function Entity.new(arena, x, y)
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
+
+    function self:updateCounters(dt)
+        if bombdown then
+            if counters.bombdown > 0 then
+                counters.bombdown = counters.bombdown - dt;
+            else
+                bombdown = false;
+                counters.bombdown = nil;
+            end
+        end
+
+        if bombdown then
+            pulse = pulse + dt * 2;
+            local sin = math.sin(pulse);
+
+            if sin < 0 then
+                pulse = 0;
+                sin = 0;
+            end
+
+            alpha = sin * 255;
+        else
+            alpha = 255;
+        end
+    end
 
     function self:move(direction)
         local adjTiles = arena:getAdjacentTiles(x, y);
@@ -63,7 +97,7 @@ function Entity.new(arena, x, y)
     end
 
     function self:plantBomb()
-        if liveBombs < bombCapacity then
+        if liveBombs < bombCapacity and not bombdown then
             if self:getTile():isPassable() then
                 self:getTile():plantBomb(blastRadius, self);
             end
@@ -83,6 +117,10 @@ function Entity.new(arena, x, y)
     -- ------------------------------------------------
     -- Getters
     -- ------------------------------------------------
+
+    function self:getAlpha()
+        return alpha;
+    end
 
     function self:getX()
         return x;

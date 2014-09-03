@@ -64,10 +64,14 @@ function Player.new(arena, x, y)
             self:kill();
             PlayerManager.remove(id);
         end
+
+        self:updateCounters(dt);
     end
 
     function self:draw()
+        love.graphics.setColor(255, 255, 255, self:getAlpha());
         love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        love.graphics.setColor(255, 255, 255, 255);
 
         love.graphics.print('Bombs: ' .. self:getLivingBombs(), 800, 20);
         love.graphics.print('Cap: ' .. self:getBombCapacity(), 800, 40);

@@ -14,7 +14,7 @@ local Upgrade = {};
 
 local CONTENT = Constants.CONTENT;
 local TILESIZE = Constants.TILESIZE;
-local TYPES = { 'fireup', 'bombup' };
+local TYPES = { 'fireup', 'bombup', 'bombdown' };
 
 -- ------------------------------------------------
 -- Local Variables
@@ -22,6 +22,7 @@ local TYPES = { 'fireup', 'bombup' };
 
 local imgFireUp = love.graphics.newImage('res/img/upgrades/fireup.png');
 local imgBombUp = love.graphics.newImage('res/img/upgrades/bombup.png');
+local imgBombDown = love.graphics.newImage('res/img/upgrades/bombdown.png');
 
 -- ------------------------------------------------
 -- Constructor
@@ -42,7 +43,7 @@ function Upgrade.new(x, y)
     -- ------------------------------------------------
 
     local function assignUpgradeType()
-        local rnd = love.math.random(1, #TYPES);
+        local rnd = love.math.random(1, #TYPES + 1);
         return TYPES[rnd];
     end
 
@@ -51,11 +52,15 @@ function Upgrade.new(x, y)
     -- ------------------------------------------------
 
     function self:init()
-        -- Save the id used in the upgrade manager.
-        id = UpgradeManager.register(self:getX(), self:getY());
-
         -- Select a random type of upgrade.
         upgradeType = assignUpgradeType();
+
+        -- Only register upgrades in the upgrade manager. We don't want
+        -- the AI to actively hunt for downgrades.
+        if upgradeType == TYPES[1] or upgradeType == TYPES[2] then
+            -- Save the id used in the upgrade manager.
+            id = UpgradeManager.register(self:getX(), self:getY());
+        end
     end
 
     function self:update(_)
@@ -67,6 +72,8 @@ function Upgrade.new(x, y)
             love.graphics.draw(imgFireUp, self:getX() * TILESIZE, self:getY() * TILESIZE);
         elseif upgradeType == TYPES[2] then
             love.graphics.draw(imgBombUp, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        elseif upgradeType == TYPES[3] then
+            love.graphics.draw(imgBombDown, self:getX() * TILESIZE, self:getY() * TILESIZE);
         end
     end
 
@@ -75,7 +82,9 @@ function Upgrade.new(x, y)
     end
 
     function self:remove()
-        UpgradeManager.remove(id);
+        if id then
+            UpgradeManager.remove(id);
+        end
         self:getParent():clearContent();
     end
 
