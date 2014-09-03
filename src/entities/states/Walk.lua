@@ -39,11 +39,11 @@ function Walk.new(manager, npc)
         -- Plant bombs if player is in bomb's blast radius.
         local playerX, playerY = PlayerManager.getClosestPlayer(x, y);
         if playerX == x then
-            if math.abs(playerY - y) <= blastRadius then
+            if math.abs(playerY - y) < blastRadius then
                 return true;
             end
         elseif playerY == y then
-            if math.abs(playerX - x) <= blastRadius then
+            if math.abs(playerX - x) < blastRadius then
                 return true;
             end
         end
