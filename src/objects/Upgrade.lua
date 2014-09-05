@@ -14,7 +14,7 @@ local Upgrade = {};
 
 local CONTENT = Constants.CONTENT;
 local TILESIZE = Constants.TILESIZE;
-local TYPES = { 'fireup', 'bombup', 'bombdown' };
+local TYPES = { 'fireup', 'bombup', 'bombdown', 'snail' };
 
 -- ------------------------------------------------
 -- Local Variables
@@ -23,6 +23,7 @@ local TYPES = { 'fireup', 'bombup', 'bombdown' };
 local imgFireUp = love.graphics.newImage('res/img/upgrades/fireup.png');
 local imgBombUp = love.graphics.newImage('res/img/upgrades/bombup.png');
 local imgBombDown = love.graphics.newImage('res/img/upgrades/bombdown.png');
+local imgSnail = love.graphics.newImage('res/img/upgrades/snail.png');
 
 -- ------------------------------------------------
 -- Constructor
@@ -74,6 +75,8 @@ function Upgrade.new(x, y)
             love.graphics.draw(imgBombUp, self:getX() * TILESIZE, self:getY() * TILESIZE);
         elseif upgradeType == TYPES[3] then
             love.graphics.draw(imgBombDown, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        elseif upgradeType == TYPES[4] then
+            love.graphics.draw(imgSnail, self:getX() * TILESIZE, self:getY() * TILESIZE);
         end
     end
 

@@ -31,13 +31,22 @@ function Entity.new(arena, x, y)
 
     local dead = false;
 
-    local bombdown;
     local counters = {};
+    local bombdown;
+    local snail;
 
     local alpha = 255; -- The current alpha of the entity.
     local pulse = 0; -- The pulse which will be used to create a pulsating effect.
 
     local prevMovementDir; -- The direction in which the player moved previously.
+
+    local normalSpeed = 2; -- The speed to use when walking normally.
+    local slowSpeed = 1; -- The speed to use when snail downgrade is active.
+    local currentSpeed = normalSpeed;
+
+    local lerpFactor = 0.2;
+
+    local tmpCap, tmpRadius; -- Variables to temporarily store the bomb's capacity and radius.
 
     -- ------------------------------------------------
     -- Private Functions
@@ -47,13 +56,22 @@ function Entity.new(arena, x, y)
         local target = arena:getTile(x, y);
         if target:getContentType() == CONTENT.UPGRADE then
             local upgrade = target:getContent();
-            if upgrade:getUpgradeType() == 'fireup' then
+            if upgrade:getUpgradeType() == 'fireup' and not snail then
                 blastRadius = blastRadius + 1;
-            elseif upgrade:getUpgradeType() == 'bombup' then
+            elseif upgrade:getUpgradeType() == 'bombup' and not snail then
                 bombCapacity = bombCapacity + 1;
             elseif upgrade:getUpgradeType() == 'bombdown' then
                 bombdown = true;
                 counters.bombdown = 5;
+            elseif upgrade:getUpgradeType() == 'snail' and not snail then
+                snail = true;
+                counters.snail = 5;
+                lerpFactor = 0.1;
+                tmpCap = bombCapacity;
+                bombCapacity = 1;
+                tmpRadius = blastRadius;
+                blastRadius = 2;
+                currentSpeed = slowSpeed;
             end
             upgrade:remove();
         end
@@ -62,7 +80,7 @@ function Entity.new(arena, x, y)
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
-    local speed = 2;
+
     local function lerp(a, b, t)
         return (1 - t) * a + t * b;
     end
@@ -76,8 +94,20 @@ function Entity.new(arena, x, y)
                 counters.bombdown = nil;
             end
         end
+        if snail then
+            if counters.snail > 0 then
+                counters.snail = counters.snail - dt;
+            else
+                snail = false;
+                counters.snail = nil;
+                lerpFactor = 0.2;
+                bombCapacity = tmpCap;
+                blastRadius = tmpRadius;
+                currentSpeed = normalSpeed;
+            end
+        end
 
-        if bombdown then
+        if bombdown or snail then
             pulse = pulse + dt * 2;
             local sin = math.sin(pulse);
 
@@ -110,24 +140,24 @@ function Entity.new(arena, x, y)
         elseif altDir and adjTiles[altDir]:isPassable() then
             direction = altDir;
         else
-            realX = lerp(realX, gridX * Constants.TILESIZE, 0.2);
-            realY = lerp(realY, gridY * Constants.TILESIZE, 0.2);
+            realX = lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
+            realY = lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
         end
 
         -- Lerp the player's position into the direction we have
         -- determined above.
         if direction == 'n' then
-            realY = realY - 1 * speed;
-            realX = lerp(realX, gridX * Constants.TILESIZE, 0.2);
+            realY = realY - 1 * currentSpeed;
+            realX = lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
         elseif direction == 's' then
-            realY = realY + 1 * speed;
-            realX = lerp(realX, gridX * Constants.TILESIZE, 0.2);
+            realY = realY + 1 * currentSpeed;
+            realX = lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
         elseif direction == 'e' then
-            realX = realX + 1 * speed;
-            realY = lerp(realY, gridY * Constants.TILESIZE, 0.2);
+            realX = realX + 1 * currentSpeed;
+            realY = lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
         elseif direction == 'w' then
-            realX = realX - 1 * speed;
-            realY = lerp(realY, gridY * Constants.TILESIZE, 0.2);
+            realX = realX - 1 * currentSpeed;
+            realY = lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
         end
 
         -- Calculate the grid coordinates, by dividing the real
