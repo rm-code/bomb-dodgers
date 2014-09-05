@@ -7,6 +7,7 @@ local Arena = require('src/Arena');
 local NPC = require('src/entities/NPC');
 local Player = require('src/entities/Player');
 local PlayerManager = require('src/entities/PlayerManager');
+local Camera = require('lib/Camera');
 
 -- ------------------------------------------------
 -- Module
@@ -23,11 +24,16 @@ function Game.new()
 
     local arena;
     local players;
+    local camera;
     local npcs;
 
     function self:init()
         arena = Arena.new();
         arena:init();
+
+        camera = Camera.new();
+        camera:setZoom(3);
+        camera:setBoundaries(32, 32, 22 * 32, 22 * 32);
 
         players = {};
         players[#players + 1] = Player.new(arena, 2, 2);
@@ -63,11 +69,13 @@ function Game.new()
         for i = 1, #players do
             if not players[i]:isDead() then
                 players[i]:update(dt);
+                camera:track(players[i]:getRealX(), players[i]:getRealY(), 6, dt);
             end
         end
     end
 
     function self:draw()
+        camera:set();
         arena:draw();
         for i = 1, #npcs do
             if not npcs[i]:isDead() then
@@ -80,6 +88,7 @@ function Game.new()
                 players[i]:draw();
             end
         end
+        camera:unset();
     end
 
     return self;
