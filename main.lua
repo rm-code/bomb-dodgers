@@ -49,6 +49,9 @@ end
 -- ------------------------------------------------
 
 function love.load()
+    -- ZeroBrane Debugging Hook
+    if arg[#arg] == "-debug" then require("mobdebug").start() end
+
     print("===================")
     print(string.format("Title: '%s'", getTitle()));
     print(string.format("Version: %.4d", getVersion()));
@@ -62,9 +65,6 @@ function love.load()
 
     -- Set the default control map.
     InputManager.setMap(Controls.GAME);
-
-    -- ZeroBrane Debugging Hook
-    if arg[#arg] == "-debug" then require("mobdebug").start() end
 end
 
 -- ------------------------------------------------
