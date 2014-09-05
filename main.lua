@@ -48,8 +48,6 @@ end
 -- Loading
 -- ------------------------------------------------
 
-local shader;
-local activeShader = false;
 function love.load()
     print("===================")
     print(string.format("Title: '%s'", getTitle()));
@@ -67,8 +65,6 @@ function love.load()
 
     -- ZeroBrane Debugging Hook
     if arg[#arg] == "-debug" then require("mobdebug").start() end
-
-    shader = love.graphics.newShader('res/shaders/gb.fs');
 end
 
 -- ------------------------------------------------
