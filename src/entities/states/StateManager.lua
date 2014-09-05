@@ -13,18 +13,9 @@ function StateManager.new()
 
     local states;
     local current;
-    local previous;
 
     function self:switch(statename)
-        -- Exit the current state and save it as the previous one.
-        if current then
-            current:exit();
-            previous = current;
-        end
-
-        -- Enter the new state.
         current = states[statename];
-        current:enter();
     end
 
     function self:update(dt)
@@ -33,10 +24,6 @@ function StateManager.new()
 
     function self:initStates(nstates)
         states = nstates;
-    end
-
-    function self:draw()
-        current:draw();
     end
 
     return self;

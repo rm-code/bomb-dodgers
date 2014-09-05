@@ -1,9 +1,3 @@
-local Constants = require('src/Constants');
-local State = require('src/entities/states/State');
-
--- ------------------------------------------------
--- Module
--- ------------------------------------------------
 
 local Evade = {};
 
@@ -12,7 +6,7 @@ local Evade = {};
 -- ------------------------------------------------
 
 function Evade.new(manager, npc)
-    local self = State.new();
+    local self = {};
 
     local npc = npc;
     local manager = manager;
@@ -74,10 +68,6 @@ function Evade.new(manager, npc)
         return bestDirection;
     end
 
-    function self:enter()
-        -- print("Enter state: Evade");
-    end
-
     function self:update()
         local direction = evadeBombs(npc);
         if direction then
@@ -87,10 +77,6 @@ function Evade.new(manager, npc)
         if npc:getTile():isSafe() then
             manager:switch('walk');
         end
-    end
-
-    function self:exit()
-        -- print("Exit state: Evade");
     end
 
     return self;

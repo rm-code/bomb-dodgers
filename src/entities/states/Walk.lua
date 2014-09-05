@@ -1,5 +1,4 @@
 local Constants = require('src/Constants');
-local State = require('src/entities/states/State');
 local UpgradeManager = require('src/upgrades/UpgradeManager');
 local PlayerManager = require('src/entities/PlayerManager');
 
@@ -14,7 +13,7 @@ local Walk = {};
 -- ------------------------------------------------
 
 function Walk.new(manager, npc)
-    local self = State.new();
+    local self = {};
 
     local npc = npc;
     local manager = manager;
@@ -108,10 +107,6 @@ function Walk.new(manager, npc)
     -- Public Functions
     -- ------------------------------------------------
 
-    function self:enter()
-        -- print("Enter state: Walk");
-    end
-
     function self:update(dt)
         local tile = npc:getTile();
         local adjTiles = npc:getAdjacentTiles();
@@ -133,10 +128,6 @@ function Walk.new(manager, npc)
         if direction and adjTiles[direction]:isSafe() then
             npc:move(direction);
         end
-    end
-
-    function self:exit()
-        -- print("Exit state: Walk");
     end
 
     return self;
