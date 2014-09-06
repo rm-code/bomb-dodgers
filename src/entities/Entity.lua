@@ -137,6 +137,8 @@ function Entity.new(arena, x, y)
         -- invalid to, we lerp the players position to the current tile.
         if adjTiles[prefDir]:isPassable() then
             direction = prefDir;
+        elseif adjTiles[prefDir]:getContentType() == CONTENT.BOMB then
+            adjTiles[prefDir]:kickBomb(prefDir);
         elseif altDir and adjTiles[altDir]:isPassable() then
             direction = altDir;
         else
