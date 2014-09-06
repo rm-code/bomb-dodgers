@@ -38,7 +38,7 @@ function SoftWall.new(x, y)
     -- sets its type and then adds it to the current tile.
     --
     local function dropUpgrade(x, y)
-        if true then
+        if love.math.random(0, Constants.UPGRADES.DROPCHANCE) == 0 then
             local upgrade = Upgrade.new(x, y);
             upgrade:init();
             self:getParent():addContent(upgrade);
