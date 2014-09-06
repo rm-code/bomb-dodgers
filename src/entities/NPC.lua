@@ -4,6 +4,7 @@ local StateManager = require('src/entities/states/StateManager');
 local Idle = require('src/entities/states/Idle');
 local Walk = require('src/entities/states/Walk');
 local Evade = require('src/entities/states/Evade');
+local AniMAL = require('lib/AniMAL');
 
 -- ------------------------------------------------
 -- Module
@@ -21,14 +22,28 @@ local TILESIZE = Constants.TILESIZE;
 -- Local Variables
 -- ------------------------------------------------
 
-local img = love.graphics.newImage('res/img/enemy.png');
+local anim_idleN = love.graphics.newImage('res/img/enemy/idle_north.png');
+local anim_idleS = love.graphics.newImage('res/img/enemy/idle_south.png');
+local anim_walkS = love.graphics.newImage('res/img/enemy/walk_south.png');
+local anim_walkN = love.graphics.newImage('res/img/enemy/walk_north.png');
+local anim_walkW = love.graphics.newImage('res/img/enemy/walk_west.png');
+local anim_walkE = love.graphics.newImage('res/img/enemy/walk_east.png');
+
+local anim = {
+    idleN = AniMAL.new(anim_idleN, TILESIZE, TILESIZE, 0.2);
+    idleS = AniMAL.new(anim_idleS, TILESIZE, TILESIZE, 0.2);
+    walkN = AniMAL.new(anim_walkN, TILESIZE, TILESIZE, 0.2);
+    walkS = AniMAL.new(anim_walkS, TILESIZE, TILESIZE, 0.2);
+    walkE = AniMAL.new(anim_walkE, TILESIZE, TILESIZE, 0.2);
+    walkW = AniMAL.new(anim_walkW, TILESIZE, TILESIZE, 0.2);
+}
 
 -- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
 function NPC.new(arena, x, y)
-    local self = Entity.new(arena, x, y);
+    local self = Entity.new(arena, x, y, anim);
 
     -- ------------------------------------------------
     -- Private Variables
@@ -58,12 +73,11 @@ function NPC.new(arena, x, y)
         end
 
         self:updateCounters(dt);
+        self:updateAnimation(dt);
     end
 
     function self:draw()
-        love.graphics.setColor(255, 255, 255, self:getAlpha());
-        love.graphics.draw(img, self:getRealX(), self:getRealY());
-        love.graphics.setColor(255, 255, 255, 255);
+        self:drawAnimation();
     end
 
     function self:setPreviousTile(nprevTile)

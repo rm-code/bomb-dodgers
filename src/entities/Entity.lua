@@ -16,7 +16,7 @@ local CONTENT = Constants.CONTENT;
 -- Constructor
 -- ------------------------------------------------
 
-function Entity.new(arena, x, y)
+function Entity.new(arena, x, y, anim)
     local self = {};
 
     local arena = arena;
@@ -47,6 +47,9 @@ function Entity.new(arena, x, y)
     local lerpFactor = 0.2;
 
     local tmpCap, tmpRadius; -- Variables to temporarily store the bomb's capacity and radius.
+
+    local anim = anim;
+    local curAnim = anim.idleS;
 
     -- ------------------------------------------------
     -- Private Functions
@@ -122,6 +125,16 @@ function Entity.new(arena, x, y)
         end
     end
 
+    function self:updateAnimation(dt)
+        curAnim:update(dt);
+    end
+
+    function self:drawAnimation()
+        love.graphics.setColor(255, 255, 255, alpha);
+        curAnim:draw(realX, realY);
+        love.graphics.setColor(255, 255, 255, 255);
+    end
+
     ---
     --
     -- @param prefDir - The preferred direction to walk to.
@@ -154,15 +167,19 @@ function Entity.new(arena, x, y)
         -- Lerp the player's position into the direction we have
         -- determined above.
         if direction == 'n' then
+            curAnim = anim.walkN;
             realY = realY - 1 * currentSpeed;
             realX = lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
         elseif direction == 's' then
+            curAnim = anim.walkS;
             realY = realY + 1 * currentSpeed;
             realX = lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
         elseif direction == 'e' then
+            curAnim = anim.walkE;
             realX = realX + 1 * currentSpeed;
             realY = lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
         elseif direction == 'w' then
+            curAnim = anim.walkW;
             realX = realX - 1 * currentSpeed;
             realY = lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
         end
@@ -183,6 +200,7 @@ function Entity.new(arena, x, y)
         -- If no direction keys have been pressed reset the previous
         -- direction to nil.
         if not dirA and not dirB then
+            curAnim = anim.idleS;
             prevMovementDir = nil;
             return;
         end

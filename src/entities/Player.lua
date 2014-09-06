@@ -2,18 +2,13 @@ local Constants = require('src/Constants');
 local Entity = require('src/entities/Entity');
 local PlayerManager = require('src/entities/PlayerManager');
 local InputManager = require('lib/InputManager');
+local AniMAL = require('lib/AniMAL');
 
 -- ------------------------------------------------
 -- Module
 -- ------------------------------------------------
 
 local Player = {};
-
--- ------------------------------------------------
--- Local Variables
--- ------------------------------------------------
-
-local img = love.graphics.newImage('res/img/dodger.png');
 
 -- ------------------------------------------------
 -- Constants
@@ -23,11 +18,31 @@ local CONTENT = Constants.CONTENT;
 local TILESIZE = Constants.TILESIZE;
 
 -- ------------------------------------------------
+-- Local Variables
+-- ------------------------------------------------
+
+local anim_idleN = love.graphics.newImage('res/img/player/idle_north.png');
+local anim_idleS = love.graphics.newImage('res/img/player/idle_south.png');
+local anim_walkS = love.graphics.newImage('res/img/player/walk_south.png');
+local anim_walkN = love.graphics.newImage('res/img/player/walk_north.png');
+local anim_walkW = love.graphics.newImage('res/img/player/walk_west.png');
+local anim_walkE = love.graphics.newImage('res/img/player/walk_east.png');
+
+local anim = {
+    idleN = AniMAL.new(anim_idleN, TILESIZE, TILESIZE, 0.2);
+    idleS = AniMAL.new(anim_idleS, TILESIZE, TILESIZE, 0.2);
+    walkN = AniMAL.new(anim_walkN, TILESIZE, TILESIZE, 0.2);
+    walkS = AniMAL.new(anim_walkS, TILESIZE, TILESIZE, 0.2);
+    walkE = AniMAL.new(anim_walkE, TILESIZE, TILESIZE, 0.2);
+    walkW = AniMAL.new(anim_walkW, TILESIZE, TILESIZE, 0.2);
+}
+
+-- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
 function Player.new(arena, x, y)
-    local self = Entity.new(arena, x, y);
+    local self = Entity.new(arena, x, y, anim);
 
     local id;
 
@@ -53,7 +68,7 @@ function Player.new(arena, x, y)
         elseif InputManager.hasCommand('LEFT') then
             self:move('w');
         else
---            self:move('s', 'e');
+            self:move();
         end
 
         if InputManager.hasCommand('BOMB') then
@@ -74,13 +89,11 @@ function Player.new(arena, x, y)
         end
 
         self:updateCounters(dt);
+        self:updateAnimation(dt);
     end
 
     function self:draw()
-        love.graphics.setColor(255, 255, 255, self:getAlpha());
-        love.graphics.draw(img, self:getRealX(), self:getRealY());
-        love.graphics.setColor(255, 255, 255, 255);
-
+        self:drawAnimation();
         love.graphics.print('Bombs: ' .. self:getLivingBombs(), 800, 20);
         love.graphics.print('Cap: ' .. self:getBombCapacity(), 800, 40);
         love.graphics.print('Blast: ' .. self:getBlastRadius(), 800, 60);

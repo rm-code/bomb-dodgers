@@ -1,6 +1,7 @@
 local Content = require('src/objects/Content');
 local Constants = require('src/Constants');
 local Explosion = require('src/objects/Explosion');
+local AniMAL = require('lib/AniMAL');
 
 -- ------------------------------------------------
 -- Module
@@ -21,6 +22,7 @@ local BOMBTIMER = Constants.BOMBTIMER;
 -- ------------------------------------------------
 
 local img = love.graphics.newImage('res/img/bomb.png');
+local bomb_anim = love.graphics.newImage('res/img/bomb_animation.png');
 
 -- ------------------------------------------------
 -- Constructor
@@ -36,18 +38,22 @@ function Bomb.new(x, y)
     local blastRadius;
     local owner;
     local timer = BOMBTIMER;
+    local anim = AniMAL.new(bomb_anim, TILESIZE, TILESIZE, 0.2);
 
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
 
     function self:draw()
+        anim:draw(self:getX() * TILESIZE, self:getY() * TILESIZE);
         -- love.graphics.setColor(255, 255, 255, 100);
-        love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        -- love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
         -- love.graphics.setColor(255, 255, 255, 255);
     end
 
     function self:update(dt)
+        anim:update(dt);
+
         timer = timer - dt;
         if timer <= 0 then
             self:getParent():explode(blastRadius, 'all');
