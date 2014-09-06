@@ -1,6 +1,7 @@
 local Constants = require('src/Constants');
 local Entity = require('src/entities/Entity');
 local StateManager = require('src/entities/states/StateManager');
+local Idle = require('src/entities/states/Idle');
 local Walk = require('src/entities/states/Walk');
 local Evade = require('src/entities/states/Evade');
 
@@ -36,11 +37,14 @@ function NPC.new(arena, x, y)
     local fsm = StateManager.new();
 
     local states = {};
+    states.idle = Idle.new(fsm, self);
     states.walk = Walk.new(fsm, self);
     states.evade = Evade.new(fsm, self);
 
     fsm:initStates(states);
-    fsm:switch('walk');
+    fsm:switch('idle');
+
+    local prevTile;
 
     -- ------------------------------------------------
     -- Public Functions
@@ -60,6 +64,14 @@ function NPC.new(arena, x, y)
         love.graphics.setColor(255, 255, 255, self:getAlpha());
         love.graphics.draw(img, self:getRealX(), self:getRealY());
         love.graphics.setColor(255, 255, 255, 255);
+    end
+
+    function self:setPreviousTile(nprevTile)
+        prevTile = nprevTile;
+    end
+
+    function self:getPreviousTile()
+        return prevTile;
     end
 
     return self;

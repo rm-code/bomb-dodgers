@@ -15,7 +15,11 @@ function StateManager.new()
     local current;
 
     function self:switch(statename)
+        if current then
+            current:exit();
+        end
         current = states[statename];
+        current:enter();
     end
 
     function self:update(dt)

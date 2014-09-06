@@ -1,4 +1,3 @@
-
 local Evade = {};
 
 -- ------------------------------------------------
@@ -68,6 +67,14 @@ function Evade.new(manager, npc)
         return bestDirection;
     end
 
+    function self:enter()
+        print('Enter: Evade');
+    end
+
+
+    function self:exit()
+    end
+
     function self:update()
         local direction = evadeBombs(npc);
         if direction then
@@ -75,7 +82,7 @@ function Evade.new(manager, npc)
         end
 
         if npc:getTile():isSafe() then
-            manager:switch('walk');
+            manager:switch('idle');
         end
     end
 
