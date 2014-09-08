@@ -8,7 +8,7 @@ local GAME_TITLE = "Bomb Dodgers";
 
 local LOVE_VERSION = "0.9.1";
 
-local GAME_VERSION = "0000";
+local GAME_VERSION = "v0086-3539";
 
 -- ------------------------------------------------
 -- Local variables
@@ -41,7 +41,7 @@ function love.conf(t)
     t.window.fullscreentype = "desktop";
     t.window.vsync = true;
     t.window.fsaa = 0;
-    t.window.display = 1;
+    t.window.display = 2;
     t.window.highdpi = false;
     t.window.srgb = false;
 

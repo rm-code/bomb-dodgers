@@ -3,6 +3,10 @@
 --==================================================================================================
 
 local ScreenManager = require('lib/screens/ScreenManager');
+local InputManager = require('lib/InputManager');
+local Controls = require('src/Controls');
+local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
+local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Screens
@@ -46,16 +50,29 @@ end
 -- ------------------------------------------------
 
 function love.load()
+    -- ZeroBrane Debugging Hook
+    if arg[#arg] == "-debug" then require("mobdebug").start() end
+
     print("===================")
     print(string.format("Title: '%s'", getTitle()));
-    print(string.format("Version: %.4d", getVersion()));
+    print(string.format("Version: %s", getVersion()));
     print(string.format("Resolution: %dx%d", love.window.getDimensions()));
+    print("===================")
 
     -- Check the user's hardware.
     checkSupport();
 
+    -- Set default filters.
+    love.graphics.setDefaultFilter('nearest', 'nearest');
+
+    -- Load resources.
+    ResourceManager.loadResources();
+
     -- Start game on the main menu.
     ScreenManager:init(Game.new());
+
+    -- Set the default control map.
+    InputManager.setMap(Controls.GAME);
 end
 
 -- ------------------------------------------------
@@ -64,14 +81,21 @@ end
 
 function love.update(dt)
     ScreenManager:update(dt);
+    InputManager.update(dt);
 end
 
 function love.draw()
+    PaletteSwitcher.set();
     local lg = love.graphics;
     local lt = love.timer;
     local format = string.format;
 
     ScreenManager:draw();
+
+    -- InputManager.draw();
+
+    PaletteSwitcher.unset();
+
     if info then
         lg.print(format("FT: %.3f ms", 1000 * lt.getAverageDelta()), 10, love.window.getHeight() - 60);
         lg.print(format("FPS: %.3f fps", lt.getFPS()), 10, love.window.getHeight() - 40);
@@ -104,6 +128,10 @@ function love.keypressed(key)
         info = not info;
     end
 
+    if key == 'tab' then
+        PaletteSwitcher.nextPalette();
+    end
+
     ScreenManager:keypressed(key);
 end
 
@@ -125,6 +153,14 @@ end
 
 function love.mousefocus(focus)
     ScreenManager:mousefocus(focus);
+end
+
+function love.joystickadded(joystick)
+    InputManager.addJoystick(joystick);
+end
+
+function love.joystickremoved(joystick)
+    InputManager.removeJoystick(joystick);
 end
 
 -- ------------------------------------------------
