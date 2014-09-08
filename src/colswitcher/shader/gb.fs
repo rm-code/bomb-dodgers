@@ -1,5 +1,7 @@
-// Receive an array which contains the colors which we will use
-// to replace the standard palette.
+/* ================================================================================================== */
+/* Copyright (C) 2014 by Robert Machmer                                                               */
+/* ================================================================================================== */
+
 extern vec3 PALETTE[4];
 
 vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )

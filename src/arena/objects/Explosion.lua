@@ -52,6 +52,7 @@ function Explosion.new(strength, x, y)
     -- Private Variables
     -- ------------------------------------------------
 
+    local strength = strength;
     local timer = Constants.EXPLOSIONTIMER;
     local sprite;
 
@@ -59,12 +60,21 @@ function Explosion.new(strength, x, y)
     -- Private Functions
     -- ------------------------------------------------
 
-    local function pickSprite(adjTiles)
+    ---
+    -- Picks an explosion sprite based on the content type of the
+    -- adjacent tiles.
+    -- @param adjTiles - The adjacent tiles next to the explosion's parent tile.
+    --
+    local function pickSprite(adjTiles, strength)
         local n = adjTiles.n:getContentType() == CONTENT.EXPLOSION;
         local s = adjTiles.s:getContentType() == CONTENT.EXPLOSION;
         local e = adjTiles.e:getContentType() == CONTENT.EXPLOSION;
         local w = adjTiles.w:getContentType() == CONTENT.EXPLOSION;
 
+        -- If we have explosions horizontal and vertical directions
+        -- then add an origin sprite. If the blast strength is one
+        -- and there is no more explosion in that direction, we know
+        -- that we have reached an end tile.
         if (n or s) and (e or w) then
             return images['origin'];
         elseif e or w then
@@ -90,23 +100,37 @@ function Explosion.new(strength, x, y)
     -- Public Functions
     -- ------------------------------------------------
 
+    ---
+    -- Update the timer until the explosion is removed and
+    -- constantly check if the current sprite needs to be changed.
+    -- This might happen if for example a new explosion intersects
+    -- with an old one and creates a new intersection sprite.
+    -- @param dt - The game's delta time.
+    --
     function self:update(dt)
         timer = timer - dt;
         if timer <= 0 then
             self:getParent():clearContent();
         end
 
-        sprite = pickSprite(self:getParent():getAdjacentTiles());
+        sprite = pickSprite(self:getParent():getAdjacentTiles(), strength);
     end
 
+    ---
+    -- Draw the picked sprite.
+    --
     function self:draw()
-        -- love.graphics.setColor(255, 255, 255, 100);
         if sprite then
             love.graphics.draw(sprite, self:getX() * TILESIZE, self:getY() * TILESIZE);
         end
-        -- love.graphics.setColor(255, 255, 255, 255);
     end
 
+    ---
+    -- Handle an explosion signal.
+    -- @param radius
+    -- @param direction
+    -- @param adjTiles
+    --
     function self:explode(radius, direction, adjTiles)
         -- Replace with newer explosion.
         self:getParent():addContent(Explosion.new(radius, self:getX(), self:getY()));
@@ -115,6 +139,12 @@ function Explosion.new(strength, x, y)
         adjTiles[direction]:explode(radius - 1, direction);
     end
 
+    ---
+    -- Increase danger.
+    -- @param radius
+    -- @param direction
+    -- @param adjTiles
+    --
     function self:increaseDanger(radius, direction, adjTiles)
         if radius > 0 then
             self:getParent():setDanger(radius);
@@ -122,6 +152,12 @@ function Explosion.new(strength, x, y)
         end
     end
 
+    ---
+    -- Decrease danger.
+    -- @param radius
+    -- @param direction
+    -- @param adjTiles
+    --
     function self:decreaseDanger(radius, direction, adjTiles)
         if radius > 0 then
             self:getParent():setDanger(-radius);
@@ -130,11 +166,15 @@ function Explosion.new(strength, x, y)
     end
 
     -- ------------------------------------------------
-    -- Setters
+    -- Return Object
     -- ------------------------------------------------
 
     return self;
 end
+
+-- ------------------------------------------------
+-- Return Module
+-- ------------------------------------------------
 
 return Explosion;
 

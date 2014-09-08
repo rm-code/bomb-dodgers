@@ -33,6 +33,51 @@ function Arena.new()
     local grid;
 
     -- ------------------------------------------------
+    -- Private Functions
+    -- ------------------------------------------------
+
+    ---
+    -- Places hardwalls at the positions which are predetermined
+    -- by the loaded grid layout. Randomly add soft walls at
+    -- free places all over the grid.
+    -- @param grid - The grid to fill.
+    --
+    local function placeWalls(grid)
+        for x = 1, #grid do
+            for y = 1, #grid[x] do
+                local type = grid[x][y];
+                grid[x][y] = Tile.new(x, y);
+
+                -- Add walls.
+                if type == 1 then
+                    grid[x][y]:addContent(HardWall.new(x, y));
+                elseif type == 0 then
+                    if love.math.random(0, 3) == 1 then
+                        grid[x][y]:addContent(SoftWall.new(x, y));
+                    end
+                end
+            end
+        end
+    end
+
+    ---
+    -- Sets the four adjacent tiles of each tile on the grid.
+    -- @param grid - The grid to iterate over.
+    --
+    local function setTileNeighbours(grid)
+        local n, s, e, w;
+        for x = 1, #grid do
+            for y = 1, #grid[x] do
+                n = self:getTile(x, y - 1);
+                s = self:getTile(x, y + 1);
+                e = self:getTile(x + 1, y);
+                w = self:getTile(x - 1, y);
+                grid[x][y]:setAdjacentTiles(n, s, e, w);
+            end
+        end
+    end
+
+    -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
 
@@ -61,37 +106,20 @@ function Arena.new()
     end
 
     function self:init()
+        -- Loads the basic grid layout of a level.
         grid = love.filesystem.load('res/empty_level.lua')();
 
-        for x = 1, #grid do
-            for y = 1, #grid[x] do
-                local type = grid[x][y];
-                grid[x][y] = Tile.new(x, y);
-
-                -- Add walls.
-                if type == 0 then
-                    if love.math.random(0, 3) == 1 then
-                        grid[x][y]:addContent(SoftWall.new(x, y));
-                    end
-                elseif type == 1 then
-                    grid[x][y]:addContent(HardWall.new(x, y));
-                end
-            end
-        end
+        -- Fills the grid with
+        placeWalls(grid);
 
         -- Set neighbours.
-        local n, s, e, w;
-        for x = 1, #grid do
-            for y = 1, #grid[x] do
-                n = self:getTile(x, y - 1);
-                s = self:getTile(x, y + 1);
-                e = self:getTile(x + 1, y);
-                w = self:getTile(x - 1, y);
-                grid[x][y]:setAdjacentTiles(n, s, e, w);
-            end
-        end
+        setTileNeighbours(grid);
     end
 
+    ---
+    -- Update all tiles on the grid.
+    -- @param dt
+    --
     function self:update(dt)
         for x = 1, #grid do
             for y = 1, #grid[x] do
@@ -100,6 +128,9 @@ function Arena.new()
         end
     end
 
+    ---
+    -- Draw all tiles on the grid.
+    --
     function self:draw()
         for x = 1, #grid do
             for y = 1, #grid[x] do
@@ -112,17 +143,34 @@ function Arena.new()
     -- Getters
     -- ------------------------------------------------
 
+    ---
+    -- Returns the grid.
+    --
     function self:getGrid()
         return grid;
     end
 
+    ---
+    -- Returns the tile at the given coordinates.
+    -- @param x - The x position of the tile to get.
+    -- @param y - The y position of the tile to get.
+    --
     function self:getTile(x, y)
         return grid[x] and grid[x][y];
     end
 
+    ---
+    -- Returns the adjacent tiles of a certain position on the grid.
+    -- @param x - The x position of the tile around which to get the adjacent tiles.
+    -- @param y - The y position of the tile around which to get the adjacent tiles.
+    --
     function self:getAdjacentTiles(x, y)
         return grid[x][y]:getAdjacentTiles();
     end
+
+    -- ------------------------------------------------
+    -- Return Object
+    -- ------------------------------------------------
 
     return self;
 end

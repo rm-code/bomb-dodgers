@@ -63,10 +63,6 @@ function Tile.new(x, y)
         if content then
             content:draw();
         end
-
-        -- love.graphics.setColor(255, 0, 0);
-        -- love.graphics.print(danger, x * TILESIZE + 16, y * TILESIZE + 16);
-        -- love.graphics.setColor(255, 255, 255);
     end
 
     function self:update(dt)

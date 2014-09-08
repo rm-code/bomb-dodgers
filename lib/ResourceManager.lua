@@ -4,6 +4,10 @@
 
 local ResourceManager = {};
 
+-- ------------------------------------------------
+-- Local Variables
+-- ------------------------------------------------
+
 local images = {};
 local fonts = {};
 local sounds = {};
@@ -13,7 +17,7 @@ local toLoad = {};
 local done = false;
 
 -- ------------------------------------------------
--- Module Functions
+-- Public Functions
 -- ------------------------------------------------
 
 ---
@@ -147,6 +151,10 @@ function ResourceManager.loadMusic(path, type)
     return music[path]
 end
 
+---
+-- Returns true if the resource manager has completed loading
+-- all resources.
+--
 function ResourceManager.isDone()
     return done;
 end

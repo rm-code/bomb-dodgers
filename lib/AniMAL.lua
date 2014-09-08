@@ -4,8 +4,16 @@
 
 local AniMAL = {};
 
+-- ------------------------------------------------
+-- Constructor
+-- ------------------------------------------------
+
 function AniMAL.new(img, w, h, speed)
     local self = {};
+
+    -- ------------------------------------------------
+    -- Private Variables
+    -- ------------------------------------------------
 
     local spritesheet = img;
     local width = w;
@@ -20,10 +28,23 @@ function AniMAL.new(img, w, h, speed)
         frames[i] = love.graphics.newQuad((i - 1) * width, 0, width, height, spritesheet:getDimensions());
     end
 
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
+
+    ---
+    -- Draws the current quad of the selected spritesheet.
+    -- @param x - The x position to draw the quad at.
+    -- @param y - The y position to draw the quad at.
+    --
     function self:draw(x, y)
         love.graphics.draw(spritesheet, frames[curFrame], x, y);
     end
 
+    ---
+    -- Loops through all frames of the animation.
+    -- @param dt
+    --
     function self:update(dt)
         timer = timer + dt;
         if timer >= speed then
@@ -32,8 +53,16 @@ function AniMAL.new(img, w, h, speed)
         end
     end
 
+    -- ------------------------------------------------
+    -- Return Object
+    -- ------------------------------------------------
+
     return self;
 end
+
+-- ------------------------------------------------
+-- Return Module
+-- ------------------------------------------------
 
 return AniMAL;
 

@@ -83,6 +83,7 @@ function Upgrade.new(x, y)
         return;
     end
 
+    -- TODO decide upgrade type when it is created
     function self:draw()
         if upgradeType == TYPES[1] then
             love.graphics.draw(images['fireUp'], self:getX() * TILESIZE, self:getY() * TILESIZE);
@@ -121,6 +122,10 @@ function Upgrade.new(x, y)
     function self:getUpgradeType()
         return upgradeType;
     end
+
+    -- ------------------------------------------------
+    -- Return Object
+    -- ------------------------------------------------
 
     return self;
 end

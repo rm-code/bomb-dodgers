@@ -14,6 +14,10 @@ function StateManager.new()
     local states;
     local current;
 
+    ---
+    -- Switches to a new state.
+    -- @param statename
+    --
     function self:switch(statename)
         if current then
             current:exit();
@@ -22,10 +26,19 @@ function StateManager.new()
         current:enter();
     end
 
+    ---
+    -- Updates the current state.
+    -- @param dt
+    --
     function self:update(dt)
         current:update(dt);
     end
 
+    ---
+    -- Gets a list of states from which to
+    -- pick new ones.
+    -- @param nstates
+    --
     function self:initStates(nstates)
         states = nstates;
     end

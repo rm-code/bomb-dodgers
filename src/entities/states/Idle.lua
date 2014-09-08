@@ -18,8 +18,16 @@ local Idle = {};
 function Idle.new(manager, npc)
     local self = {};
 
+    -- ------------------------------------------------
+    -- Private Variables
+    -- ------------------------------------------------
+
     local npc = npc;
     local manager = manager;
+
+    -- ------------------------------------------------
+    -- Private Functions
+    -- ------------------------------------------------
 
     ---
     -- This function returns true, if the current tile is a good
@@ -61,12 +69,13 @@ function Idle.new(manager, npc)
         end
     end
 
-    function self:enter()
-        print('Enter: idle');
-    end
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
 
-    function self:exit()
-    end
+    function self:enter() end
+
+    function self:exit() end
 
     function self:update(dt)
         local tile = npc:getTile();

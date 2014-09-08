@@ -24,6 +24,10 @@ local CONTENT = Constants.CONTENT;
 function Entity.new(arena, x, y, anim)
     local self = {};
 
+    -- ------------------------------------------------
+    -- Private Variables
+    -- ------------------------------------------------
+
     local arena = arena;
     local gridX = x;
     local gridY = y;
@@ -49,17 +53,23 @@ function Entity.new(arena, x, y, anim)
     local slowSpeed = 1; -- The speed to use when snail downgrade is active.
     local currentSpeed = normalSpeed;
 
-    local lerpFactor = 0.2;
+    local lerpFactor = 0.2; -- The lerpFactor to use for the entity's movement.
 
     local tmpCap, tmpRadius; -- Variables to temporarily store the bomb's capacity and radius.
 
-    local anim = anim;
-    local curAnim = anim.idleS;
+    local anim = anim; -- The list of animations from which to pick one.
+    local curAnim = anim.idleS; -- The current animation.
 
     -- ------------------------------------------------
     -- Private Functions
     -- ------------------------------------------------
 
+    ---
+    -- Takes an upgrade and decides what should happen to the entity
+    -- based on the type of upgrade.
+    -- @param x - The x position from which to pick the upgrade.
+    -- @param y - The y position from which to pick the upgrade.
+    --
     local function takeUpgrade(x, y)
         local target = arena:getTile(x, y);
         if target:getContentType() == CONTENT.UPGRADE then

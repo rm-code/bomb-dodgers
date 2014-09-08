@@ -76,6 +76,10 @@ function Camera.new(x, y, zoom)
         minX, maxX, minY, maxY = _minX, _maxX, _minY, _maxY;
     end
 
+    -- ------------------------------------------------
+    -- Return Object
+    -- ------------------------------------------------
+
     return self;
 end
 
