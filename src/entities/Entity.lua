@@ -142,8 +142,13 @@ function Entity.new(arena, x, y)
         elseif altDir and adjTiles[altDir]:isPassable() then
             direction = altDir;
         else
-            realX = lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
-            realY = lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
+            -- If the target tile is not passible, lerp the player's position
+            -- only to the axis he wants to move on.
+            if prefDir == 'n' or altDir == 'n' or prefDir == 's' or altDir == 's' then
+                realY = lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
+            elseif prefDir == 'e' or altDir == 'e' or prefDir == 'w' or altDir == 'w' then
+                realX = lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
+            end
         end
 
         -- Lerp the player's position into the direction we have
