@@ -12,6 +12,10 @@ function Math.clamp(min, val, max)
     return math.max(min, math.min(val, max));
 end
 
+function Math.lerp(a, b, t)
+    return (1 - t) * a + t * b;
+end
+
 -- ------------------------------------------------
 -- Return Module
 -- ------------------------------------------------

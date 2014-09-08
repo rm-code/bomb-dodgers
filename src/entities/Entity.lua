@@ -1,3 +1,4 @@
+local Math = require('lib/Math');
 local Constants = require('src/Constants');
 
 -- ------------------------------------------------
@@ -84,10 +85,6 @@ function Entity.new(arena, x, y, anim)
     -- Public Functions
     -- ------------------------------------------------
 
-    local function lerp(a, b, t)
-        return (1 - t) * a + t * b;
-    end
-
     function self:updateCounters(dt)
         if bombdown then
             if counters.bombdown > 0 then
@@ -158,9 +155,9 @@ function Entity.new(arena, x, y, anim)
             -- If the target tile is not passible, lerp the player's position
             -- only to the axis he wants to move on.
             if prefDir == 'n' or altDir == 'n' or prefDir == 's' or altDir == 's' then
-                realY = lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
+                realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
             elseif prefDir == 'e' or altDir == 'e' or prefDir == 'w' or altDir == 'w' then
-                realX = lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
+                realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
             end
         end
 
@@ -169,19 +166,19 @@ function Entity.new(arena, x, y, anim)
         if direction == 'n' then
             curAnim = anim.walkN;
             realY = realY - 1 * currentSpeed;
-            realX = lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
+            realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
         elseif direction == 's' then
             curAnim = anim.walkS;
             realY = realY + 1 * currentSpeed;
-            realX = lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
+            realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
         elseif direction == 'e' then
             curAnim = anim.walkE;
             realX = realX + 1 * currentSpeed;
-            realY = lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
+            realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
         elseif direction == 'w' then
             curAnim = anim.walkW;
             realX = realX - 1 * currentSpeed;
-            realY = lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
+            realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
         end
 
         -- Calculate the grid coordinates, by dividing the real
