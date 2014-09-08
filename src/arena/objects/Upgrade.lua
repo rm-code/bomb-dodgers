@@ -2,9 +2,9 @@
 -- Copyright (C) 2014 by Robert Machmer                                                            =
 --==================================================================================================
 
-local Content = require('src/objects/Content');
+local Content = require('src/arena/objects/Content');
 local Constants = require('src/Constants');
-local UpgradeManager = require('src/upgrades/UpgradeManager');
+local UpgradeManager = require('src/arena/objects/UpgradeManager');
 local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------

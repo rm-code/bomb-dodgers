@@ -2,9 +2,9 @@
 -- Copyright (C) 2014 by Robert Machmer                                                            =
 --==================================================================================================
 
-local Content = require('src/objects/Content');
+local Content = require('src/arena/objects/Content');
 local Constants = require('src/Constants');
-local Explosion = require('src/objects/Explosion');
+local Explosion = require('src/arena/objects/Explosion');
 local AniMAL = require('lib/AniMAL');
 local ResourceManager = require('lib/ResourceManager');
 

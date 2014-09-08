@@ -5,7 +5,7 @@
 local ScreenManager = require('lib/screens/ScreenManager');
 local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
-local PaletteSwitcher = require('lib/PaletteSwitcher');
+local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------

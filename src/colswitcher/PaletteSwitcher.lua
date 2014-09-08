@@ -4,8 +4,8 @@
 
 local PaletteSwitcher = {};
 
-local shader = love.graphics.newShader('res/shaders/gb.fs');
-local palettes = require('lib/Palettes');
+local shader = love.graphics.newShader('src/colswitcher/shader/gb.fs');
+local palettes = require('src/colswitcher/Palettes');
 local curPalette = 1;
 local colors = palettes[curPalette].colors;
 

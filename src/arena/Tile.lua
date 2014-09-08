@@ -3,8 +3,8 @@
 --==================================================================================================
 
 local Constants = require('src/Constants');
-local Explosion = require('src/objects/Explosion');
-local Bomb = require('src/objects/Bomb');
+local Explosion = require('src/arena/objects/Explosion');
+local Bomb = require('src/arena/objects/Bomb');
 local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------

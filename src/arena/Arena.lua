@@ -3,9 +3,9 @@
 --==================================================================================================
 
 local Constants = require('src/Constants');
-local Tile = require('src/Tile');
-local SoftWall = require('src/objects/SoftWall');
-local HardWall = require('src/objects/HardWall');
+local Tile = require('src/arena/Tile');
+local SoftWall = require('src/arena/objects/SoftWall');
+local HardWall = require('src/arena/objects/HardWall');
 
 -- ------------------------------------------------
 -- Module
@@ -61,7 +61,7 @@ function Arena.new()
     end
 
     function self:init()
-        grid = love.filesystem.load('res/grid.lua')();
+        grid = love.filesystem.load('res/empty_level.lua')();
 
         for x = 1, #grid do
             for y = 1, #grid[x] do
