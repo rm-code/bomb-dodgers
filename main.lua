@@ -55,7 +55,7 @@ function love.load()
 
     print("===================")
     print(string.format("Title: '%s'", getTitle()));
-    print(string.format("Version: %.4d", getVersion()));
+    print(string.format("Version: %s", getVersion()));
     print(string.format("Resolution: %dx%d", love.window.getDimensions()));
     print("===================")
 
