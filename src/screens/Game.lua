@@ -3,7 +3,7 @@
 --==================================================================================================
 
 local Screen = require('lib/screens/Screen');
-local Arena = require('src/Arena');
+local Arena = require('src/arena/Arena');
 local NPC = require('src/entities/NPC');
 local Player = require('src/entities/Player');
 local PlayerManager = require('src/entities/PlayerManager');

@@ -1,6 +1,10 @@
-local Content = require('src/objects/Content');
+--==================================================================================================
+-- Copyright (C) 2014 by Robert Machmer                                                            =
+--==================================================================================================
+
+local Content = require('src/arena/objects/Content');
 local Constants = require('src/Constants');
-local UpgradeManager = require('src/upgrades/UpgradeManager');
+local UpgradeManager = require('src/arena/objects/UpgradeManager');
 local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
@@ -79,6 +83,7 @@ function Upgrade.new(x, y)
         return;
     end
 
+    -- TODO decide upgrade type when it is created
     function self:draw()
         if upgradeType == TYPES[1] then
             love.graphics.draw(images['fireUp'], self:getX() * TILESIZE, self:getY() * TILESIZE);
@@ -117,6 +122,10 @@ function Upgrade.new(x, y)
     function self:getUpgradeType()
         return upgradeType;
     end
+
+    -- ------------------------------------------------
+    -- Return Object
+    -- ------------------------------------------------
 
     return self;
 end

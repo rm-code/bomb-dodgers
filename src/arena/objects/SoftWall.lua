@@ -1,6 +1,10 @@
-local Content = require('src/objects/Content');
+--==================================================================================================
+-- Copyright (C) 2014 by Robert Machmer                                                            =
+--==================================================================================================
+
+local Content = require('src/arena/objects/Content');
 local Constants = require('src/Constants');
-local Upgrade = require('src/objects/Upgrade');
+local Upgrade = require('src/arena/objects/Upgrade');
 local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
@@ -56,6 +60,10 @@ function SoftWall.new(x, y)
         end
     end
 
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
+
     function self:explode(_, _, _)
         -- Remove the softwall from the tile.
         -- TODO replace with burning animation.
@@ -73,16 +81,20 @@ function SoftWall.new(x, y)
         return;
     end
 
-    -- ------------------------------------------------
-    -- Public Functions
-    -- ------------------------------------------------
-
     function self:draw()
         love.graphics.draw(images['soft_wall'], self:getX() * TILESIZE, self:getY() * TILESIZE);
     end
 
+    -- ------------------------------------------------
+    -- Return Object
+    -- ------------------------------------------------
+
     return self;
 end
+
+-- ------------------------------------------------
+-- Return Module
+-- ------------------------------------------------
 
 return SoftWall;
 

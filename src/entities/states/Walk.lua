@@ -1,4 +1,8 @@
-local UpgradeManager = require('src/upgrades/UpgradeManager');
+--==================================================================================================
+-- Copyright (C) 2014 by Robert Machmer                                                            =
+--==================================================================================================
+
+local UpgradeManager = require('src/arena/objects/UpgradeManager');
 local PlayerManager = require('src/entities/PlayerManager');
 
 -- ------------------------------------------------

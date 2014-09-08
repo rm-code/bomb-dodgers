@@ -1,4 +1,8 @@
-local Content = require('src/objects/Content');
+--==================================================================================================
+-- Copyright (C) 2014 by Robert Machmer                                                            =
+--==================================================================================================
+
+local Content = require('src/arena/objects/Content');
 local Constants = require('src/Constants');
 local ResourceManager = require('lib/ResourceManager');
 

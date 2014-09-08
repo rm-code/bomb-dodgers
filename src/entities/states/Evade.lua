@@ -1,3 +1,7 @@
+--==================================================================================================
+-- Copyright (C) 2014 by Robert Machmer                                                            =
+--==================================================================================================
+
 local Evade = {};
 
 -- ------------------------------------------------
@@ -7,6 +11,10 @@ local Evade = {};
 function Evade.new(manager, npc)
     local self = {};
 
+    -- ------------------------------------------------
+    -- Private Variables
+    -- ------------------------------------------------
+
     local npc = npc;
     local manager = manager;
 
@@ -14,6 +22,12 @@ function Evade.new(manager, npc)
     -- Private Function
     -- ------------------------------------------------
 
+    ---
+    -- Checks the tiles around the npc if they are safe
+    -- and passable or not.
+    -- @param adjTiles - The tiles to check.
+    -- @return True if the tiles are passable and safe.
+    --
     local function checkAdjacentTiles(adjTiles)
         for _, tile in pairs(adjTiles) do
             if tile:isPassable() and tile:isSafe() then
@@ -22,9 +36,11 @@ function Evade.new(manager, npc)
         end
     end
 
-    local function evadeBombs(npc)
-        local adjTiles = npc:getAdjacentTiles();
-
+    ---
+    -- Searches for a safe tile near to the npc.
+    -- @param adjTiles -- The tiles to check.
+    --
+    local function evadeBombs(adjTiles)
         local bestDirection;
         local shortest = 10000;
 
@@ -67,16 +83,20 @@ function Evade.new(manager, npc)
         return bestDirection;
     end
 
-    function self:enter()
-        print('Enter: Evade');
-    end
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
 
+    function self:enter() end
 
-    function self:exit()
-    end
+    function self:exit() end
 
-    function self:update()
-        local direction = evadeBombs(npc);
+    ---
+    -- Checks for a new direction and moves the npc
+    -- until a safe tile is reached.
+    --
+    function self:update(dt)
+        local direction = evadeBombs(npc:getAdjacentTiles());
         if direction then
             npc:move(direction);
         end
@@ -85,6 +105,10 @@ function Evade.new(manager, npc)
             manager:switch('idle');
         end
     end
+
+    -- ------------------------------------------------
+    -- Return Object
+    -- ------------------------------------------------
 
     return self;
 end

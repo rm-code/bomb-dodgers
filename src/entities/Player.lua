@@ -1,3 +1,7 @@
+--==================================================================================================
+-- Copyright (C) 2014 by Robert Machmer                                                            =
+--==================================================================================================
+
 local Constants = require('src/Constants');
 local Entity = require('src/entities/Entity');
 local PlayerManager = require('src/entities/PlayerManager');

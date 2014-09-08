@@ -5,7 +5,7 @@
 local ScreenManager = require('lib/screens/ScreenManager');
 local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
-local PaletteSwitcher = require('lib/PaletteSwitcher');
+local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
@@ -55,7 +55,7 @@ function love.load()
 
     print("===================")
     print(string.format("Title: '%s'", getTitle()));
-    print(string.format("Version: %.4d", getVersion()));
+    print(string.format("Version: %s", getVersion()));
     print(string.format("Resolution: %dx%d", love.window.getDimensions()));
     print("===================")
 
