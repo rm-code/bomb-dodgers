@@ -6,6 +6,7 @@ local ScreenManager = require('lib/screens/ScreenManager');
 local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
 local PaletteSwitcher = require('lib/PaletteSwitcher');
+local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Screens
@@ -56,9 +57,16 @@ function love.load()
     print(string.format("Title: '%s'", getTitle()));
     print(string.format("Version: %.4d", getVersion()));
     print(string.format("Resolution: %dx%d", love.window.getDimensions()));
+    print("===================")
 
     -- Check the user's hardware.
     checkSupport();
+
+    -- Set default filters.
+    love.graphics.setDefaultFilter('nearest', 'nearest');
+
+    -- Load resources.
+    ResourceManager.loadResources();
 
     -- Start game on the main menu.
     ScreenManager:init(Game.new());

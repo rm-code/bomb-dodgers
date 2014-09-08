@@ -1,5 +1,6 @@
 local Content = require('src/objects/Content');
 local Constants = require('src/Constants');
+local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
@@ -15,16 +16,26 @@ local CONTENT = Constants.CONTENT;
 local TILESIZE = Constants.TILESIZE;
 
 -- ------------------------------------------------
--- Local Variables
+-- Resource Loading
 -- ------------------------------------------------
 
-local origin = love.graphics.newImage('res/img/explosion/origin.png');
-local horizontal = love.graphics.newImage('res/img/explosion/middle_hor.png');
-local vertical = love.graphics.newImage('res/img/explosion/middle_vert.png');
-local endnorth = love.graphics.newImage('res/img/explosion/end_up.png');
-local endsouth = love.graphics.newImage('res/img/explosion/end_down.png');
-local endeast = love.graphics.newImage('res/img/explosion/end_right.png');
-local endwest = love.graphics.newImage('res/img/explosion/end_left.png');
+local images = {};
+
+-- Register module with resource manager.
+ResourceManager.register(Explosion);
+
+---
+-- Load images.
+--
+function Explosion.loadImages()
+    images['origin'] = ResourceManager.loadImage('res/img/explosion/origin.png');
+    images['horizontal'] = ResourceManager.loadImage('res/img/explosion/middle_hor.png');
+    images['vertical'] = ResourceManager.loadImage('res/img/explosion/middle_vert.png');
+    images['endnorth'] = ResourceManager.loadImage('res/img/explosion/end_up.png');
+    images['endsouth'] = ResourceManager.loadImage('res/img/explosion/end_down.png');
+    images['endeast'] = ResourceManager.loadImage('res/img/explosion/end_right.png');
+    images['endwest'] = ResourceManager.loadImage('res/img/explosion/end_left.png');
+end
 
 -- ------------------------------------------------
 -- Constructor
@@ -51,25 +62,23 @@ function Explosion.new(strength, x, y)
         local w = adjTiles.w:getContentType() == CONTENT.EXPLOSION;
 
         if (n or s) and (e or w) then
-            return origin;
+            return images['origin'];
         elseif e or w then
             if strength == 1 and e and not w then
-                return endwest;
+                return images['endwest'];
             elseif strength == 1 and w and not e then
-                return endeast;
+                return images['endeast'];
             else
-                return horizontal;
+                return images['horizontal'];
             end
         elseif n or s then
             if strength == 1 and n and not s then
-                return endsouth;
+                return images['endsouth'];
             elseif strength == 1 and s and not n then
-                return endnorth;
+                return images['endnorth'];
             else
-                return vertical;
+                return images['vertical'];
             end
-        else
-            return missing;
         end
     end
 

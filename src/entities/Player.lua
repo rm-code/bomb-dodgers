@@ -3,6 +3,7 @@ local Entity = require('src/entities/Entity');
 local PlayerManager = require('src/entities/PlayerManager');
 local InputManager = require('lib/InputManager');
 local AniMAL = require('lib/AniMAL');
+local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
@@ -18,31 +19,41 @@ local CONTENT = Constants.CONTENT;
 local TILESIZE = Constants.TILESIZE;
 
 -- ------------------------------------------------
--- Local Variables
+-- Resource Loading
 -- ------------------------------------------------
 
-local anim_idleN = love.graphics.newImage('res/img/player/idle_north.png');
-local anim_idleS = love.graphics.newImage('res/img/player/idle_south.png');
-local anim_walkS = love.graphics.newImage('res/img/player/walk_south.png');
-local anim_walkN = love.graphics.newImage('res/img/player/walk_north.png');
-local anim_walkW = love.graphics.newImage('res/img/player/walk_west.png');
-local anim_walkE = love.graphics.newImage('res/img/player/walk_east.png');
+local images = {};
 
-local anim = {
-    idleN = AniMAL.new(anim_idleN, TILESIZE, TILESIZE, 0.2);
-    idleS = AniMAL.new(anim_idleS, TILESIZE, TILESIZE, 0.2);
-    walkN = AniMAL.new(anim_walkN, TILESIZE, TILESIZE, 0.2);
-    walkS = AniMAL.new(anim_walkS, TILESIZE, TILESIZE, 0.2);
-    walkE = AniMAL.new(anim_walkE, TILESIZE, TILESIZE, 0.2);
-    walkW = AniMAL.new(anim_walkW, TILESIZE, TILESIZE, 0.2);
-}
+-- Register module with resource manager.
+ResourceManager.register(Player);
+
+---
+-- Load images.
+--
+function Player.loadImages()
+    images['idleN'] = ResourceManager.loadImage('res/img/player/idle_north.png');
+    images['idleS'] = ResourceManager.loadImage('res/img/player/idle_south.png');
+    images['walkN'] = ResourceManager.loadImage('res/img/player/walk_north.png');
+    images['walkS'] = ResourceManager.loadImage('res/img/player/walk_south.png');
+    images['walkE'] = ResourceManager.loadImage('res/img/player/walk_east.png');
+    images['walkW'] = ResourceManager.loadImage('res/img/player/walk_west.png');
+
+    images['anims'] = {
+        idleN = AniMAL.new(images['idleN'], TILESIZE, TILESIZE, 0.2);
+        idleS = AniMAL.new(images['idleS'], TILESIZE, TILESIZE, 0.2);
+        walkN = AniMAL.new(images['walkN'], TILESIZE, TILESIZE, 0.2);
+        walkS = AniMAL.new(images['walkS'], TILESIZE, TILESIZE, 0.2);
+        walkE = AniMAL.new(images['walkE'], TILESIZE, TILESIZE, 0.2);
+        walkW = AniMAL.new(images['walkW'], TILESIZE, TILESIZE, 0.2);
+    };
+end
 
 -- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
 function Player.new(arena, x, y)
-    local self = Entity.new(arena, x, y, anim);
+    local self = Entity.new(arena, x, y, images.anims);
 
     local id;
 

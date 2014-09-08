@@ -1,6 +1,7 @@
 local Content = require('src/objects/Content');
 local Constants = require('src/Constants');
 local Upgrade = require('src/objects/Upgrade');
+local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
@@ -16,10 +17,20 @@ local CONTENT = Constants.CONTENT;
 local TILESIZE = Constants.TILESIZE;
 
 -- ------------------------------------------------
--- Local Variables
+-- Resource Loading
 -- ------------------------------------------------
 
-local img = love.graphics.newImage('res/img/softwall.png');
+local images = {};
+
+-- Register module with resource manager.
+ResourceManager.register(SoftWall);
+
+---
+-- Load images.
+--
+function SoftWall.loadImages()
+    images['soft_wall'] = ResourceManager.loadImage('res/img/content/softwall.png');
+end
 
 -- ------------------------------------------------
 -- Constructor
@@ -67,7 +78,7 @@ function SoftWall.new(x, y)
     -- ------------------------------------------------
 
     function self:draw()
-        love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        love.graphics.draw(images['soft_wall'], self:getX() * TILESIZE, self:getY() * TILESIZE);
     end
 
     return self;

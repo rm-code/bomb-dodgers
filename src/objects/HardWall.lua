@@ -1,5 +1,6 @@
 local Content = require('src/objects/Content');
 local Constants = require('src/Constants');
+local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
@@ -15,10 +16,20 @@ local CONTENT = Constants.CONTENT;
 local TILESIZE = Constants.TILESIZE;
 
 -- ------------------------------------------------
--- Local Variables
+-- Resource Loading
 -- ------------------------------------------------
 
-local img = love.graphics.newImage('res/img/hardwall.png');
+local images = {};
+
+-- Register module with resource manager.
+ResourceManager.register(HardWall);
+
+---
+-- Load images.
+--
+function HardWall.loadImages()
+    images['hard_wall'] = ResourceManager.loadImage('res/img/content/hardwall.png');
+end
 
 -- ------------------------------------------------
 -- Constructor
@@ -32,7 +43,7 @@ function HardWall.new(x, y)
     end
 
     function self:draw()
-        love.graphics.draw(img, self:getX() * TILESIZE, self:getY() * TILESIZE);
+        love.graphics.draw(images['hard_wall'], self:getX() * TILESIZE, self:getY() * TILESIZE);
     end
 
     function self:increaseDanger(_, _, _)

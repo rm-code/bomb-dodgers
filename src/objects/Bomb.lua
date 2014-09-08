@@ -2,6 +2,7 @@ local Content = require('src/objects/Content');
 local Constants = require('src/Constants');
 local Explosion = require('src/objects/Explosion');
 local AniMAL = require('lib/AniMAL');
+local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
@@ -18,11 +19,20 @@ local TILESIZE = Constants.TILESIZE;
 local BOMBTIMER = Constants.BOMBTIMER;
 
 -- ------------------------------------------------
--- Local Variables
+-- Resource Loading
 -- ------------------------------------------------
 
-local img = love.graphics.newImage('res/img/bomb.png');
-local bomb_anim = love.graphics.newImage('res/img/bomb_animation.png');
+local images = {};
+
+-- Register module with resource manager.
+ResourceManager.register(Bomb);
+
+---
+-- Load images.
+--
+function Bomb.loadImages()
+    images['bomb_anim'] = ResourceManager.loadImage('res/img/content/bomb_animation.png');
+end
 
 -- ------------------------------------------------
 -- Constructor
@@ -38,7 +48,7 @@ function Bomb.new(x, y)
     local blastRadius;
     local owner;
     local timer = BOMBTIMER;
-    local anim = AniMAL.new(bomb_anim, TILESIZE, TILESIZE, 0.2);
+    local anim = AniMAL.new(images['bomb_anim'], TILESIZE, TILESIZE, 0.2);
 
     -- ------------------------------------------------
     -- Public Functions

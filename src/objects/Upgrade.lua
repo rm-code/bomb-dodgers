@@ -1,6 +1,7 @@
 local Content = require('src/objects/Content');
 local Constants = require('src/Constants');
 local UpgradeManager = require('src/upgrades/UpgradeManager');
+local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
@@ -17,13 +18,23 @@ local TILESIZE = Constants.TILESIZE;
 local TYPES = { 'fireup', 'bombup', 'bombdown', 'snail' };
 
 -- ------------------------------------------------
--- Local Variables
+-- Resource Loading
 -- ------------------------------------------------
 
-local imgFireUp = love.graphics.newImage('res/img/upgrades/fireup.png');
-local imgBombUp = love.graphics.newImage('res/img/upgrades/bombup.png');
-local imgBombDown = love.graphics.newImage('res/img/upgrades/bombdown.png');
-local imgSnail = love.graphics.newImage('res/img/upgrades/snail.png');
+local images = {};
+
+-- Register module with resource manager.
+ResourceManager.register(Upgrade);
+
+---
+-- Load images.
+--
+function Upgrade.loadImages()
+    images['fireUp'] = love.graphics.newImage('res/img/upgrades/fireup.png');
+    images['bombUp'] = love.graphics.newImage('res/img/upgrades/bombup.png');
+    images['bombDown'] = love.graphics.newImage('res/img/upgrades/bombdown.png');
+    images['snail'] = love.graphics.newImage('res/img/upgrades/snail.png');
+end
 
 -- ------------------------------------------------
 -- Constructor
@@ -70,13 +81,13 @@ function Upgrade.new(x, y)
 
     function self:draw()
         if upgradeType == TYPES[1] then
-            love.graphics.draw(imgFireUp, self:getX() * TILESIZE, self:getY() * TILESIZE);
+            love.graphics.draw(images['fireUp'], self:getX() * TILESIZE, self:getY() * TILESIZE);
         elseif upgradeType == TYPES[2] then
-            love.graphics.draw(imgBombUp, self:getX() * TILESIZE, self:getY() * TILESIZE);
+            love.graphics.draw(images['bombUp'], self:getX() * TILESIZE, self:getY() * TILESIZE);
         elseif upgradeType == TYPES[3] then
-            love.graphics.draw(imgBombDown, self:getX() * TILESIZE, self:getY() * TILESIZE);
+            love.graphics.draw(images['bombDown'], self:getX() * TILESIZE, self:getY() * TILESIZE);
         elseif upgradeType == TYPES[4] then
-            love.graphics.draw(imgSnail, self:getX() * TILESIZE, self:getY() * TILESIZE);
+            love.graphics.draw(images['snail'], self:getX() * TILESIZE, self:getY() * TILESIZE);
         end
     end
 
