@@ -8,7 +8,7 @@ Constants.CONTENT.EXPLOSION = 'explosion';
 Constants.CONTENT.UPGRADE = 'upgrade';
 
 Constants.TILESIZE = 32;
-Constants.BOMBTIMER = 2;
+Constants.BOMBTIMER = 2.5;
 Constants.EXPLOSIONTIMER = 1.5;
 
 Constants.UPGRADES = {};
