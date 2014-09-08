@@ -1,3 +1,7 @@
+--==================================================================================================
+-- Copyright (C) 2014 by Robert Machmer                                                            =
+--==================================================================================================
+
 local UpgradeManager = require('src/upgrades/UpgradeManager');
 local PlayerManager = require('src/entities/PlayerManager');
 

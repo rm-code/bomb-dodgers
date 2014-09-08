@@ -1,3 +1,7 @@
+--==================================================================================================
+-- Copyright (C) 2014 by Robert Machmer                                                            =
+--==================================================================================================
+
 local Constants = require('src/Constants');
 local Tile = require('src/Tile');
 local SoftWall = require('src/objects/SoftWall');

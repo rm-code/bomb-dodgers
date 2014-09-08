@@ -1,3 +1,7 @@
+--==================================================================================================
+-- Copyright (C) 2014 by Robert Machmer                                                            =
+--==================================================================================================
+
 local Content = require('src/objects/Content');
 local Constants = require('src/Constants');
 local Explosion = require('src/objects/Explosion');
