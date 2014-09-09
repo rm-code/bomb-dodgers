@@ -274,6 +274,10 @@ function Entity.new(arena, x, y, anim)
         return gridY;
     end
 
+    function self:getId()
+        return id;
+    end
+
     function self:getRealX()
         return realX;
     end

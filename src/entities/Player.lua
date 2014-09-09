@@ -98,7 +98,7 @@ function Player.new(arena, x, y)
 
         if self:getTile():getContentType() == CONTENT.EXPLOSION then
             self:kill();
-            PlayerManager.remove(id);
+            PlayerManager.remove(self:getId());
         end
 
         self:updateCounters(dt);
