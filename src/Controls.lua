@@ -11,10 +11,10 @@ local Controls = {};
 Controls.GAME = {};
 Controls.GAME.gamepad = {};
 Controls.GAME.gamepad.axes = {};
-Controls.GAME.gamepad.axes.lXRight   = { cmd = 'RIGHT',  value = 0, rep = false, locked = false };
-Controls.GAME.gamepad.axes.lXLeft    = { cmd = 'LEFT',   value = 0, rep = false, locked = false };
-Controls.GAME.gamepad.axes.lYUp      = { cmd = 'UP',     value = 0, rep = false, locked = false };
-Controls.GAME.gamepad.axes.lYDown    = { cmd = 'DOWN',   value = 0, rep = false, locked = false };
+Controls.GAME.gamepad.axes.lXRight   = { cmd = 'RIGHT',  value = 0, rep = true, locked = false };
+Controls.GAME.gamepad.axes.lXLeft    = { cmd = 'LEFT',   value = 0, rep = true, locked = false };
+Controls.GAME.gamepad.axes.lYUp      = { cmd = 'UP',     value = 0, rep = true, locked = false };
+Controls.GAME.gamepad.axes.lYDown    = { cmd = 'DOWN',   value = 0, rep = true, locked = false };
 
 Controls.GAME.gamepad.buttons = {};
 Controls.GAME.gamepad.buttons.a      = { cmd = 'BOMB',     rep = false, locked = false };
