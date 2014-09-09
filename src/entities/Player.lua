@@ -63,25 +63,25 @@ function Player.new(arena, x, y)
     -- Private Functions
     -- ------------------------------------------------
 
-    local function handleInput()
+    local function handleInput(dt)
         if InputManager.hasCommand('UP') and InputManager.hasCommand('RIGHT') then
-            self:move('n', 'e');
+            self:move(dt, 'n', 'e');
         elseif InputManager.hasCommand('UP') and InputManager.hasCommand('LEFT') then
-            self:move('n', 'w');
+            self:move(dt, 'n', 'w');
         elseif InputManager.hasCommand('DOWN') and InputManager.hasCommand('RIGHT') then
-            self:move('s', 'e');
+            self:move(dt, 's', 'e');
         elseif InputManager.hasCommand('DOWN') and InputManager.hasCommand('LEFT') then
-            self:move('s', 'w');
+            self:move(dt, 's', 'w');
         elseif InputManager.hasCommand('UP') then
-            self:move('n');
+            self:move(dt, 'n');
         elseif InputManager.hasCommand('DOWN') then
-            self:move('s');
+            self:move(dt, 's');
         elseif InputManager.hasCommand('RIGHT') then
-            self:move('e');
+            self:move(dt, 'e');
         elseif InputManager.hasCommand('LEFT') then
-            self:move('w');
+            self:move(dt, 'w');
         else
-            self:move();
+            self:move(dt);
         end
 
         if InputManager.hasCommand('BOMB') then
@@ -94,7 +94,7 @@ function Player.new(arena, x, y)
     -- ------------------------------------------------
 
     function self:update(dt)
-        handleInput();
+        handleInput(dt);
 
         if self:getTile():getContentType() == CONTENT.EXPLOSION then
             self:kill();

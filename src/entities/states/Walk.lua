@@ -88,7 +88,7 @@ function Walk.new(manager, npc)
         if not targetTile then
             manager:switch('idle');
         elseif targetTile ~= curTile then
-            npc:move(targetDir);
+            npc:move(dt, targetDir);
             return;
         else
             manager:switch('idle');

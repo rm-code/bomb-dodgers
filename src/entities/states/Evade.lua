@@ -98,7 +98,7 @@ function Evade.new(manager, npc)
     function self:update(dt)
         local direction = evadeBombs(npc:getAdjacentTiles());
         if direction then
-            npc:move(direction);
+            npc:move(dt, direction);
         end
 
         if npc:getTile():isSafe() then

@@ -51,8 +51,8 @@ function Entity.new(arena, x, y, anim)
 
     local prevMovementDir; -- The direction in which the player moved previously.
 
-    local normalSpeed = 2; -- The speed to use when walking normally.
-    local slowSpeed = 1; -- The speed to use when snail downgrade is active.
+    local normalSpeed = 150; -- The speed to use when walking normally.
+    local slowSpeed = 50; -- The speed to use when snail downgrade is active.
     local currentSpeed = normalSpeed;
 
     local lerpFactor = 0.2; -- The lerpFactor to use for the entity's movement.
@@ -153,7 +153,7 @@ function Entity.new(arena, x, y, anim)
     -- @param prefDir - The preferred direction to walk to.
     -- @param altDir - The alternative direction to walk to if the first one is not valid.
     --
-    local function updatePlayerPosition(prefDir, altDir)
+    local function updatePlayerPosition(dt, prefDir, altDir)
         local adjTiles = arena:getAdjacentTiles(gridX, gridY);
         local direction;
 
@@ -181,19 +181,19 @@ function Entity.new(arena, x, y, anim)
         -- determined above.
         if direction == 'n' then
             curAnim = anim.walkN;
-            realY = realY - 1 * currentSpeed;
+            realY = realY - 1 * currentSpeed * dt;
             realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
         elseif direction == 's' then
             curAnim = anim.walkS;
-            realY = realY + 1 * currentSpeed;
+            realY = realY + 1 * currentSpeed * dt;
             realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
         elseif direction == 'e' then
             curAnim = anim.walkE;
-            realX = realX + 1 * currentSpeed;
+            realX = realX + 1 * currentSpeed * dt;
             realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
         elseif direction == 'w' then
             curAnim = anim.walkW;
-            realX = realX - 1 * currentSpeed;
+            realX = realX - 1 * currentSpeed * dt;
             realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
         end
 
@@ -207,7 +207,7 @@ function Entity.new(arena, x, y, anim)
         takeUpgrade(gridX, gridY);
     end
 
-    function self:move(dirA, dirB)
+    function self:move(dt, dirA, dirB)
         local adjTiles = arena:getAdjacentTiles(gridX, gridY);
 
         -- If no direction keys have been pressed reset the previous
@@ -222,7 +222,7 @@ function Entity.new(arena, x, y, anim)
         -- as the previous direction.
         if dirA and not dirB then
             prevMovementDir = dirA;
-            updatePlayerPosition(dirA);
+            updatePlayerPosition(dt, dirA);
             return;
         end
 
@@ -231,9 +231,9 @@ function Entity.new(arena, x, y, anim)
         -- direction.
         if dirA and dirB then
             if dirA == prevMovementDir then
-                updatePlayerPosition(dirB, dirA);
+                updatePlayerPosition(dt, dirB, dirA);
             elseif dirB == prevMovementDir then
-                updatePlayerPosition(dirA, dirB);
+                updatePlayerPosition(dt, dirA, dirB);
             else
                 return;
             end
