@@ -97,7 +97,7 @@ function Tile.new(x, y)
     end
 
     function self:kickBomb(direction)
-        content:move(direction);
+        content:setDirection(direction);
     end
 
     -- ------------------------------------------------
