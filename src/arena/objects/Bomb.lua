@@ -7,6 +7,8 @@ local Constants = require('src/Constants');
 local Explosion = require('src/arena/objects/Explosion');
 local AniMAL = require('lib/AniMAL');
 local ResourceManager = require('lib/ResourceManager');
+local PlayerManager = require('src/entities/PlayerManager');
+local NpcManager = require('src/entities/NpcManager');
 
 -- ------------------------------------------------
 -- Module
@@ -72,10 +74,19 @@ function Bomb.new(x, y)
     local function move(dt, direction)
         local adjTiles = self:getParent():getAdjacentTiles(gridX, gridY);
         local target = adjTiles[direction];
+        local playerX, playerY = PlayerManager.getClosestPlayer(gridX, gridY);
+        local npcX, npcY = NpcManager.getClosestNpc(gridX, gridY);
 
         if target:getContentType() == CONTENT.EXPLOSION then
             self:getParent():explode(blastRadius, 'all');
             return;
+        elseif (playerX == target:getX() and playerY == target:getY())
+                or (npcX == target:getX() and npcY == target:getY())
+                or not target:isPassable() then
+            gridX = self:getParent():getX();
+            gridY = self:getParent():getY();
+            pxX = gridX * TILESIZE;
+            pxY = gridY * TILESIZE;
         elseif target:isPassable() then
             -- Update pixel coordinates
             if direction == 'n' then
@@ -113,11 +124,6 @@ function Bomb.new(x, y)
                 self:increaseDanger(blastRadius, 'all', target:getAdjacentTiles(gridX, gridY));
             end
             return direction;
-        elseif not target:isPassable() then
-            gridX = self:getParent():getX();
-            gridY = self:getParent():getY();
-            pxX = gridX * TILESIZE;
-            pxY = gridY * TILESIZE;
         end
     end
 
