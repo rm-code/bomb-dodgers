@@ -140,7 +140,6 @@ function Bomb.new(x, y)
 
         if direction then
             direction = move(dt, direction);
-            print(direction);
         end
 
         timer = timer - dt;
