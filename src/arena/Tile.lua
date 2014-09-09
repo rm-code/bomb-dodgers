@@ -5,7 +5,6 @@
 local Constants = require('src/Constants');
 local Explosion = require('src/arena/objects/Explosion');
 local Bomb = require('src/arena/objects/Bomb');
-local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
@@ -18,23 +17,6 @@ local Tile = {};
 -- ------------------------------------------------
 
 local CONTENT = Constants.CONTENT;
-local TILESIZE = Constants.TILESIZE;
-
--- ------------------------------------------------
--- Resource Loading
--- ------------------------------------------------
-
-local images = {};
-
--- Register module with resource manager.
-ResourceManager.register(Tile);
-
----
--- Load images.
---
-function Tile.loadImages()
-    images['floor'] = ResourceManager.loadImage('res/img/content/floor.png');
-end
 
 -- ------------------------------------------------
 -- Constructor
@@ -58,8 +40,6 @@ function Tile.new(x, y)
     -- ------------------------------------------------
 
     function self:draw()
-        love.graphics.draw(images['floor'], x * TILESIZE, y * TILESIZE);
-
         if content then
             content:draw();
         end

@@ -6,6 +6,7 @@ local Constants = require('src/Constants');
 local Tile = require('src/arena/Tile');
 local SoftWall = require('src/arena/objects/SoftWall');
 local HardWall = require('src/arena/objects/HardWall');
+local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
@@ -18,6 +19,23 @@ local Arena = {}
 -- ------------------------------------------------
 
 local CONTENT = Constants.CONTENT;
+local TILESIZE = Constants.TILESIZE;
+
+-- ------------------------------------------------
+-- Resource Loading
+-- ------------------------------------------------
+
+local images = {};
+
+-- Register module with resource manager.
+ResourceManager.register(Arena);
+
+---
+-- Load images.
+--
+function Arena.loadImages()
+    images['floor'] = ResourceManager.loadImage('res/img/content/floor.png');
+end
 
 -- ------------------------------------------------
 -- Constructor
@@ -31,6 +49,7 @@ function Arena.new()
     -- ------------------------------------------------
 
     local grid;
+    local canvas;
 
     -- ------------------------------------------------
     -- Private Functions
@@ -109,11 +128,23 @@ function Arena.new()
         -- Loads the basic grid layout of a level.
         grid = love.filesystem.load('res/empty_level.lua')();
 
+        -- Create canvas.
+        canvas = love.graphics.newCanvas(#grid * TILESIZE, #grid * TILESIZE);
+
         -- Fills the grid with
         placeWalls(grid);
 
         -- Set neighbours.
         setTileNeighbours(grid);
+
+        -- Draw to canvas.
+        canvas:renderTo(function()
+            for x = 1, #grid do
+                for y = 1, #grid[x] do
+                    love.graphics.draw(images['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                end
+            end
+        end)
     end
 
     ---
@@ -132,6 +163,8 @@ function Arena.new()
     -- Draw all tiles on the grid.
     --
     function self:draw()
+        love.graphics.draw(canvas, TILESIZE, TILESIZE);
+
         for x = 1, #grid do
             for y = 1, #grid[x] do
                 grid[x][y]:draw();
