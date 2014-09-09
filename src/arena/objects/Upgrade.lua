@@ -75,7 +75,7 @@ function Upgrade.new(x, y)
         -- the AI to actively hunt for downgrades.
         if upgradeType == TYPES[1] or upgradeType == TYPES[2] then
             -- Save the id used in the upgrade manager.
-            id = UpgradeManager.register(self:getX(), self:getY());
+            id = UpgradeManager.register(self);
         end
     end
 
