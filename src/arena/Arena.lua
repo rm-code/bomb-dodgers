@@ -35,6 +35,7 @@ ResourceManager.register(Arena);
 --
 function Arena.loadImages()
     images['floor'] = ResourceManager.loadImage('res/img/content/floor.png');
+    images['hard_wall'] = ResourceManager.loadImage('res/img/content/hardwall.png');
 end
 
 -- ------------------------------------------------
@@ -141,7 +142,11 @@ function Arena.new()
         canvas:renderTo(function()
             for x = 1, #grid do
                 for y = 1, #grid[x] do
-                    love.graphics.draw(images['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                    if grid[x][y]:getContentType() == CONTENT.HARDWALL then
+                        love.graphics.draw(images['hard_wall'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                    else
+                        love.graphics.draw(images['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                    end
                 end
             end
         end)
