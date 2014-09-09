@@ -244,9 +244,8 @@ function Entity.new(arena, x, y, anim)
         if liveBombs < bombCapacity and not bombdown then
             if self:getTile():isPassable() then
                 self:getTile():plantBomb(blastRadius, self);
+                liveBombs = liveBombs + 1;
             end
-
-            liveBombs = liveBombs + 1;
         end
     end
 
