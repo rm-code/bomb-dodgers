@@ -28,6 +28,8 @@ function Entity.new(arena, x, y, anim)
     -- Private Variables
     -- ------------------------------------------------
 
+    local id; -- The unique id which is used to store a reference to the entity.
+
     local arena = arena;
     local gridX = x;
     local gridY = y;
@@ -306,6 +308,14 @@ function Entity.new(arena, x, y, anim)
 
     function self:getPosition()
         return gridX, gridY;
+    end
+
+    -- ------------------------------------------------
+    -- Setters
+    -- ------------------------------------------------
+
+    function self:setId(nid)
+        id = nid;
     end
 
     return self;

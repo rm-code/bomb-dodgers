@@ -7,6 +7,7 @@ local Arena = require('src/arena/Arena');
 local NPC = require('src/entities/NPC');
 local Player = require('src/entities/Player');
 local PlayerManager = require('src/entities/PlayerManager');
+local NpcManager = require('src/entities/NpcManager');
 local Camera = require('lib/Camera');
 
 -- ------------------------------------------------
@@ -25,7 +26,6 @@ function Game.new()
     local arena;
     local players;
     local camera;
-    local npcs;
 
     function self:init()
         arena = Arena.new();
@@ -43,10 +43,15 @@ function Game.new()
             players[i]:setId(id);
         end
 
-        npcs = {};
+        local npcs = {};
         npcs[#npcs + 1] = NPC.new(arena, 2, 20);
         npcs[#npcs + 1] = NPC.new(arena, 20, 20);
         npcs[#npcs + 1] = NPC.new(arena, 20, 2);
+
+        for i = 1, #npcs do
+            local id = NpcManager.register(npcs[i]);
+            npcs[i]:setId(id);
+        end
 
         -- Clear the spawn points from softwalls.
         arena:clearSpawns(players);
@@ -60,11 +65,7 @@ function Game.new()
             return;
         end
 
-        for i = 1, #npcs do
-            if not npcs[i]:isDead() then
-                npcs[i]:update(dt);
-            end
-        end
+        NpcManager.update(dt);
 
         for i = 1, #players do
             if not players[i]:isDead() then
@@ -77,11 +78,8 @@ function Game.new()
     function self:draw()
         camera:set();
         arena:draw();
-        for i = 1, #npcs do
-            if not npcs[i]:isDead() then
-                npcs[i]:draw();
-            end
-        end
+
+        NpcManager.draw();
 
         for i = 1, #players do
             if not players[i]:isDead() then

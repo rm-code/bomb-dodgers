@@ -59,8 +59,6 @@ end
 function Player.new(arena, x, y)
     local self = Entity.new(arena, x, y, images.anims);
 
-    local id;
-
     -- ------------------------------------------------
     -- Private Functions
     -- ------------------------------------------------
@@ -115,10 +113,6 @@ function Player.new(arena, x, y)
 
         love.graphics.print('RealX: ' .. self:getRealX() .. ' RealY: ' .. self:getRealY(), 800, 100);
         love.graphics.print('GridX: ' .. self:getX() .. ' GridY: ' .. self:getY(), 800, 120);
-    end
-
-    function self:setId(nid)
-        id = nid;
     end
 
     return self;
