@@ -5,7 +5,7 @@ local Player = require('src/entities/Player');
 local Button = require('src/ui/Button');
 local ButtonManager = require('src/ui/ButtonManager');
 local InputManager = require('lib/InputManager');
-local LevelSelector = require('src/screens/LevelSelector');
+local Game = require('src/screens/Game');
 local Camera = require('lib/Camera');
 local Constants = require('src/Constants');
 local ResourceManager = require('lib/ResourceManager');
@@ -15,7 +15,7 @@ local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 -- Module
 -- ------------------------------------------------
 
-local MainMenu = {};
+local LevelSelector = {};
 
 -- ------------------------------------------------
 -- Resource Loading
@@ -23,27 +23,28 @@ local MainMenu = {};
 
 local images = {};
 
-ResourceManager.register(MainMenu);
+ResourceManager.register(LevelSelector);
 
-function MainMenu.loadImages()
+function LevelSelector.loadImages()
     images['button'] = ResourceManager.loadImage('res/img/ui/button.png');
-    images['logo'] = ResourceManager.loadImage('res/img/ui/logo.png');
+    images['lvl1'] = ResourceManager.loadImage('res/img/ui/preview_lvl_1.png');
 end
 
 -- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
-function MainMenu.new()
+function LevelSelector.new()
     local self = Screen.new();
 
     local arena;
     local player;
     local buttons;
     local camera;
+    local shader;
 
     local function start()
-        ScreenManager.switch(LevelSelector.new());
+        ScreenManager.switch(Game.new());
     end
 
     local function options()
@@ -54,17 +55,17 @@ function MainMenu.new()
 
     function self:init()
         arena = Arena.new();
-        arena:init('res/menu_lvl.lua', true);
+        arena:init('res/arenas/lvlselector.lua', true);
 
         camera = Camera.new();
         camera:setZoom(2.0);
 
+        shader = love.graphics.newShader('res/shader/wave.fs');
+
         player = Player.new(arena, 2, 2);
 
         buttons = ButtonManager.new();
-        buttons:register(Button.new(images['button'], 128, 64, start));
-        buttons:register(Button.new(images['button'], 128, 96, options));
-        buttons:register(Button.new(images['button'], 128, 128, exit));
+        buttons:register(Button.new(images['lvl1'], 128, 64, start));
     end
 
     local function handleInput()
@@ -74,12 +75,8 @@ function MainMenu.new()
     end
 
     local function select()
-        if player:getY() == 2 then
+        if player:getY() == 2 or player:getY() == 3 or player:getY() == 4 then
             buttons:select(1)
-        elseif player:getY() == 3 then
-            buttons:select(2)
-        elseif player:getY() == 4 then
-            buttons:select(3)
         end
     end
 
@@ -92,6 +89,8 @@ function MainMenu.new()
 
         camera:track(player:getRealX() + Constants.TILESIZE * 2.5, player:getRealY(), 6, dt);
 
+        shader:send('time', love.timer.getTime());
+
         buttons:update(dt);
     end
 
@@ -100,13 +99,12 @@ function MainMenu.new()
         camera:set();
         arena:draw();
         player:draw();
-
-        love.graphics.draw(images['logo'], Constants.TILESIZE * 2.0, -64, 0, 2, 2);
-
-        buttons:draw();
-        camera:unset();
-
         PaletteSwitcher.unset();
+
+        love.graphics.setShader(shader);
+        buttons:draw();
+
+        camera:unset();
     end
 
     return self;
@@ -116,8 +114,8 @@ end
 -- Return Module
 -- ------------------------------------------------
 
-return MainMenu;
+return LevelSelector;
 
 --==================================================================================================
--- Created 11.09.14 - 17:52                                                                        =
+-- Created 12.09.14 - 00:33                                                                        =
 --==================================================================================================
