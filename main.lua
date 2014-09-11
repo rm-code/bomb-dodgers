@@ -7,12 +7,7 @@ local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
 local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local ResourceManager = require('lib/ResourceManager');
-
--- ------------------------------------------------
--- Screens
--- ------------------------------------------------
-
-Game = require('src/screens/Game');
+local Game = require('src/screens/Game');
 
 -- ------------------------------------------------
 -- Local variables
