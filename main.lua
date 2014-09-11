@@ -5,9 +5,8 @@
 local ScreenManager = require('lib/screens/ScreenManager');
 local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
-local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local ResourceManager = require('lib/ResourceManager');
-local Game = require('src/screens/Game');
+local MainMenu = require('src/screens/MainMenu');
 
 -- ------------------------------------------------
 -- Local variables
@@ -64,10 +63,10 @@ function love.load()
     ResourceManager.loadResources();
 
     -- Start game on the main menu.
-    ScreenManager.init(Game.new());
+    ScreenManager.init(MainMenu.new());
 
     -- Set the default control map.
-    InputManager.setMap(Controls.GAME);
+    InputManager.setMap(Controls.MENU);
 end
 
 -- ------------------------------------------------
@@ -80,7 +79,6 @@ function love.update(dt)
 end
 
 function love.draw()
-    PaletteSwitcher.set();
     local lg = love.graphics;
     local lt = love.timer;
     local format = string.format;
@@ -88,8 +86,6 @@ function love.draw()
     ScreenManager.draw();
 
     -- InputManager.draw();
-
-    PaletteSwitcher.unset();
 
     if info then
         lg.print(format("FT: %.3f ms", 1000 * lt.getAverageDelta()), 10, love.window.getHeight() - 60);
@@ -121,10 +117,6 @@ end
 function love.keypressed(key)
     if key == 'f1' then
         info = not info;
-    end
-
-    if key == 'tab' then
-        PaletteSwitcher.nextPalette();
     end
 
     ScreenManager.keypressed(key);

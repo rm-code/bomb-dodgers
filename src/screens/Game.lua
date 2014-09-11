@@ -9,6 +9,9 @@ local Player = require('src/entities/Player');
 local PlayerManager = require('src/entities/PlayerManager');
 local NpcManager = require('src/entities/NpcManager');
 local Camera = require('lib/Camera');
+local InputManager = require('lib/InputManager');
+local Controls = require('src/Controls');
+local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 
 -- ------------------------------------------------
 -- Module
@@ -28,8 +31,11 @@ function Game.new()
     local camera;
 
     function self:init()
+        -- Set the input map for the game.
+        InputManager.setMap(Controls.GAME);
+
         arena = Arena.new();
-        arena:init();
+        arena:init('res/empty_level.lua');
 
         camera = Camera.new();
         camera:setZoom(3);
@@ -76,6 +82,7 @@ function Game.new()
     end
 
     function self:draw()
+        PaletteSwitcher.set();
         camera:set();
         arena:draw();
 
@@ -87,6 +94,7 @@ function Game.new()
             end
         end
         camera:unset();
+        PaletteSwitcher.unset();
     end
 
     return self;

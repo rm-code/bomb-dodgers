@@ -62,7 +62,7 @@ function Arena.new()
     -- free places all over the grid.
     -- @param grid - The grid to fill.
     --
-    local function placeWalls(grid)
+    local function placeWalls(grid, suppressSoftwalls)
         for x = 1, #grid do
             for y = 1, #grid[x] do
                 local type = grid[x][y];
@@ -72,7 +72,7 @@ function Arena.new()
                 if type == 1 then
                     grid[x][y]:addContent(HardWall.new(x, y));
                 elseif type == 0 then
-                    if love.math.random(0, 3) == 1 then
+                    if love.math.random(0, 3) == 1 and not suppressSoftwalls then
                         grid[x][y]:addContent(SoftWall.new(x, y));
                     end
                 end
@@ -125,15 +125,15 @@ function Arena.new()
         end
     end
 
-    function self:init()
+    function self:init(toLoad, suppressSoftwalls)
         -- Loads the basic grid layout of a level.
-        grid = love.filesystem.load('res/empty_level.lua')();
+        grid = love.filesystem.load(toLoad)();
 
         -- Create canvas.
-        canvas = love.graphics.newCanvas(#grid * TILESIZE, #grid * TILESIZE);
+        canvas = love.graphics.newCanvas(#grid * TILESIZE, #grid[1] * TILESIZE);
 
         -- Fills the grid with
-        placeWalls(grid);
+        placeWalls(grid, suppressSoftwalls);
 
         -- Set neighbours.
         setTileNeighbours(grid);

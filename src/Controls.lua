@@ -26,6 +26,12 @@ Controls.GAME.keyboard.up            = { cmd = 'UP',      rep = true, locked = f
 Controls.GAME.keyboard.down          = { cmd = 'DOWN',    rep = true, locked = false };
 Controls.GAME.keyboard[' ']          = { cmd = 'BOMB',    rep = false, locked = false };
 
+Controls.MENU= {};
+Controls.MENU.keyboard = {};
+Controls.MENU.keyboard.up            = { cmd = 'UP',      rep = true, locked = false };
+Controls.MENU.keyboard.down          = { cmd = 'DOWN',    rep = true, locked = false };
+Controls.MENU.keyboard[' ']          = { cmd = 'SELECT',  rep = false, locked = false };
+
 return Controls;
 
 --==================================================================================================
