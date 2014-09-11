@@ -64,7 +64,7 @@ function love.load()
     ResourceManager.loadResources();
 
     -- Start game on the main menu.
-    ScreenManager:init(Game.new());
+    ScreenManager.init(Game.new());
 
     -- Set the default control map.
     InputManager.setMap(Controls.GAME);
@@ -75,7 +75,7 @@ end
 -- ------------------------------------------------
 
 function love.update(dt)
-    ScreenManager:update(dt);
+    ScreenManager.update(dt);
     InputManager.update(dt);
 end
 
@@ -85,7 +85,7 @@ function love.draw()
     local lt = love.timer;
     local format = string.format;
 
-    ScreenManager:draw();
+    ScreenManager.draw();
 
     -- InputManager.draw();
 
@@ -103,15 +103,15 @@ end
 -- ------------------------------------------------
 
 function love.resize(width, height)
-    ScreenManager:resize(width, height);
+    ScreenManager.resize(width, height);
 end
 
 function love.visible(visible)
-    ScreenManager:visible(visible);
+    ScreenManager.visible(visible);
 end
 
 function love.focus(focus)
-    ScreenManager:focus(focus);
+    ScreenManager.focus(focus);
 end
 
 -- ------------------------------------------------
@@ -127,27 +127,27 @@ function love.keypressed(key)
         PaletteSwitcher.nextPalette();
     end
 
-    ScreenManager:keypressed(key);
+    ScreenManager.keypressed(key);
 end
 
 function love.keyreleased(key)
-    ScreenManager:keyreleased(key);
+    ScreenManager.keyreleased(key);
 end
 
 function love.textinput(input)
-    ScreenManager:textinput(input);
+    ScreenManager.textinput(input);
 end
 
 function love.mousepressed(x, y, button)
-    ScreenManager:mousepressed(x, y, button);
+    ScreenManager.mousepressed(x, y, button);
 end
 
 function love.mousereleased(x, y, button)
-    ScreenManager:mousereleased(x, y, button);
+    ScreenManager.mousereleased(x, y, button);
 end
 
 function love.mousefocus(focus)
-    ScreenManager:mousefocus(focus);
+    ScreenManager.mousefocus(focus);
 end
 
 function love.joystickadded(joystick)

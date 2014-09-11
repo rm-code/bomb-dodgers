@@ -4,6 +4,8 @@
 
 local ScreenManager = {};
 
+local stack = {};
+
 -- ------------------------------------------------
 -- Module Functions
 -- ------------------------------------------------
@@ -12,9 +14,9 @@ local ScreenManager = {};
 -- Initialise the ScreenManager and
 -- @param screen
 --
-function ScreenManager:init(screen)
-    self.stack = {};
-    self:push(screen);
+function ScreenManager.init(screen)
+    stack = {};
+    ScreenManager.push(screen);
 end
 
 ---
@@ -23,9 +25,9 @@ end
 --
 -- @param nscreen
 --
-function ScreenManager:switch(screen)
-    self:clear();
-    self:push(screen);
+function ScreenManager.switch(screen)
+    ScreenManager.clear();
+    ScreenManager.push(screen);
 end
 
 ---
@@ -35,39 +37,39 @@ end
 --
 -- @param nscreen
 --
-function ScreenManager:push(nscreen)
+function ScreenManager.push(nscreen)
     -- Deactivate the previous screen if there is one.
-    if self:peek() then
-        self:peek():setActive(false);
+    if ScreenManager.peek() then
+        ScreenManager.peek():setActive(false);
     end
 
     -- Create the new screen and initialise it.
     nscreen:init();
 
     -- Push the new screen onto the stack.
-    self.stack[#self.stack + 1] = nscreen;
+    stack[#stack + 1] = nscreen;
 end
 
 ---
 -- Returns the screen on top of the screen stack without removing it.
 --
-function ScreenManager:peek()
-    return self.stack[#self.stack];
+function ScreenManager.peek()
+    return stack[#stack];
 end
 
 ---
 -- Removes the topmost screen of the stack
 --
-function ScreenManager:pop()
-    if #self.stack > 1 then
+function ScreenManager.pop()
+    if #stack > 1 then
         -- Close the currently active screen.
-        self:peek():close();
+        ScreenManager.peek():close();
 
         -- Remove the now inactive screen from the stack.
-        self.stack[#self.stack] = nil;
+        stack[#stack] = nil;
 
         -- Activate next screen on the stack.
-        self:peek():setActive(true);
+        ScreenManager.peek():setActive(true);
     else
         error("Can't close the last screen. Use switch() to clear the screen manager and add a new screen");
     end
@@ -76,10 +78,10 @@ end
 ---
 -- Close and remove all screens from the stack.
 --
-function ScreenManager:clear()
-    for i = 1, #self.stack do
-        self.stack[i]:close();
-        self.stack[i] = nil;
+function ScreenManager.clear()
+    for i = 1, #stack do
+        stack[i]:close();
+        stack[i] = nil;
     end
 end
 
@@ -87,18 +89,18 @@ end
 -- Draw all screens on the stack. Screens that are higher on the stack
 -- will overlay screens that are on the bottom.
 --
-function ScreenManager:draw()
-    for i = 1, #self.stack do
-        self.stack[i]:draw();
+function ScreenManager.draw()
+    for i = 1, #stack do
+        stack[i]:draw();
     end
 end
 
 ---
 -- Update all screens on the stack.
 --
-function ScreenManager:update(dt)
-    for i = 1, #self.stack do
-        self.stack[i]:update(dt);
+function ScreenManager.update(dt)
+    for i = 1, #stack do
+        stack[i]:update(dt);
     end
 end
 
@@ -107,9 +109,9 @@ end
 -- @param w
 -- @param h
 --
-function ScreenManager:resize(w, h)
-    for i = 1, #self.stack do
-        self.stack[i]:resize(w, h);
+function ScreenManager.resize(w, h)
+    for i = 1, #stack do
+        stack[i]:resize(w, h);
     end
 end
 
@@ -118,9 +120,9 @@ end
 -- loses focus.
 -- @param dfocus
 --
-function ScreenManager:focus(dfocus)
-    for i = 1, #self.stack do
-        self.stack[i]:focus(dfocus);
+function ScreenManager.focus(dfocus)
+    for i = 1, #stack do
+        stack[i]:focus(dfocus);
     end
 end
 
@@ -128,9 +130,9 @@ end
 -- Update all screens on the stack whenever the game window is minimized.
 -- @param dvisible
 --
-function ScreenManager:visible(dvisible)
-    for i = 1, #self.stack do
-        self.stack[i]:visible(dvisible);
+function ScreenManager.visible(dvisible)
+    for i = 1, #stack do
+        stack[i]:visible(dvisible);
     end
 end
 
@@ -138,24 +140,24 @@ end
 -- Reroutes the keypressed callback to the currently active screen.
 -- @param key
 --
-function ScreenManager:keypressed(key)
-    self:peek():keypressed(key);
+function ScreenManager.keypressed(key)
+    ScreenManager.peek():keypressed(key);
 end
 
 ---
 -- Reroutes the keyreleased callback to the currently active screen.
 -- @param key
 --
-function ScreenManager:keyreleased(key)
-    self:peek():keyreleased(key);
+function ScreenManager.keyreleased(key)
+    ScreenManager.peek():keyreleased(key);
 end
 
 ---
 -- Reroute the textinput callback to the currently active screen.
 -- @param input
 --
-function ScreenManager:textinput(input)
-    self:peek():textinput(input);
+function ScreenManager.textinput(input)
+    ScreenManager.peek():textinput(input);
 end
 
 ---
@@ -164,8 +166,8 @@ end
 -- @param y
 -- @param button
 --
-function ScreenManager:mousepressed(x, y, button)
-    self:peek():mousepressed(x, y, button);
+function ScreenManager.mousepressed(x, y, button)
+    ScreenManager.peek():mousepressed(x, y, button);
 end
 
 ---
@@ -174,8 +176,8 @@ end
 -- @param y
 -- @param button
 --
-function ScreenManager:mousereleased(x, y, button)
-    self:peek():mousereleased(x, y, button);
+function ScreenManager.mousereleased(x, y, button)
+    ScreenManager.peek():mousereleased(x, y, button);
 end
 
 ---
@@ -184,8 +186,8 @@ end
 -- @param y
 -- @param button
 --
-function ScreenManager:mousefocus(focus)
-    self:peek():mousefocus(focus);
+function ScreenManager.mousefocus(focus)
+    ScreenManager.peek():mousefocus(focus);
 end
 
 -- ------------------------------------------------
