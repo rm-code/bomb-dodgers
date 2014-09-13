@@ -39,6 +39,10 @@ function Arena.loadImages()
     images.stonegarden['floor'] = ResourceManager.loadImage('res/img/levels/stonegarden/floor.png');
     images.stonegarden['hwall'] = ResourceManager.loadImage('res/img/levels/stonegarden/hardwall.png');
     images.stonegarden['swall'] = ResourceManager.loadImage('res/img/levels/stonegarden/softwall.png');
+
+    images.desert['floor'] = ResourceManager.loadImage('res/img/levels/desert/floor.png');
+    images.desert['hwall'] = ResourceManager.loadImage('res/img/levels/desert/hardwall.png');
+    images.desert['swall'] = ResourceManager.loadImage('res/img/levels/desert/softwall.png');
 end
 
 -- ------------------------------------------------
