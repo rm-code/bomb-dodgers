@@ -26,6 +26,8 @@ local TILESIZE = Constants.TILESIZE;
 -- ------------------------------------------------
 
 local images = {};
+images.stonegarden = {};
+images.desert = {};
 
 -- Register module with resource manager.
 ResourceManager.register(Arena);
@@ -34,15 +36,16 @@ ResourceManager.register(Arena);
 -- Load images.
 --
 function Arena.loadImages()
-    images['floor'] = ResourceManager.loadImage('res/img/content/floor.png');
-    images['hard_wall'] = ResourceManager.loadImage('res/img/content/hardwall.png');
+    images.stonegarden['floor'] = ResourceManager.loadImage('res/img/levels/stonegarden/floor.png');
+    images.stonegarden['hwall'] = ResourceManager.loadImage('res/img/levels/stonegarden/hardwall.png');
+    images.stonegarden['swall'] = ResourceManager.loadImage('res/img/levels/stonegarden/softwall.png');
 end
 
 -- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
-function Arena.new()
+function Arena.new(ts)
     local self = {};
 
     -- ------------------------------------------------
@@ -51,6 +54,7 @@ function Arena.new()
 
     local grid;
     local canvas;
+    local tileset = ts or 'stonegarden';
 
     -- ------------------------------------------------
     -- Private Functions
@@ -143,9 +147,9 @@ function Arena.new()
             for x = 1, #grid do
                 for y = 1, #grid[x] do
                     if grid[x][y]:getContentType() == CONTENT.HARDWALL then
-                        love.graphics.draw(images['hard_wall'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                        love.graphics.draw(images[tileset]['hwall'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
                     else
-                        love.graphics.draw(images['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                        love.graphics.draw(images[tileset]['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
                     end
                 end
             end
@@ -172,6 +176,9 @@ function Arena.new()
 
         for x = 1, #grid do
             for y = 1, #grid[x] do
+                if grid[x][y]:getContentType() == CONTENT.SOFTWALL then
+                    love.graphics.draw(images[tileset]['swall'], x * TILESIZE, y * TILESIZE);
+                end
                 grid[x][y]:draw();
             end
         end
