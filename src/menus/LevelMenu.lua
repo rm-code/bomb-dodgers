@@ -5,7 +5,7 @@ local Player = require('src/entities/Player');
 local Button = require('src/ui/Button');
 local ButtonManager = require('src/ui/ButtonManager');
 local InputManager = require('lib/InputManager');
-local Game = require('src/screens/Game');
+local Level = require('src/screens/Level');
 local Camera = require('lib/Camera');
 local Constants = require('src/Constants');
 local ResourceManager = require('lib/ResourceManager');
@@ -44,7 +44,7 @@ function LevelMenu.new()
     local shader;
 
     local function start()
-        ScreenManager.switch(Game.new());
+        ScreenManager.switch(Level.new());
     end
 
     local function options()
@@ -103,6 +103,7 @@ function LevelMenu.new()
 
         love.graphics.setShader(shader);
         buttons:draw();
+        love.graphics.setShader();
 
         camera:unset();
     end

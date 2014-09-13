@@ -41,7 +41,9 @@ function PlayerManager.getClosestPlayer(x, y)
         end
     end
 
-    return players[targetId]:getX(), players[targetId]:getY();
+    if players[targetId] then
+        return players[targetId]:getX(), players[targetId]:getY();
+    end
 end
 
 function PlayerManager.clear()
