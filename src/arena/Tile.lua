@@ -34,6 +34,7 @@ function Tile.new(x, y)
     local adjTiles;
     local content;
     local danger = 0;
+    local tilesheet;
 
     -- ------------------------------------------------
     -- Public Functions
@@ -144,6 +145,10 @@ function Tile.new(x, y)
         return content;
     end
 
+    function self:getTileSheet()
+        return tilesheet;
+    end
+
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
@@ -158,6 +163,10 @@ function Tile.new(x, y)
 
     function self:setDanger(nd)
         danger = danger + nd;
+    end
+
+    function self:setTileSheet(ts)
+        tilesheet = ts;
     end
 
     return self;

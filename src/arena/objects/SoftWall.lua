@@ -5,6 +5,7 @@
 local Content = require('src/arena/objects/Content');
 local Constants = require('src/Constants');
 local Upgrade = require('src/arena/objects/Upgrade');
+local Destruction = require('src/arena/objects/Destruction');
 
 -- ------------------------------------------------
 -- Module
@@ -39,6 +40,8 @@ function SoftWall.new(x, y)
             local upgrade = Upgrade.new(x, y);
             upgrade:init();
             self:getParent():addContent(upgrade);
+        else
+            self:getParent():addContent(Destruction.new(self:getParent():getTileSheet(), x, y));
         end
     end
 

@@ -75,6 +75,7 @@ function Arena.new(ts)
             for y = 1, #grid[x] do
                 local type = grid[x][y];
                 grid[x][y] = Tile.new(x, y);
+                grid[x][y]:setTileSheet(tileset);
 
                 -- Add walls.
                 if type == 1 then
