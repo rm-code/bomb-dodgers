@@ -43,11 +43,11 @@ function ScreenManager.push(nscreen)
         ScreenManager.peek():setActive(false);
     end
 
-    -- Create the new screen and initialise it.
-    nscreen:init();
-
     -- Push the new screen onto the stack.
     stack[#stack + 1] = nscreen;
+
+    -- Create the new screen and initialise it.
+    nscreen:init();
 end
 
 ---
