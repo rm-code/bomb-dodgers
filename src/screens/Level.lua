@@ -1,5 +1,6 @@
 local Constants = require('src/Constants');
 local Screen = require('lib/screens/Screen');
+local ScreenManager = require('lib/screens/ScreenManager');
 local Arena = require('src/arena/Arena');
 local Camera = require('lib/Camera');
 local InputManager = require('lib/InputManager');
@@ -9,6 +10,8 @@ local PlayerManager = require('src/entities/PlayerManager');
 local Npc = require('src/entities/Npc');
 local NpcManager = require('src/entities/NpcManager');
 local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
+local LevelIntro = require('src/screens/LevelIntro');
+local LevelOutro = require('src/screens/LevelOutro');
 
 -- ------------------------------------------------
 -- Module
@@ -20,7 +23,7 @@ local Level = {};
 -- Constructor
 -- ------------------------------------------------
 
-function Level.new(tileset)
+function Level.new(level)
     local self = Screen.new();
 
     -- ------------------------------------------------
@@ -77,15 +80,13 @@ function Level.new(tileset)
     end
 
     local function reset()
-        generateArena(tileset);
+        generateArena(level);
         generatePlayers(arena);
         generateNpcs(stage);
         clearSpawns(arena, npcs, players);
     end
 
     local function endRound(winner)
-        self:setActive(false);
-
         round = round + 1;
 
         if winner == 'npc' then
@@ -107,8 +108,9 @@ function Level.new(tileset)
             -- error('A winner is npc.');
         end
 
+        ScreenManager.push(LevelOutro.new(round, playerScore, npcScore));
+
         reset();
-        self:setActive(true);
     end
 
     -- ------------------------------------------------
@@ -119,7 +121,7 @@ function Level.new(tileset)
         -- Set the input map for the game.
         InputManager.setMap(Controls.GAME);
 
-        generateArena(tileset);
+        generateArena(level);
 
         stage = 1;
         round = 1;
@@ -138,6 +140,8 @@ function Level.new(tileset)
         camera = Camera.new();
         camera:setZoom(3);
         camera:setBoundaries(Constants.TILESIZE, Constants.TILESIZE, 22 * Constants.TILESIZE, 22 * Constants.TILESIZE);
+
+        ScreenManager.push(LevelIntro.new(level));
     end
 
     function self:update(dt)
@@ -168,27 +172,29 @@ function Level.new(tileset)
     end
 
     function self:draw()
-        PaletteSwitcher.set();
-        camera:set();
-        arena:draw();
+        if self:isActive() then
+            PaletteSwitcher.set();
+            camera:set();
+            arena:draw();
 
-        NpcManager.draw();
+            NpcManager.draw();
 
-        for i = 1, #players do
-            if not players[i]:isDead() then
-                players[i]:draw();
+            for i = 1, #players do
+                if not players[i]:isDead() then
+                    players[i]:draw();
+                end
             end
+
+            camera:unset();
+            PaletteSwitcher.unset();
+
+            love.graphics.setColor(0, 0, 0);
+            love.graphics.print('NPCs:' .. NpcManager.getNpcCount(), 20, 20);
+            love.graphics.print('Players:' .. PlayerManager.getPlayerCount(), 20, 40);
+            love.graphics.print('Round:' .. round, 20, 60);
+            love.graphics.print('Stage:' .. stage, 20, 80);
+            love.graphics.setColor(255, 255, 255);
         end
-
-        camera:unset();
-        PaletteSwitcher.unset();
-
-        love.graphics.setColor(0, 0, 0);
-        love.graphics.print('NPCs:' .. NpcManager.getNpcCount(), 20, 20);
-        love.graphics.print('Players:' .. PlayerManager.getPlayerCount(), 20, 40);
-        love.graphics.print('Round:' .. round, 20, 60);
-        love.graphics.print('Stage:' .. stage, 20, 80);
-        love.graphics.setColor(255, 255, 255);
     end
 
     return self;
