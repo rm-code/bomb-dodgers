@@ -28,6 +28,7 @@ ResourceManager.register(LevelMenu);
 function LevelMenu.loadImages()
     images['button'] = ResourceManager.loadImage('res/img/ui/button.png');
     images['lvl1'] = ResourceManager.loadImage('res/img/ui/preview_lvl_1.png');
+    images['lvl2'] = ResourceManager.loadImage('res/img/ui/preview_lvl_2.png');
 end
 
 -- ------------------------------------------------
@@ -43,14 +44,12 @@ function LevelMenu.new()
     local camera;
     local shader;
 
-    local function start()
-        ScreenManager.switch(Level.new());
+    local function startOne()
+        ScreenManager.switch(Level.new('stonegarden'));
     end
 
-    local function options()
-    end
-
-    local function exit()
+    local function startTwo()
+        ScreenManager.switch(Level.new('desert'));
     end
 
     function self:init()
@@ -65,7 +64,8 @@ function LevelMenu.new()
         player = Player.new(arena, 2, 2);
 
         buttons = ButtonManager.new();
-        buttons:register(Button.new(images['lvl1'], 128, 64, start));
+        buttons:register(Button.new(images['lvl1'], 128, 64, startOne));
+        buttons:register(Button.new(images['lvl2'], 128, 256, startTwo));
     end
 
     local function handleInput()
@@ -75,8 +75,10 @@ function LevelMenu.new()
     end
 
     local function select()
-        if player:getY() == 2 or player:getY() == 3 or player:getY() == 4 then
+        if player:getY() >= 2 and player:getY() <= 6 then
             buttons:select(1)
+        elseif player:getY() > 7 and player:getY() <= 12 then
+            buttons:select(2)
         end
     end
 
