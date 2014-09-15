@@ -26,18 +26,14 @@ function NpcManager.remove(id)
 end
 
 function NpcManager.update(dt)
-    for i = 1, #npcs do
-        if not npcs[i]:isDead() then
-            npcs[i]:update(dt);
-        end
+    for _, npc in pairs(npcs) do
+        npc:update(dt);
     end
 end
 
 function NpcManager.draw()
-    for i = 1, #npcs do
-        if not npcs[i]:isDead() then
-            npcs[i]:draw();
-        end
+    for _, npc in pairs(npcs) do
+        npc:draw();
     end
 end
 

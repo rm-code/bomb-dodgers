@@ -10,6 +10,7 @@ local Walk = require('src/entities/states/Walk');
 local Evade = require('src/entities/states/Evade');
 local AniMAL = require('lib/AniMAL');
 local ResourceManager = require('lib/ResourceManager');
+local NpcManager = require('src/entities/NpcManager');
 
 -- ------------------------------------------------
 -- Module
@@ -83,7 +84,8 @@ function NPC.new(arena, x, y)
     function self:update(dt)
         fsm:update(dt);
 
-        if self:getTile():getContentType() == Constants.CONTENT.EXPLOSION then
+        if self:getTile(): getContentType() == Constants.CONTENT.EXPLOSION then
+            NpcManager.remove(self:getId());
             self:kill();
         end
 
