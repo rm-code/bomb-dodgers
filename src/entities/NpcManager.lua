@@ -64,6 +64,12 @@ function NpcManager.getNpcCount()
     return i;
 end
 
+function NpcManager.clear()
+    for i, _ in pairs(npcs) do
+        npcs[i] = nil;
+    end
+end
+
 -- ------------------------------------------------
 -- Return Module
 -- ------------------------------------------------
