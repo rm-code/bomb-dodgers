@@ -18,6 +18,7 @@ Controls.GAME.gamepad.axes.lYDown    = { cmd = 'DOWN',   value = 0, rep = true, 
 
 Controls.GAME.gamepad.buttons = {};
 Controls.GAME.gamepad.buttons.a      = { cmd = 'BOMB',     rep = false, locked = false };
+Controls.GAME.gamepad.buttons.x      = { cmd = 'COL',     rep = false, locked = false };
 
 Controls.GAME.keyboard = {};
 Controls.GAME.keyboard.right         = { cmd = 'RIGHT',   rep = true, locked = false };
@@ -25,12 +26,14 @@ Controls.GAME.keyboard.left          = { cmd = 'LEFT',    rep = true, locked = f
 Controls.GAME.keyboard.up            = { cmd = 'UP',      rep = true, locked = false };
 Controls.GAME.keyboard.down          = { cmd = 'DOWN',    rep = true, locked = false };
 Controls.GAME.keyboard[' ']          = { cmd = 'BOMB',    rep = false, locked = false };
+Controls.GAME.keyboard['tab']        = { cmd = 'COL',     rep = false, locked = false };
 
 Controls.MENU= {};
 Controls.MENU.keyboard = {};
 Controls.MENU.keyboard.up            = { cmd = 'UP',      rep = true, locked = false };
 Controls.MENU.keyboard.down          = { cmd = 'DOWN',    rep = true, locked = false };
 Controls.MENU.keyboard[' ']          = { cmd = 'SELECT',  rep = false, locked = false };
+Controls.MENU.keyboard['tab']        = { cmd = 'COL',     rep = false, locked = false };
 
 return Controls;
 

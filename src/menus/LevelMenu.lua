@@ -71,6 +71,8 @@ function LevelMenu.new()
     local function handleInput()
         if InputManager.hasCommand('SELECT') then
             buttons:press();
+        elseif InputManager.hasCommand('COL') then
+            PaletteSwitcher.nextPalette();
         end
     end
 

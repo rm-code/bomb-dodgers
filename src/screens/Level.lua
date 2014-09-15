@@ -141,6 +141,10 @@ function Level.new(tileset)
     end
 
     function self:update(dt)
+        if InputManager.hasCommand('COL') then
+            PaletteSwitcher.nextPalette();
+        end
+
         if self:isActive() then
             if PlayerManager.getPlayerCount() == 0 then
                 endRound('npc');
