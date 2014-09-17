@@ -112,6 +112,14 @@ function Tile.new(x, y)
         return y;
     end
 
+    function self:getRealX()
+        return x * Constants.TILESIZE;
+    end
+
+    function self:getRealY()
+        return y * Constants.TILESIZE;
+    end
+
     function self:getAdjacentTiles()
         return adjTiles;
     end

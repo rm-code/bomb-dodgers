@@ -97,6 +97,13 @@ function Entity.new(arena, x, y, anim)
         end
     end
 
+    local function doesCollide(x1, y1, x2, y2)
+        return x1 < x2 + Constants.TILESIZE
+                and x2 < x1 + Constants.TILESIZE
+                and y1 < y2 + Constants.TILESIZE
+                and y2 < y1 + Constants.TILESIZE;
+    end
+
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
@@ -148,35 +155,7 @@ function Entity.new(arena, x, y, anim)
         love.graphics.setColor(255, 255, 255, 255);
     end
 
-    ---
-    --
-    -- @param prefDir - The preferred direction to walk to.
-    -- @param altDir - The alternative direction to walk to if the first one is not valid.
-    --
-    local function updatePlayerPosition(dt, prefDir, altDir)
-        local adjTiles = arena:getAdjacentTiles(gridX, gridY);
-        local direction;
-
-        -- If the preferred direction is valid we'll use it to move the
-        -- player. If the preferred direction is invalid we check the
-        -- passability of the alternative direction. If that one is
-        -- invalid to, we lerp the players position to the current tile.
-        if adjTiles[prefDir]:isPassable() then
-            direction = prefDir;
-        elseif adjTiles[prefDir]:getContentType() == CONTENT.BOMB then
-            adjTiles[prefDir]:kickBomb(prefDir);
-        elseif altDir and adjTiles[altDir]:isPassable() then
-            direction = altDir;
-        else
-            -- If the target tile is not passible, lerp the player's position
-            -- only to the axis he wants to move on.
-            if prefDir == 'n' or altDir == 'n' or prefDir == 's' or altDir == 's' then
-                realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
-            elseif prefDir == 'e' or altDir == 'e' or prefDir == 'w' or altDir == 'w' then
-                realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
-            end
-        end
-
+    local function updatePosition(dt, direction)
         -- Lerp the player's position into the direction we have
         -- determined above.
         if direction == 'n' then
@@ -202,9 +181,67 @@ function Entity.new(arena, x, y, anim)
         -- to the next integer.
         gridX = math.floor((realX / Constants.TILESIZE) + 0.5);
         gridY = math.floor((realY / Constants.TILESIZE) + 0.5);
+    end
 
-        -- Take upgrade.
-        takeUpgrade(gridX, gridY);
+    ---
+    --
+    -- @param prefDir - The preferred direction to walk to.
+    -- @param altDir - The alternative direction to walk to if the first one is not valid.
+    --
+    local function calculatePosition(dt, prefDir, altDir)
+        local adjTiles = arena:getAdjacentTiles(gridX, gridY);
+        local direction;
+
+        -- If tiles are passable just move into that direction.
+        if adjTiles[prefDir]:isPassable() then
+            direction = prefDir;
+            updatePosition(dt, direction);
+            takeUpgrade(gridX, gridY);
+            return;
+        elseif altDir and adjTiles[altDir]:isPassable() then
+            direction = altDir;
+            updatePosition(dt, direction);
+            takeUpgrade(gridX, gridY);
+            return;
+        end
+
+        -- If tile is not passable make an AABB check to see if we have to stop already.
+        if not adjTiles[prefDir]:isPassable() then
+            if not doesCollide(realX, realY, adjTiles[prefDir]:getRealX(), adjTiles[prefDir]:getRealY()) then
+                direction = prefDir;
+                updatePosition(dt, direction);
+                takeUpgrade(gridX, gridY);
+                return;
+            else
+                if adjTiles[prefDir]:getContentType() == CONTENT.BOMB then
+                    adjTiles[prefDir]:kickBomb(prefDir);
+                end
+                if prefDir == 'n' or prefDir == 's' then
+                    realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
+                elseif prefDir == 'e' or prefDir == 'w' then
+                    realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
+                end
+            end
+        end
+
+        -- If tile is not passable make an AABB check to see if we have to stop already.
+        if altDir and not adjTiles[altDir]:isPassable() then
+            if not doesCollide(realX, realY, adjTiles[altDir]:getRealX(), adjTiles[altDir]:getRealY()) then
+                direction = altDir;
+                updatePosition(dt, direction);
+                takeUpgrade(gridX, gridY);
+                return;
+            else
+                if adjTiles[altDir]:getContentType() == CONTENT.BOMB then
+                    adjTiles[altDir]:kickBomb(altDir);
+                end
+                if altDir == 'n' or altDir == 's' then
+                    realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
+                elseif altDir == 'e' or altDir == 'w' then
+                    realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
+                end
+            end
+        end
     end
 
     function self:move(dt, dirA, dirB)
@@ -222,7 +259,7 @@ function Entity.new(arena, x, y, anim)
         -- as the previous direction.
         if dirA and not dirB then
             prevMovementDir = dirA;
-            updatePlayerPosition(dt, dirA);
+            calculatePosition(dt, dirA);
             return;
         end
 
@@ -231,9 +268,9 @@ function Entity.new(arena, x, y, anim)
         -- direction.
         if dirA and dirB then
             if dirA == prevMovementDir then
-                updatePlayerPosition(dt, dirB, dirA);
+                calculatePosition(dt, dirB, dirA);
             elseif dirB == prevMovementDir then
-                updatePlayerPosition(dt, dirA, dirB);
+                calculatePosition(dt, dirA, dirB);
             else
                 return;
             end
