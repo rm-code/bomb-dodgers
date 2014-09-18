@@ -78,8 +78,10 @@ function Walk.new(manager, npc)
 
         -- Aquire new target which we will try to move to.
         tarX, tarY = aquireTarget(npc:getX(), npc:getY());
-        targetTile, targetDir = getBestTile(tarX, tarY)
-        npc:setPreviousTile(npc:getTile());
+        if tarX and tarY then
+            targetTile, targetDir = getBestTile(tarX, tarY)
+            npc:setPreviousTile(npc:getTile());
+        end
     end
 
     function self:update(dt)
