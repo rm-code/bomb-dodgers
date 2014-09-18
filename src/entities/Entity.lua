@@ -67,6 +67,51 @@ function Entity.new(arena, x, y, anim)
     -- ------------------------------------------------
 
     ---
+    -- Increases the blast radius of a bomb.
+    --
+    local function activateFireUp()
+        if not snail then
+            blastRadius = blastRadius + 1;
+        else
+            tmpRadius = tmpRadius + 1;
+        end
+    end
+
+    ---
+    -- Increases the bomb carry capacity of the entity.
+    --
+    local function activateBombUp()
+        if not snail then
+            bombCapacity = bombCapacity + 1;
+        else
+            tmpCap = tmpCap + 1;
+        end
+    end
+
+    ---
+    -- Prevents entity from planting bombs.
+    --
+    local function activateBombDown()
+        bombdown = true;
+        counters.bombdown = 5;
+    end
+
+    ---
+    -- Slows down the player and reduces his carry capacity and blast
+    -- radius to a minimum.
+    --
+    local function activateSnail()
+        snail = true;
+        counters.snail = 5;
+        lerpFactor = 0.1;
+        tmpCap = bombCapacity;
+        bombCapacity = 1;
+        tmpRadius = blastRadius;
+        blastRadius = 2;
+        currentSpeed = slowSpeed;
+    end
+
+    ---
     -- Takes an upgrade and decides what should happen to the entity
     -- based on the type of upgrade.
     -- @param x - The x position from which to pick the upgrade.
@@ -76,22 +121,14 @@ function Entity.new(arena, x, y, anim)
         local target = arena:getTile(x, y);
         if target:getContentType() == CONTENT.UPGRADE then
             local upgrade = target:getContent();
-            if upgrade:getUpgradeType() == 'fireup' and not snail then
-                blastRadius = blastRadius + 1;
-            elseif upgrade:getUpgradeType() == 'bombup' and not snail then
-                bombCapacity = bombCapacity + 1;
-            elseif upgrade:getUpgradeType() == 'bombdown' then
-                bombdown = true;
-                counters.bombdown = 5;
+            if upgrade:getUpgradeType() == 'fireup' then
+                activateFireUp();
+            elseif upgrade:getUpgradeType() == 'bombup' then
+                activateBombUp();
+            elseif upgrade:getUpgradeType() == 'bombdown' and not snail then
+                activateBombDown();
             elseif upgrade:getUpgradeType() == 'snail' and not snail then
-                snail = true;
-                counters.snail = 5;
-                lerpFactor = 0.1;
-                tmpCap = bombCapacity;
-                bombCapacity = 1;
-                tmpRadius = blastRadius;
-                blastRadius = 2;
-                currentSpeed = slowSpeed;
+                activateSnail();
             end
             upgrade:remove();
         end
