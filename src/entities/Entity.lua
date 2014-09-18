@@ -42,9 +42,11 @@ function Entity.new(arena, x, y, anim)
 
     local dead = false;
 
-    local counters = {};
-    local bombdown;
-    local snail;
+    local upgrades = {};
+    upgrades['fireup'] = {};
+    upgrades['bombup'] = {};
+    upgrades['bombdown'] = {};
+    upgrades['snail'] = {};
 
     local alpha = 255; -- The current alpha of the entity.
     local pulse = 0; -- The pulse which will be used to create a pulsating effect.
@@ -67,10 +69,10 @@ function Entity.new(arena, x, y, anim)
     -- ------------------------------------------------
 
     ---
-    -- Increases the blast radius of a bomb.
+    -- Increases the blast radius of each bomb.
     --
-    local function activateFireUp()
-        if not snail then
+    function upgrades.fireup.activate()
+        if not upgrades.snail.active then
             blastRadius = blastRadius + 1;
         else
             tmpRadius = tmpRadius + 1;
@@ -80,8 +82,8 @@ function Entity.new(arena, x, y, anim)
     ---
     -- Increases the bomb carry capacity of the entity.
     --
-    local function activateBombUp()
-        if not snail then
+    function upgrades.bombup.activate()
+        if not upgrades.snail.active then
             bombCapacity = bombCapacity + 1;
         else
             tmpCap = tmpCap + 1;
@@ -91,24 +93,44 @@ function Entity.new(arena, x, y, anim)
     ---
     -- Prevents entity from planting bombs.
     --
-    local function activateBombDown()
-        bombdown = true;
-        counters.bombdown = 5;
+    function upgrades.bombdown.activate()
+        upgrades.bombdown.active = true;
+        upgrades.bombdown.counter = 5;
+    end
+
+    ---
+    -- Restores player's ability to plant bombs.
+    --
+    function upgrades.bombdown.deactivate()
+        upgrades.bombdown.active = false;
+        upgrades.bombdown.counter = nil;
     end
 
     ---
     -- Slows down the player and reduces his carry capacity and blast
     -- radius to a minimum.
     --
-    local function activateSnail()
-        snail = true;
-        counters.snail = 5;
+    function upgrades.snail.activate()
+        upgrades.snail.active = true;
+        upgrades.snail.counter = 5;
         lerpFactor = 0.1;
         tmpCap = bombCapacity;
         bombCapacity = 1;
         tmpRadius = blastRadius;
         blastRadius = 2;
         currentSpeed = slowSpeed;
+    end
+
+    ---
+    -- Restores the players original speed, bomb capacity and blast radius.
+    --
+    function upgrades.snail.deactivate()
+        upgrades.snail.active = false;
+        upgrades.snail.counter = nil;
+        lerpFactor = 0.2;
+        bombCapacity = tmpCap;
+        blastRadius = tmpRadius;
+        currentSpeed = normalSpeed;
     end
 
     ---
@@ -122,18 +144,26 @@ function Entity.new(arena, x, y, anim)
         if target:getContentType() == CONTENT.UPGRADE then
             local upgrade = target:getContent();
             if upgrade:getUpgradeType() == 'fireup' then
-                activateFireUp();
+                upgrades.fireup.activate();
             elseif upgrade:getUpgradeType() == 'bombup' then
-                activateBombUp();
-            elseif upgrade:getUpgradeType() == 'bombdown' and not snail then
-                activateBombDown();
-            elseif upgrade:getUpgradeType() == 'snail' and not snail then
-                activateSnail();
+                upgrades.bombup.activate();
+            elseif upgrade:getUpgradeType() == 'bombdown' then
+                upgrades.bombdown.activate();
+            elseif upgrade:getUpgradeType() == 'snail' and not upgrades.snail.active then
+                upgrades.snail.activate();
             end
             upgrade:remove();
         end
     end
 
+    ---
+    -- Checks for collisions between the bounding box of the
+    -- entity versus another given bounding box.
+    -- @param x1
+    -- @param y1
+    -- @param x2
+    -- @param y2
+    --
     local function doesCollide(x1, y1, x2, y2)
         return x1 < x2 + Constants.TILESIZE
                 and x2 < x1 + Constants.TILESIZE
@@ -141,45 +171,50 @@ function Entity.new(arena, x, y, anim)
                 and y2 < y1 + Constants.TILESIZE;
     end
 
+    ---
+    -- This function will create a pulsating effect, by reducing
+    -- and increasing the alpha channel of the entity as long as
+    -- any negative effects are active.
+    -- @param dt
+    --
+    local function updateAlpha(dt)
+        if upgrades.bombdown.active or upgrades.snail.active then
+            pulse = pulse + dt * 2;
+            local sin = math.sin(pulse);
+            if sin < 0 then
+                pulse = 0;
+                sin = 0;
+            end
+            alpha = sin * 255;
+        else
+            alpha = 255;
+        end
+    end
+
+    ---
+    -- Upgrades the counter of each up / downgrade and deactivates
+    -- it, if the counter has reached zero.
+    -- @param dt
+    --
+    local function updateUpgrades(dt)
+        for name, upgrade in pairs(upgrades) do
+            if upgrade.active then
+                if upgrade.counter and upgrade.counter > 0 then
+                    upgrades[name].counter = upgrades[name].counter - dt;
+                else
+                    upgrades[name].deactivate();
+                end
+            end
+        end
+    end
+
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
 
     function self:updateCounters(dt)
-        if bombdown then
-            if counters.bombdown > 0 then
-                counters.bombdown = counters.bombdown - dt;
-            else
-                bombdown = false;
-                counters.bombdown = nil;
-            end
-        end
-        if snail then
-            if counters.snail > 0 then
-                counters.snail = counters.snail - dt;
-            else
-                snail = false;
-                counters.snail = nil;
-                lerpFactor = 0.2;
-                bombCapacity = tmpCap;
-                blastRadius = tmpRadius;
-                currentSpeed = normalSpeed;
-            end
-        end
-
-        if bombdown or snail then
-            pulse = pulse + dt * 2;
-            local sin = math.sin(pulse);
-
-            if sin < 0 then
-                pulse = 0;
-                sin = 0;
-            end
-
-            alpha = sin * 255;
-        else
-            alpha = 255;
-        end
+        updateUpgrades(dt);
+        updateAlpha(dt);
     end
 
     function self:updateAnimation(dt)
@@ -315,7 +350,7 @@ function Entity.new(arena, x, y, anim)
     end
 
     function self:plantBomb()
-        if liveBombs < bombCapacity and not bombdown then
+        if liveBombs < bombCapacity and not upgrades.bombdown.active then
             if self:getTile():isPassable() then
                 self:getTile():plantBomb(blastRadius, self);
                 liveBombs = liveBombs + 1;
