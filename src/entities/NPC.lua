@@ -90,7 +90,6 @@ function NPC.new(arena, x, y)
         end
 
         self:updateCounters(dt);
-        self:updateAnimation(dt);
     end
 
     function self:draw()

@@ -208,6 +208,14 @@ function Entity.new(arena, x, y, anim)
         end
     end
 
+    ---
+    -- Update the currently active animation.
+    -- @param dt
+    --
+    local function updateAnimation(dt)
+        curAnim:update(dt);
+    end
+
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
@@ -215,10 +223,7 @@ function Entity.new(arena, x, y, anim)
     function self:updateCounters(dt)
         updateUpgrades(dt);
         updateAlpha(dt);
-    end
-
-    function self:updateAnimation(dt)
-        curAnim:update(dt);
+        updateAnimation(dt);
     end
 
     function self:drawAnimation()
