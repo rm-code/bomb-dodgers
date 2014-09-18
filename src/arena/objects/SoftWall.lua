@@ -47,20 +47,10 @@ function SoftWall.new(x, y)
     -- ------------------------------------------------
 
     function self:explode(_, _, _)
-        -- Remove the softwall from the tile.
-        -- TODO replace with burning animation.
         self:getParent():clearContent();
 
         -- Randomly drop upgrades.
         dropUpgrade(self:getX(), self:getY());
-    end
-
-    function self:increaseDanger(_, _, _)
-        return;
-    end
-
-    function self:decreaseDanger(_, _, _)
-        return;
     end
 
     -- ------------------------------------------------

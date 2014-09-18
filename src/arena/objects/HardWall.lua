@@ -22,21 +22,7 @@ local CONTENT = Constants.CONTENT;
 -- ------------------------------------------------
 
 function HardWall.new(x, y)
-    local self = Content.new(CONTENT.HARDWALL, false, x, y);
-
-    function self:explode(_, _, _)
-        return;
-    end
-
-    function self:increaseDanger(_, _, _)
-        return;
-    end
-
-    function self:decreaseDanger(_, _, _)
-        return;
-    end
-
-    return self;
+    return Content.new(CONTENT.HARDWALL, false, x, y);
 end
 
 return HardWall;

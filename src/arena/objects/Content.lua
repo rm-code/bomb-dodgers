@@ -32,6 +32,18 @@ function Content.new(type, passable, x, y)
         return;
     end
 
+    function self:increaseDanger(_, _, _)
+        return;
+    end
+
+    function self:decreaseDanger(_, _, _)
+        return;
+    end
+
+    function self:explode(_, _, _)
+        return;
+    end
+
     -- ------------------------------------------------
     -- Getters
     -- ------------------------------------------------

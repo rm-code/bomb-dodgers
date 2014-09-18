@@ -86,10 +86,6 @@ function Upgrade.new(x, y)
         sprite = assignSprite(upgradeType);
     end
 
-    function self:update(_)
-        return;
-    end
-
     function self:draw()
         love.graphics.draw(sprite, self:getX() * TILESIZE, self:getY() * TILESIZE);
     end
@@ -103,14 +99,6 @@ function Upgrade.new(x, y)
             UpgradeManager.remove(id);
         end
         self:getParent():clearContent();
-    end
-
-    function self:increaseDanger(_, _, _)
-        return;
-    end
-
-    function self:decreaseDanger(_, _, _)
-        return;
     end
 
     -- ------------------------------------------------
