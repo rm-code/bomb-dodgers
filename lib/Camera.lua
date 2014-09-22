@@ -1,5 +1,22 @@
 --==================================================================================================
--- Copyright (C) 2014 by Robert Machmer                                                            =
+-- Copyright (c) 2014 Robert Machmer                                                               =
+--                                                                                                 =
+-- This software is provided 'as-is', without any express or implied                               =
+-- warranty. In no event will the authors be held liable for any damages                           =
+-- arising from the use of this software.                                                          =
+--                                                                                                 =
+-- Permission is granted to anyone to use this software for any purpose,                           =
+-- including commercial applications, and to alter it and redistribute it                          =
+-- freely, subject to the following restrictions:                                                  =
+--                                                                                                 =
+-- 1. The origin of this software must not be misrepresented; you must not                         =
+--    claim that you wrote the original software. If you use this software                         =
+--    in a product, an acknowledgment in the product documentation would be                        =
+--    appreciated but is not required.                                                             =
+-- 2. Altered source versions must be plainly marked as such, and must not be                      =
+--    misrepresented as being the original software.                                               =
+-- 3. This notice may not be removed or altered from any source distribution.                      =
+--                                                                                                 =
 --==================================================================================================
 
 local Math = require('lib/Math');
@@ -23,7 +40,7 @@ function Camera.new(x, y, zoom)
 
     local x = x or 0;
     local y = y or 0;
-    local zoom = zoom or 0;
+    local zoom = zoom or 2;
     local minX, minY, maxX, maxY;
 
     local screenW, screenH = love.graphics.getDimensions();
@@ -44,36 +61,26 @@ function Camera.new(x, y, zoom)
     end
 
     function self:zoom(dZoom)
-        zoom = Math.clamp(0.5, zoom + dZoom, 5);
+        zoom = Math.clamp(0.5, zoom + dZoom, 10);
     end
 
     function self:track(tarX, tarY, speed, dt)
         local nX = x - (x - math.floor(tarX)) * dt * speed;
         local nY = y - (y - math.floor(tarY)) * dt * speed;
-
-        if minX and maxX then
-            x = Math.clamp(minX + screenW / (2 * zoom), nX, maxX - screenW / (2 * zoom));
-        else
-            x = nX;
-        end
-
-        if minY and maxY then
-            y = Math.clamp(minY + screenH / (2 * zoom), nY, maxY - screenH / (2 * zoom));
-        else
-            y = nY;
-        end
+        x = (minX and maxX) and Math.clamp(minX + screenW / (2 * zoom), nX, maxX - screenW / (2 * zoom)) or nX;
+        y = (minY and maxY) and Math.clamp(minY + screenH / (2 * zoom), nY, maxY - screenH / (2 * zoom)) or nY;
     end
 
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
 
-    function self:setZoom(_zoom)
-        zoom = Math.clamp(0.5, _zoom, 5);
+    function self:setZoom(z)
+        zoom = Math.clamp(0.5, z, 5);
     end
 
-    function self:setBoundaries(_minX, _minY, _maxX, _maxY)
-        minX, maxX, minY, maxY = _minX, _maxX, _minY, _maxY;
+    function self:setBoundaries(mX, mY, mxX, mxY)
+        minX, maxX, minY, maxY = mX, mxX, mY, mxY;
     end
 
     -- ------------------------------------------------
