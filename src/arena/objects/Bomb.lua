@@ -9,6 +9,7 @@ local AniMAL = require('lib/AniMAL');
 local ResourceManager = require('lib/ResourceManager');
 local PlayerManager = require('src/entities/PlayerManager');
 local NpcManager = require('src/entities/NpcManager');
+local Math = require('lib/Math');
 
 -- ------------------------------------------------
 -- Module
@@ -58,13 +59,46 @@ function Bomb.new(x, y)
     local direction;
     local gridX = x;
     local gridY = y;
-    local pxX = gridX * TILESIZE;
-    local pxY = gridY * TILESIZE;
+    local realX = gridX * TILESIZE;
+    local realY = gridY * TILESIZE;
     local speed = 200;
 
     -- ------------------------------------------------
     -- Private Functions
     -- ------------------------------------------------
+
+    local function updatePosition(dt, direction)
+        if direction == 'n' then
+            realY = realY - 1 * speed * dt;
+        elseif direction == 's' then
+            realY = realY + 1 * speed * dt;
+        elseif direction == 'e' then
+            realX = realX + 1 * speed * dt;
+        elseif direction == 'w' then
+            realX = realX - 1 * speed * dt;
+        elseif direction == 'lerp' then
+            realX = Math.lerp(realX, gridX * Constants.TILESIZE, 0.2);
+            realY = Math.lerp(realY, gridY * Constants.TILESIZE, 0.2);
+        end
+    end
+
+    local function updateGrid(tmpX, tmpY, adjTiles, target)
+        if tmpX ~= gridX or tmpY ~= gridY then
+            -- Decrease the danger value of all tiles within the blast radius.
+            self:decreaseDanger(blastRadius, 'all', adjTiles);
+
+            -- Remove the bomb from the current tile.
+            self:getParent():clearContent();
+
+            -- Add the bomb to the next tile.
+            target:addContent(self);
+
+            -- Update the bombs coordinates and make distribute the danger information.
+            gridX = tmpX;
+            gridY = tmpY;
+            self:increaseDanger(blastRadius, 'all', target:getAdjacentTiles(gridX, gridY));
+        end
+    end
 
     ---
     -- Move the bomb into the direction it has been kicked in, until it hits
@@ -72,57 +106,31 @@ function Bomb.new(x, y)
     -- @param direction - The direction the bomb has been kicked in.
     --
     local function move(dt, direction)
-        local adjTiles = self:getParent():getAdjacentTiles(gridX, gridY);
-        local target = adjTiles[direction];
-        local playerX, playerY = PlayerManager.getClosestPlayer(gridX, gridY);
-        local npcX, npcY = NpcManager.getClosestNpc(gridX, gridY);
+        if direction == 'lerp' then
+            updatePosition(dt, direction);
+            return 'lerp';
+        end
 
+        local adjTiles = self:getParent():getAdjacentTiles(gridX, gridY);
+        local target = self:getParent():getAdjacentTiles(gridX, gridY)[direction];
         if target:getContentType() == CONTENT.EXPLOSION then
             self:getParent():explode(blastRadius, 'all');
             return;
-        elseif (playerX == target:getX() and playerY == target:getY())
-                or (npcX == target:getX() and npcY == target:getY())
-                or not target:isPassable() then
-            gridX = self:getParent():getX();
-            gridY = self:getParent():getY();
-            pxX = gridX * TILESIZE;
-            pxY = gridY * TILESIZE;
-        elseif target:isPassable() then
-            -- Update pixel coordinates
-            if direction == 'n' then
-                pxY = pxY - 1 * speed * dt;
-            elseif direction == 's' then
-                pxY = pxY + 1 * speed * dt;
-            elseif direction == 'e' then
-                pxX = pxX + 1 * speed * dt;
-            elseif direction == 'w' then
-                pxX = pxX - 1 * speed * dt;
-            end
+        end
 
-            -- Calculate the grid coordinates, by dividing the real
-            -- coordinates by the tile size of the grid and rounding it
-            -- to the next integer.
-            local tmpX = math.floor(pxX / Constants.TILESIZE);
-            local tmpY = math.floor(pxY / Constants.TILESIZE);
+        local playerX, playerY = PlayerManager.getClosestPlayer(gridX, gridY);
+        local npcX, npcY = NpcManager.getClosestNpc(gridX, gridY);
+        if playerX == target:getX() and playerY == target:getY() then
+            return 'lerp';
+        elseif npcX == target:getX() and npcY == target:getY() then
+            return 'lerp';
+        elseif not target:isPassable() then
+            return 'lerp';
+        end
 
-            if tmpX ~= gridX or tmpY ~= gridY then
-                gridX = tmpX;
-                gridY = tmpY;
-
-                -- Decrease the danger value of all tiles within the blast radius.
-                self:decreaseDanger(blastRadius, 'all', adjTiles);
-
-                -- Remove the bomb from the current tile.
-                self:getParent():clearContent();
-
-                -- Add the bomb to the next tile.
-                target:addContent(self);
-
-                -- Update the bombs coordinates and make distribute the danger information.
-                gridX = target:getX();
-                gridY = target:getY();
-                self:increaseDanger(blastRadius, 'all', target:getAdjacentTiles(gridX, gridY));
-            end
+        if target:isPassable() then
+            updatePosition(dt, direction);
+            updateGrid(math.floor(realX / Constants.TILESIZE), math.floor(realY / Constants.TILESIZE), adjTiles, target);
             return direction;
         end
     end
@@ -132,7 +140,7 @@ function Bomb.new(x, y)
     -- ------------------------------------------------
 
     function self:draw()
-        anim:draw(pxX, pxY);
+        anim:draw(realX, realY);
     end
 
     function self:update(dt)
