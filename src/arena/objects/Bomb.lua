@@ -30,6 +30,7 @@ local BOMBTIMER = Constants.BOMBTIMER;
 -- ------------------------------------------------
 
 local images = {};
+local sounds = {};
 
 -- Register module with resource manager.
 ResourceManager.register(Bomb);
@@ -39,6 +40,11 @@ ResourceManager.register(Bomb);
 --
 function Bomb.loadImages()
     images['bomb_anim'] = ResourceManager.loadImage('res/img/content/bomb_animation.png');
+end
+
+function Bomb.loadSounds()
+    sounds['explosion'] = ResourceManager.loadSound('res/snd/explosion.ogg');
+    sounds['explosion']:setRolloff(0.02);
 end
 
 -- ------------------------------------------------
@@ -166,6 +172,10 @@ function Bomb.new(x, y)
     -- @param adjTiles - The tiles adjacent to the bomb's parent tile.
     --
     function self:explode(_, _, adjTiles)
+        sounds['explosion']:stop();
+        sounds['explosion']:play();
+        sounds['explosion']:setPosition(realX, realY, 0);
+
         -- Send out a signal to decrease the danger value of the tiles within the blast radius.
         self:decreaseDanger(blastRadius, 'all', self:getParent():getAdjacentTiles(gridX, gridY));
         -- Add an explosion to the tile the bomb was on.

@@ -109,6 +109,8 @@ function Player.new(arena, x, y)
         self:updateAnimation(dt);
         self:updateUpgrades(dt);
         self:updateCamera(dt);
+
+        love.audio.setPosition(self:getRealX(), self:getRealY(), 0);
     end
 
     function self:draw()

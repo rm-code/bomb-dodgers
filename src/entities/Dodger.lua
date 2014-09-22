@@ -6,12 +6,36 @@ local Constants = require('src/Constants');
 local Entity = require('src/entities/Entity');
 local NpcManager = require('src/entities/NpcManager');
 local PlayerManager = require('src/entities/PlayerManager');
+local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
 -- ------------------------------------------------
 
 local Dodger = {};
+
+-- ------------------------------------------------
+-- Resource Loading
+-- ------------------------------------------------
+
+local images = {};
+local sounds = {};
+
+-- Register module with resource manager.
+ResourceManager.register(Dodger);
+
+---
+-- Load images.
+--
+function Dodger.loadImages()
+    images['bomb_anim'] = ResourceManager.loadImage('res/img/content/bomb_animation.png');
+end
+
+function Dodger.loadSounds()
+    sounds['plant'] = ResourceManager.loadSound('res/snd/plant.ogg');
+    sounds['plant']:setVolume(0.5);
+    sounds['plant']:setRolloff(0.02);
+end
 
 -- ------------------------------------------------
 -- Constants
@@ -177,6 +201,9 @@ function Dodger.new(arena, x, y, animations)
             if self:getTile():isPassable() then
                 self:getTile():plantBomb(blastRadius, self);
                 liveBombs = liveBombs + 1;
+                sounds['plant']:stop();
+                sounds['plant']:play();
+                sounds['plant']:setPosition(self:getRealX(), self:getRealY(), 0);
             end
         end
     end

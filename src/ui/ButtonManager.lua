@@ -14,13 +14,15 @@ local ButtonManager = {};
 -- Load Resources
 -- ------------------------------------------------
 
-local SOUNDS = {};
+local sounds = {};
 
 ResourceManager.register(ButtonManager);
 
 function ButtonManager.loadSounds()
-    SOUNDS['select'] = ResourceManager.loadSound('res/snd/select.wav', 'static');
-    SOUNDS['beep'] = ResourceManager.loadSound('res/snd/beep.wav', 'static');
+    sounds['select'] = ResourceManager.loadSound('res/snd/select.wav', 'static');
+    sounds['beep'] = ResourceManager.loadSound('res/snd/beep.wav', 'static');
+    sounds['select']:setRelative(true);
+    sounds['beep']:setRelative(true);
 end
 
 -- ------------------------------------------------
@@ -51,7 +53,7 @@ function ButtonManager.new()
     end
 
     function self:press()
-        SOUNDS['select']:play();
+        sounds['select']:play();
         curButton:press();
     end
 
@@ -61,19 +63,19 @@ function ButtonManager.new()
             curButton:setActive(true);
         elseif curButton ~= buttons[no] then
             curButton:setActive(false);
-            SOUNDS['beep']:play();
+            sounds['beep']:play();
             curButton = buttons[no];
             curButton:setActive(true);
         end
     end
 
     function self:next()
-        SOUNDS['beep']:play();
+        sounds['beep']:play();
         currentButton = currentButton == #buttons and 1 or currentButton + 1;
     end
 
     function self:prev()
-        SOUNDS['beep']:play();
+        sounds['beep']:play();
         currentButton = currentButton == 1 and #buttons or currentButton - 1;
     end
 
