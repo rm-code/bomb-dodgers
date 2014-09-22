@@ -37,17 +37,14 @@ function NpcManager.draw()
     end
 end
 
-function NpcManager.getClosestNpc(x, y)
+function NpcManager.getClosest(x, y)
     local distance;
     local targetId;
 
     for id, target in pairs(npcs) do
         local td = math.abs(x - target:getX()) + math.abs(y - target:getY());
 
-        if not distance then
-            distance = td;
-            targetId = id;
-        elseif td < distance then
+        if not distance or td < distance then
             distance = td;
             targetId = id;
         end
@@ -56,7 +53,7 @@ function NpcManager.getClosestNpc(x, y)
     return npcs[targetId]:getX(), npcs[targetId]:getY();
 end
 
-function NpcManager.getNpcCount()
+function NpcManager.getCount()
     local i = 0;
     for _, _ in pairs(npcs) do
         i = i + 1;

@@ -99,7 +99,7 @@ function NPC.new(arena, x, y)
         end
 
         -- Plant bombs if player is in bomb's blast radius.
-        local playerX, playerY = PlayerManager.getClosestPlayer(x, y);
+        local playerX, playerY = PlayerManager.getClosest(x, y);
         if playerX == x then
             if math.abs(playerY - y) < radius then
                 return true;

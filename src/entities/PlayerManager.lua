@@ -25,17 +25,14 @@ function PlayerManager.remove(id)
     players[id] = nil;
 end
 
-function PlayerManager.getClosestPlayer(x, y)
+function PlayerManager.getClosest(x, y)
     local distance;
     local targetId;
 
     for id, target in pairs(players) do
         local td = math.abs(x - target:getX()) + math.abs(y - target:getY());
 
-        if not distance then
-            distance = td;
-            targetId = id;
-        elseif td < distance then
+        if not distance or td < distance then
             distance = td;
             targetId = id;
         end
@@ -52,7 +49,7 @@ function PlayerManager.clear()
     end
 end
 
-function PlayerManager.getPlayerCount()
+function PlayerManager.getCount()
     local i = 0;
     for _, _ in pairs(players) do
         i = i + 1;

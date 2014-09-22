@@ -150,10 +150,10 @@ function Level.new(level)
         end
 
         if self:isActive() then
-            if PlayerManager.getPlayerCount() == 0 then
+            if PlayerManager.getCount() == 0 then
                 endRound('npc');
                 return;
-            elseif NpcManager.getNpcCount() == 0 then
+            elseif NpcManager.getCount() == 0 then
                 endRound('player');
                 return;
             end
@@ -189,8 +189,8 @@ function Level.new(level)
             PaletteSwitcher.unset();
 
             love.graphics.setColor(0, 0, 0);
-            love.graphics.print('NPCs:' .. NpcManager.getNpcCount(), 20, 20);
-            love.graphics.print('Players:' .. PlayerManager.getPlayerCount(), 20, 40);
+            love.graphics.print('NPCs:' .. NpcManager.getCount(), 20, 20);
+            love.graphics.print('Players:' .. PlayerManager.getCount(), 20, 40);
             love.graphics.print('Round:' .. round, 20, 60);
             love.graphics.print('Stage:' .. stage, 20, 80);
             love.graphics.setColor(255, 255, 255);

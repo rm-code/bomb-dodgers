@@ -21,8 +21,8 @@ function Move.new(fsm, npc)
     local curTile;
 
     local function aquireTarget(x, y)
-        local playerX, playerY = PlayerManager.getClosestPlayer(x, y);
-        local upgradeX, upgradeY = UpgradeManager.getClosestUpgrade(x, y);
+        local playerX, playerY = PlayerManager.getClosest(x, y);
+        local upgradeX, upgradeY = UpgradeManager.getClosest(x, y);
 
         if upgradeX and upgradeY then
             if math.abs(x - upgradeX) + math.abs(y - upgradeY) < math.abs(x - playerX) + math.abs(y - playerY) then
