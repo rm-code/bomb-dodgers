@@ -313,9 +313,9 @@ function Entity.new(arena, x, y, anim)
         local adjTiles = arena:getAdjacentTiles(gridX, gridY);
 
         if prefDir and checkDirection(dt, adjTiles, prefDir) then
-            return;
+            return true;
         elseif altDir and checkDirection(dt, adjTiles, altDir) then
-            return;
+            return true;
         end
     end
 
@@ -334,8 +334,7 @@ function Entity.new(arena, x, y, anim)
         -- as the previous direction.
         if dirA and not dirB then
             prevMovementDir = dirA;
-            moveIntoDirection(dt, dirA);
-            return;
+            return moveIntoDirection(dt, dirA);
         end
 
         -- If two keys are pressed, check if one of them was
@@ -343,11 +342,9 @@ function Entity.new(arena, x, y, anim)
         -- direction.
         if dirA and dirB then
             if dirA == prevMovementDir then
-                moveIntoDirection(dt, dirB, dirA);
+                return moveIntoDirection(dt, dirB, dirA);
             elseif dirB == prevMovementDir then
-                moveIntoDirection(dt, dirA, dirB);
-            else
-                return;
+                return moveIntoDirection(dt, dirA, dirB);
             end
         end
     end

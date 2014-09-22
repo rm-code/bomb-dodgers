@@ -1,6 +1,8 @@
---==================================================================================================
--- Copyright (C) 2014 by Robert Machmer                                                            =
---==================================================================================================
+local Constants = require('src/Constants');
+
+-- ------------------------------------------------
+-- Module
+-- ------------------------------------------------
 
 local Evade = {};
 
@@ -8,26 +10,12 @@ local Evade = {};
 -- Constructor
 -- ------------------------------------------------
 
-function Evade.new(manager, npc)
+function Evade.new(fsm, npc)
     local self = {};
 
-    -- ------------------------------------------------
-    -- Private Variables
-    -- ------------------------------------------------
+    local direction;
+    local prevDirection;
 
-    local npc = npc;
-    local manager = manager;
-
-    -- ------------------------------------------------
-    -- Private Function
-    -- ------------------------------------------------
-
-    ---
-    -- Checks the tiles around the npc if they are safe
-    -- and passable or not.
-    -- @param adjTiles - The tiles to check.
-    -- @return True if the tiles are passable and safe.
-    --
     local function checkAdjacentTiles(adjTiles)
         for _, tile in pairs(adjTiles) do
             if tile:isPassable() and tile:isSafe() then
@@ -36,26 +24,19 @@ function Evade.new(manager, npc)
         end
     end
 
-    ---
-    -- Searches for a safe tile near to the npc.
-    -- @param adjTiles -- The tiles to check.
-    --
     local function evadeBombs(adjTiles)
         local bestDirection;
-        local shortest = 10000;
+        local shortest;
 
         -- Look for a path to a safe tile.
         for dir, tile in pairs(adjTiles) do
-            -- Ignore impassable tiles.
-            if tile:isPassable() then
+            if tile:isPassable() and dir ~= prevDirection then
                 local checkedTiles = 1;
 
-                local currentlyCheckedTile = tile;
-                local adjTiles = currentlyCheckedTile:getAdjacentTiles();
-                local nextTile = adjTiles[dir];
+                local adjTiles = tile:getAdjacentTiles();
 
                 -- Check the next tile in the same direction.
-                while not currentlyCheckedTile:isSafe() do
+                while not tile:isSafe() do
 
                     -- Check the adjacent tiles of the current tile to see if there
                     -- is a quick escape outside of the direct bomb path.
@@ -64,51 +45,64 @@ function Evade.new(manager, npc)
                     else
                         checkedTiles = checkedTiles + 1;
 
-                        currentlyCheckedTile = nextTile;
-                        adjTiles = currentlyCheckedTile:getAdjacentTiles();
-                        nextTile = adjTiles[dir];
+                        tile = adjTiles[dir];
+                        adjTiles = tile:getAdjacentTiles();
                     end
                 end
 
                 -- If the tile is passable and not dangerous compare it
                 -- to previously checked tiles and see if it would provide
                 -- a shorter way.
-                if currentlyCheckedTile:isPassable() and checkedTiles < shortest then
+                if not shortest or (tile:isPassable() and checkedTiles < shortest) then
                     shortest = checkedTiles;
                     bestDirection = dir;
                 end
             end
         end
-
         return bestDirection;
     end
 
-    -- ------------------------------------------------
-    -- Public Functions
-    -- ------------------------------------------------
+    local function isSafeMove(dir)
+        local adjTiles = npc:getAdjacentTiles();
+        if adjTiles[dir] and adjTiles[dir]:getContentType() ~= Constants.CONTENT.EXPLOSION then
+            return true;
+        end
+    end
 
-    function self:enter() end
+    local function getPrevDirection(curDirection)
+        if curDirection == 'n' then
+            return 's';
+        elseif curDirection == 's' then
+            return 'n';
+        elseif curDirection == 'e' then
+            return 'w';
+        elseif curDirection == 'w' then
+            return 'e';
+        end
+    end
 
-    function self:exit() end
+    function self:enter()
+        print('Evade');
+        direction = evadeBombs(npc:getAdjacentTiles());
+        prevDirection = getPrevDirection(direction);
+    end
 
-    ---
-    -- Checks for a new direction and moves the npc
-    -- until a safe tile is reached.
-    --
     function self:update(dt)
-        local direction = evadeBombs(npc:getAdjacentTiles());
-        if direction then
+        direction = evadeBombs(npc:getAdjacentTiles());
+        if direction and isSafeMove(direction) then
+            prevDirection = getPrevDirection(direction);
             npc:move(dt, direction);
         end
 
         if npc:getTile():isSafe() then
-            manager:switch('idle');
+            fsm:switch('move');
         end
     end
 
-    -- ------------------------------------------------
-    -- Return Object
-    -- ------------------------------------------------
+    function self:exit()
+        direction = nil;
+        prevDirection = nil;
+    end
 
     return self;
 end
@@ -120,5 +114,5 @@ end
 return Evade;
 
 --==================================================================================================
--- Created 13.08.14 - 18:16                                                                        =
+-- Created 22.09.14 - 05:20                                                                        =
 --==================================================================================================

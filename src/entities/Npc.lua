@@ -5,12 +5,13 @@
 local Constants = require('src/Constants');
 local Entity = require('src/entities/Entity');
 local StateManager = require('src/entities/states/StateManager');
-local Idle = require('src/entities/states/Idle');
-local Walk = require('src/entities/states/Walk');
+local Move = require('src/entities/states/Move');
 local Evade = require('src/entities/states/Evade');
+local Random = require('src/entities/states/Random');
 local AniMAL = require('lib/AniMAL');
 local ResourceManager = require('lib/ResourceManager');
 local NpcManager = require('src/entities/NpcManager');
+local PlayerManager = require('src/entities/PlayerManager');
 
 -- ------------------------------------------------
 -- Module
@@ -68,12 +69,12 @@ function NPC.new(arena, x, y)
     local fsm = StateManager.new();
 
     local states = {};
-    states.idle = Idle.new(fsm, self);
-    states.walk = Walk.new(fsm, self);
+    states.move = Move.new(fsm, self);
+    states.random = Random.new(fsm, self);
     states.evade = Evade.new(fsm, self);
 
     fsm:initStates(states);
-    fsm:switch('idle');
+    fsm:switch('move');
 
     local prevTile;
 
@@ -81,13 +82,42 @@ function NPC.new(arena, x, y)
     -- Public Functions
     -- ------------------------------------------------
 
-    function self:update(dt)
-        fsm:update(dt);
+    function self:isSafeToPlant(adjTiles)
+        for _, tile in pairs(adjTiles) do
+            if tile:isSafe() and tile:isPassable() then
+                return true;
+            end
+        end
+    end
 
-        if self:getTile(): getContentType() == Constants.CONTENT.EXPLOSION then
+    function self:isGoodToPlant(adjTiles, x, y, radius)
+        -- Plant bombs next to soft walls.
+        for _, tile in pairs(adjTiles) do
+            if tile:getContentType() == Constants.CONTENT.SOFTWALL then
+                return true;
+            end
+        end
+
+        -- Plant bombs if player is in bomb's blast radius.
+        local playerX, playerY = PlayerManager.getClosestPlayer(x, y);
+        if playerX == x then
+            if math.abs(playerY - y) < radius then
+                return true;
+            end
+        elseif playerY == y then
+            if math.abs(playerX - x) < radius then
+                return true;
+            end
+        end
+    end
+
+    function self:update(dt)
+        if self:getTile():getContentType() == Constants.CONTENT.EXPLOSION then
             NpcManager.remove(self:getId());
             self:kill();
         end
+
+        fsm:update(dt);
 
         self:updateCounters(dt);
     end
