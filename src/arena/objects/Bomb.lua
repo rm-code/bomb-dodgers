@@ -114,7 +114,12 @@ function Bomb.new(x, y)
         local adjTiles = self:getParent():getAdjacentTiles(gridX, gridY);
         local target = self:getParent():getAdjacentTiles(gridX, gridY)[direction];
         if target:getContentType() == CONTENT.EXPLOSION then
-            self:getParent():explode(blastRadius, 'all');
+            self:decreaseDanger(blastRadius, 'all', adjTiles);
+            self:getParent():clearContent();
+            gridX, gridY = target:getX(), target:getY();
+            target:addContent(self);
+            target:increaseDanger(blastRadius, 'all', adjTiles);
+            target:explode(blastRadius, 'all');
             return;
         end
 
