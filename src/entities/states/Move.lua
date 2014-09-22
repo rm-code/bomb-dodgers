@@ -14,7 +14,6 @@ local Move = {};
 function Move.new(fsm, npc)
     local self = {};
 
-    local results = {};
     local tarX, tarY;
     local direction;
     local prevDirection;
@@ -39,26 +38,17 @@ function Move.new(fsm, npc)
         local bestDir;
         local cost;
 
-        -- Clear results table.
-        for i = 1, #results do
-            results[i] = nil;
-        end
-
         for dir, tile in pairs(adjTiles) do
             if tile:isPassable() and tile:isSafe() and dir ~= prevDirection then
                 local ncost = math.abs(tile:getX() - tarX) + math.abs(tile:getY() - tarY);
                 if not cost or ncost <= cost then
                     cost = ncost;
                     bestDir = dir;
-                    results[#results + 1] = dir;
                 end
             end
         end
 
-        -- Randomly return one of the valid directions.
-        if #results > 0 then
-            return results[love.math.random(1, #results)];
-        end
+        return bestDir;
     end
 
     local function getPrevDirection(curDirection)
@@ -112,10 +102,6 @@ function Move.new(fsm, npc)
     end
 
     function self:exit()
-        for i = 1, #results do
-            results[i] = nil;
-        end
-
         tarX, tarY = nil, nil;
         direction = nil;
         prevDirection = nil;
