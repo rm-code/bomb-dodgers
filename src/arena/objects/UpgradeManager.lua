@@ -55,7 +55,7 @@ function UpgradeManager.getClosest(x, y)
     end
 
     if upgrades[targetId] then
-        return upgrades[targetId]:getX(), upgrades[targetId]:getY();
+        return upgrades[targetId];
     end
 end
 

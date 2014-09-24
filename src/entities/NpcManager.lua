@@ -50,7 +50,9 @@ function NpcManager.getClosest(x, y)
         end
     end
 
-    return npcs[targetId]:getX(), npcs[targetId]:getY();
+    if npcs[targetId] then
+        return npcs[targetId];
+    end
 end
 
 function NpcManager.getCount()

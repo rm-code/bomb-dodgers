@@ -123,11 +123,11 @@ function Bomb.new(x, y)
             return;
         end
 
-        local playerX, playerY = PlayerManager.getClosest(gridX, gridY);
-        local npcX, npcY = NpcManager.getClosest(gridX, gridY);
-        if playerX == target:getX() and playerY == target:getY() then
+        local player = PlayerManager.getClosest(gridX, gridY);
+        local npc = NpcManager.getClosest(gridX, gridY);
+        if player:getX() == target:getX() and player:getY() == target:getY() then
             return 'lerp';
-        elseif npcX == target:getX() and npcY == target:getY() then
+        elseif npc:getX() == target:getX() and npc:getY() == target:getY() then
             return 'lerp';
         elseif not target:isPassable() then
             return 'lerp';

@@ -39,7 +39,7 @@ function PlayerManager.getClosest(x, y)
     end
 
     if players[targetId] then
-        return players[targetId]:getX(), players[targetId]:getY();
+        return players[targetId];
     end
 end
 
