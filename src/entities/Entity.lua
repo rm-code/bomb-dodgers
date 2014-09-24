@@ -4,6 +4,8 @@
 
 local Math = require('lib/Math');
 local Constants = require('src/Constants');
+local NpcManager = require('src/entities/NpcManager');
+local PlayerManager = require('src/entities/PlayerManager');
 
 -- ------------------------------------------------
 -- Module
@@ -199,6 +201,16 @@ function Entity.new(arena, x, y, anim)
     local function updateUpgrades(dt)
         for name, upgrade in pairs(upgrades) do
             if upgrade.active then
+                local player = PlayerManager.getClosest(gridX, gridY);
+                if player and not player:isActive(name) and player ~= self and player:getX() == gridX and player:getY() == gridY then
+                    player:infect(name);
+                end
+
+                local npc = NpcManager.getClosest(gridX, gridY);
+                if npc and not npc:isActive(name) and npc ~= self and npc:getX() == gridX and npc:getY() == gridY then
+                    npc:infect(name);
+                end
+
                 if upgrade.counter and upgrade.counter > 0 then
                     upgrades[name].counter = upgrades[name].counter - dt;
                 else
@@ -366,6 +378,10 @@ function Entity.new(arena, x, y, anim)
         dead = true;
     end
 
+    function self:infect(upgrade)
+        upgrades[upgrade].activate();
+    end
+
     -- ------------------------------------------------
     -- Getters
     -- ------------------------------------------------
@@ -420,6 +436,10 @@ function Entity.new(arena, x, y, anim)
 
     function self:getPosition()
         return gridX, gridY;
+    end
+
+    function self:isActive(upgrade)
+        return upgrades[upgrade].active;
     end
 
     -- ------------------------------------------------
