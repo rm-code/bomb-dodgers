@@ -250,6 +250,10 @@ function Entity.new(arena, x, y, animations)
         alpha = nalpha;
     end
 
+    function self:setSpeed(nspeed)
+        speed = nspeed;
+    end
+
     return self;
 end
 
