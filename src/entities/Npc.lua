@@ -3,7 +3,7 @@
 --==================================================================================================
 
 local Constants = require('src/Constants');
-local Entity = require('src/entities/Entity');
+local Dodger = require('src/entities/Dodger');
 local StateManager = require('src/entities/states/StateManager');
 local Move = require('src/entities/states/Move');
 local Evade = require('src/entities/states/Evade');
@@ -60,7 +60,7 @@ end
 -- ------------------------------------------------
 
 function NPC.new(arena, x, y)
-    local self = Entity.new(arena, x, y, images.anims);
+    local self = Dodger.new(arena, x, y, images.anims);
 
     -- ------------------------------------------------
     -- Private Variables
@@ -119,7 +119,14 @@ function NPC.new(arena, x, y)
 
         fsm:update(dt);
 
-        self:updateCounters(dt);
+        self:takeUpgrade(self:getX(), self:getY());
+        if self:isActive('snail') or self:isActive('bombdown') then
+            self:pulse(dt);
+        else
+            self:setAlpha(255);
+        end
+        self:updateAnimation(dt);
+        self:updateUpgrades(dt);
     end
 
     function self:draw()

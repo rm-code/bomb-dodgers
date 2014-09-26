@@ -3,7 +3,7 @@
 --==================================================================================================
 
 local Constants = require('src/Constants');
-local Entity = require('src/entities/Entity');
+local Dodger = require('src/entities/Dodger');
 local PlayerManager = require('src/entities/PlayerManager');
 local InputManager = require('lib/InputManager');
 local AniMAL = require('lib/AniMAL');
@@ -57,7 +57,7 @@ end
 -- ------------------------------------------------
 
 function Player.new(arena, x, y)
-    local self = Entity.new(arena, x, y, images.anims);
+    local self = Dodger.new(arena, x, y, images.anims);
 
     -- ------------------------------------------------
     -- Private Functions
@@ -101,7 +101,14 @@ function Player.new(arena, x, y)
             PlayerManager.remove(self:getId());
         end
 
-        self:updateCounters(dt);
+        self:takeUpgrade(self:getX(), self:getY());
+        if self:isActive('snail') or self:isActive('bombdown') then
+            self:pulse(dt);
+        else
+            self:setAlpha(255);
+        end
+        self:updateAnimation(dt);
+        self:updateUpgrades(dt);
     end
 
     function self:draw()
