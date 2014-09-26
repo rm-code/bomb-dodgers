@@ -152,7 +152,7 @@ function Dodger.new(arena, x, y, animations)
                 end
 
                 local npc = NpcManager.getClosest(self:getX(), self:getY());
-                if npc and not npc:isActive(name)
+                if npc and npc.isActive and not npc:isActive(name)
                         and npc ~= self
                         and npc:getX() == self:getX()
                         and npc:getY() == self:getY() then

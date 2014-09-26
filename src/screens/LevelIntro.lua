@@ -1,5 +1,6 @@
 local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
+local NpcManager = require('src/entities/NpcManager');
 
 -- ------------------------------------------------
 -- Module
@@ -26,6 +27,8 @@ function LevelIntro.new(level, scores)
     function self:draw()
         love.graphics.print('Time: ' .. timer, 20, 20);
         love.graphics.print('Loading: ' .. level, 20, 40);
+        love.graphics.print('Npcs: ' .. NpcManager.getCount(), 20, 60);
+
         if scores[1] then
             love.graphics.print('Round 1: ' .. scores[1], 20, 80);
         end

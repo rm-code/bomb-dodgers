@@ -45,11 +45,11 @@ function LevelMenu.new()
     local shader;
 
     local function startOne()
-        ScreenManager.switch(LevelSwitcher.new('stonegarden'));
+        ScreenManager.switch(LevelSwitcher.new(1));
     end
 
     local function startTwo()
-        ScreenManager.switch(LevelSwitcher.new('desert'));
+        ScreenManager.switch(LevelSwitcher.new(2));
     end
 
     function self:init()

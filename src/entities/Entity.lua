@@ -34,6 +34,8 @@ function Entity.new(arena, x, y, animations)
     local alpha = 255; -- The current alpha of the entity.
     local pulse = 0; -- The pulse which will be used to create a pulsating effect.
 
+    local ignoreBombs;
+
     local camera;
 
     local dead;
@@ -95,7 +97,8 @@ function Entity.new(arena, x, y, animations)
     local function checkDirection(dt, adjTiles, direction)
 
         -- If the adjTile in that direction is passable then the entity is moved.
-        if adjTiles[direction]:isPassable() then
+        if adjTiles[direction]:isPassable() or
+                (adjTiles[direction]:getContentType() == Constants.CONTENT.BOMB and ignoreBombs) then
             updatePosition(dt, direction);
             return true;
         end
@@ -184,9 +187,9 @@ function Entity.new(arena, x, y, animations)
         curAnim:update(dt);
     end
 
-    function self:drawAnimation()
+    function self:drawAnimation(modX, modY)
         love.graphics.setColor(255, 255, 255, alpha);
-        curAnim:draw(realX, realY);
+        curAnim:draw(realX + (modX or 0), realY + (modY or 0));
         love.graphics.setColor(255, 255, 255, 255);
     end
 
@@ -263,6 +266,10 @@ function Entity.new(arena, x, y, animations)
 
     function self:setSpeed(nspeed)
         speed = nspeed;
+    end
+
+    function self:setIgnoreBombs(nignoreBombs)
+        ignoreBombs = nignoreBombs;
     end
 
     function self:setCamera(ncamera)

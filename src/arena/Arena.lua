@@ -58,7 +58,7 @@ function Arena.new(ts)
 
     local grid;
     local canvas;
-    local tileset = ts or 'stonegarden';
+    local tilesheet = ts or 'stonegarden';
 
     -- ------------------------------------------------
     -- Private Functions
@@ -75,7 +75,7 @@ function Arena.new(ts)
             for y = 1, #grid[x] do
                 local type = grid[x][y];
                 grid[x][y] = Tile.new(x, y);
-                grid[x][y]:setTileSheet(tileset);
+                grid[x][y]:setTileSheet(tilesheet);
 
                 -- Add walls.
                 if type == 1 then
@@ -106,6 +106,23 @@ function Arena.new(ts)
         end
     end
 
+    local function renderToCanvas(canvas, grid)
+        canvas:clear();
+
+        -- Draw to canvas.
+        canvas:renderTo(function()
+            for x = 1, #grid do
+                for y = 1, #grid[x] do
+                    if grid[x][y]:getContentType() == CONTENT.HARDWALL then
+                        love.graphics.draw(images[tilesheet]['hwall'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                    else
+                        love.graphics.draw(images[tilesheet]['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                    end
+                end
+            end
+        end)
+    end
+
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
@@ -134,28 +151,31 @@ function Arena.new(ts)
         end
     end
 
-    function self:reset()
+    function self:reset(level, suppressSoftwalls)
         for x = 1, #grid do
             for y = 1, #grid[x] do
                 local tile = grid[x][y];
+                tile:setTileSheet(level);
 
                 -- Add walls.
                 if tile:getContentType() == CONTENT.HARDWALL then
                     -- Do nothing.
                 elseif tile:getContentType() == CONTENT.SOFTWALL then
-                    if love.math.random(0, 3) > 0 then
-                        grid[x][y]:clearContent();
+                    if love.math.random(0, 3) > 0 or suppressSoftwalls then
+                        tile:clearContent();
                     end
                 else
-                    if love.math.random(0, 3) == 0 then
-                        grid[x][y]:addContent(SoftWall.new(x, y));
+                    if love.math.random(0, 3) == 0 and not suppressSoftwalls then
+                        tile:addContent(SoftWall.new(x, y));
                     else
-                        grid[x][y]:clearContent();
+                        tile:clearContent();
                     end
                 end
                 tile:setDanger(-1000);
             end
         end
+
+        renderToCanvas(canvas, grid);
     end
 
     function self:init(toLoad, suppressSoftwalls)
@@ -171,18 +191,7 @@ function Arena.new(ts)
         -- Set neighbours.
         setTileNeighbours(grid);
 
-        -- Draw to canvas.
-        canvas:renderTo(function()
-            for x = 1, #grid do
-                for y = 1, #grid[x] do
-                    if grid[x][y]:getContentType() == CONTENT.HARDWALL then
-                        love.graphics.draw(images[tileset]['hwall'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
-                    else
-                        love.graphics.draw(images[tileset]['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
-                    end
-                end
-            end
-        end)
+        renderToCanvas(canvas, grid);
     end
 
     ---
@@ -206,7 +215,7 @@ function Arena.new(ts)
         for x = 1, #grid do
             for y = 1, #grid[x] do
                 if grid[x][y]:getContentType() == CONTENT.SOFTWALL then
-                    love.graphics.draw(images[tileset]['swall'], x * TILESIZE, y * TILESIZE);
+                    love.graphics.draw(images[tilesheet]['swall'], x * TILESIZE, y * TILESIZE);
                 end
                 grid[x][y]:draw();
             end
@@ -240,6 +249,14 @@ function Arena.new(ts)
     --
     function self:getAdjacentTiles(x, y)
         return grid[x][y]:getAdjacentTiles();
+    end
+
+    -- ------------------------------------------------
+    -- Setters
+    -- ------------------------------------------------
+
+    function self:setTilesheet(ntilesheet)
+        tilesheet = ntilesheet;
     end
 
     -- ------------------------------------------------
