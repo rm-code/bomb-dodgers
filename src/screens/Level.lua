@@ -140,6 +140,7 @@ function Level.new(level)
         camera = Camera.new();
         camera:setZoom(3);
         camera:setBoundaries(Constants.TILESIZE, Constants.TILESIZE, 22 * Constants.TILESIZE, 22 * Constants.TILESIZE);
+        PlayerManager.attachCamera(camera, 1);
 
         ScreenManager.push(LevelIntro.new(level));
     end
@@ -155,7 +156,6 @@ function Level.new(level)
             for i = 1, #players do
                 if not players[i]:isDead() then
                     players[i]:update(dt);
-                    camera:track(players[i]:getRealX(), players[i]:getRealY(), 6, dt);
                 end
             end
             if PlayerManager.getCount() == 0 then

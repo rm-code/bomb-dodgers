@@ -36,6 +36,8 @@ function Entity.new(arena, x, y, animations)
     local alpha = 255; -- The current alpha of the entity.
     local pulse = 0; -- The pulse which will be used to create a pulsating effect.
 
+    local camera;
+
     local dead;
 
     -- ------------------------------------------------
@@ -204,6 +206,12 @@ function Entity.new(arena, x, y, animations)
         alpha = sin * 255;
     end
 
+    function self:updateCamera(dt)
+        if camera then
+            camera:track(realX, realY, 6, dt);
+        end
+    end
+
     -- ------------------------------------------------
     -- Getters
     -- ------------------------------------------------
@@ -259,7 +267,11 @@ function Entity.new(arena, x, y, animations)
     function self:setSpeed(nspeed)
         speed = nspeed;
     end
-    
+
+    function self:setCamera(ncamera)
+        camera = ncamera;
+    end
+
     function self:setDead(ndead)
         dead = ndead;
     end

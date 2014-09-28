@@ -55,6 +55,10 @@ function PlayerManager.getCount()
     return cnt;
 end
 
+function PlayerManager.attachCamera(cam, id)
+    players[id]:setCamera(cam);
+end
+
 -- ------------------------------------------------
 -- Return Module
 -- ------------------------------------------------

@@ -109,6 +109,7 @@ function Player.new(arena, x, y)
         end
         self:updateAnimation(dt);
         self:updateUpgrades(dt);
+        self:updateCamera(dt);
     end
 
     function self:draw()
