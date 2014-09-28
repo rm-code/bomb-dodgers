@@ -10,7 +10,6 @@ local Evade = require('src/entities/states/Evade');
 local Random = require('src/entities/states/Random');
 local AniMAL = require('lib/AniMAL');
 local ResourceManager = require('lib/ResourceManager');
-local NpcManager = require('src/entities/NpcManager');
 local PlayerManager = require('src/entities/PlayerManager');
 
 -- ------------------------------------------------

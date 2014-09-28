@@ -4,7 +4,6 @@
 
 local Constants = require('src/Constants');
 local Dodger = require('src/entities/Dodger');
-local PlayerManager = require('src/entities/PlayerManager');
 local InputManager = require('lib/InputManager');
 local AniMAL = require('lib/AniMAL');
 local ResourceManager = require('lib/ResourceManager');

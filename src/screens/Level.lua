@@ -7,7 +7,6 @@ local LevelOutro = require('src/screens/LevelOutro');
 local PlayerManager = require('src/entities/PlayerManager');
 local NpcManager = require('src/entities/NpcManager');
 
-
 -- ------------------------------------------------
 -- Module
 -- ------------------------------------------------
