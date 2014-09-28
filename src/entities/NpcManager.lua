@@ -21,19 +21,15 @@ function NpcManager.register(npc)
     return uniqueID;
 end
 
-function NpcManager.remove(id)
-    npcs[id] = nil;
-end
-
 function NpcManager.update(dt)
-    for _, npc in pairs(npcs) do
-        npc:update(dt);
+    for i = 1, #npcs do
+        npcs[i]:update(dt);
     end
 end
 
 function NpcManager.draw()
-    for _, npc in pairs(npcs) do
-        npc:draw();
+    for i = 1, #npcs do
+        npcs[i]:draw();
     end
 end
 
@@ -41,12 +37,12 @@ function NpcManager.getClosest(x, y)
     local distance;
     local targetId;
 
-    for id, target in pairs(npcs) do
-        local td = math.abs(x - target:getX()) + math.abs(y - target:getY());
+    for i = 1, #npcs do
+        local td = math.abs(x - npcs[i]:getX()) + math.abs(y - npcs[i]:getY());
 
         if not distance or td < distance then
             distance = td;
-            targetId = id;
+            targetId = i;
         end
     end
 
@@ -56,15 +52,17 @@ function NpcManager.getClosest(x, y)
 end
 
 function NpcManager.getCount()
-    local i = 0;
-    for _, _ in pairs(npcs) do
-        i = i + 1;
+    local cnt = 0;
+    for i = 1, #npcs do
+        if not npcs[i]:isDead() then
+            cnt = cnt + 1;
+        end
     end
-    return i;
+    return cnt;
 end
 
 function NpcManager.clear()
-    for i, _ in pairs(npcs) do
+    for i = 1, #npcs do
         npcs[i] = nil;
     end
 end

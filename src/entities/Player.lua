@@ -98,7 +98,7 @@ function Player.new(arena, x, y)
 
         if self:getTile():getContentType() == CONTENT.EXPLOSION then
             self:setDead(true);
-            PlayerManager.remove(self:getId());
+            return;
         end
 
         self:takeUpgrade(self:getX(), self:getY());

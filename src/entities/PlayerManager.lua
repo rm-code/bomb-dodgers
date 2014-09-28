@@ -21,20 +21,16 @@ function PlayerManager.register(player)
     return uniqueID;
 end
 
-function PlayerManager.remove(id)
-    players[id] = nil;
-end
-
 function PlayerManager.getClosest(x, y)
     local distance;
     local targetId;
 
-    for id, target in pairs(players) do
-        local td = math.abs(x - target:getX()) + math.abs(y - target:getY());
+    for i = 1, #players do
+        local td = math.abs(x - players[i]:getX()) + math.abs(y - players[i]:getY());
 
         if not distance or td < distance then
             distance = td;
-            targetId = id;
+            targetId = i;
         end
     end
 
@@ -44,17 +40,19 @@ function PlayerManager.getClosest(x, y)
 end
 
 function PlayerManager.clear()
-    for i, _ in pairs(players) do
+    for i = 1, #players do
         players[i] = nil;
     end
 end
 
 function PlayerManager.getCount()
-    local i = 0;
-    for _, _ in pairs(players) do
-        i = i + 1;
+    local cnt = 0;
+    for i = 1, #players do
+        if not players[i]:isDead() then
+            cnt = cnt + 1;
+        end
     end
-    return i;
+    return cnt;
 end
 
 -- ------------------------------------------------
