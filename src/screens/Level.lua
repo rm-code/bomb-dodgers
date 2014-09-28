@@ -150,14 +150,6 @@ function Level.new(level)
         end
 
         if self:isActive() then
-            if PlayerManager.getCount() == 0 then
-                endRound('npc');
-                return;
-            elseif NpcManager.getCount() == 0 then
-                endRound('player');
-                return;
-            end
-
             arena:update(dt);
 
             for i = 1, #players do
@@ -166,8 +158,16 @@ function Level.new(level)
                     camera:track(players[i]:getRealX(), players[i]:getRealY(), 6, dt);
                 end
             end
+            if PlayerManager.getCount() == 0 then
+                endRound('npc');
+                return;
+            end
 
             NpcManager.update(dt);
+            if NpcManager.getCount() == 0 then
+                endRound('player');
+                return;
+            end
         end
     end
 
