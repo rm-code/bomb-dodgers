@@ -97,7 +97,7 @@ function Player.new(arena, x, y)
         handleInput(dt);
 
         if self:getTile():getContentType() == CONTENT.EXPLOSION then
-            self:kill();
+            self:setDead(true);
             PlayerManager.remove(self:getId());
         end
 

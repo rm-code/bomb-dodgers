@@ -114,7 +114,7 @@ function NPC.new(arena, x, y)
     function self:update(dt)
         if self:getTile():getContentType() == Constants.CONTENT.EXPLOSION then
             NpcManager.remove(self:getId());
-            self:kill();
+            self:setDead(true);
         end
 
         fsm:update(dt);

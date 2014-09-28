@@ -36,6 +36,8 @@ function Entity.new(arena, x, y, animations)
     local alpha = 255; -- The current alpha of the entity.
     local pulse = 0; -- The pulse which will be used to create a pulsating effect.
 
+    local dead;
+
     -- ------------------------------------------------
     -- Private Functions
     -- ------------------------------------------------
@@ -238,6 +240,10 @@ function Entity.new(arena, x, y, animations)
         return gridX, gridY;
     end
 
+    function self:isDead()
+        return dead;
+    end
+
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
@@ -252,6 +258,10 @@ function Entity.new(arena, x, y, animations)
 
     function self:setSpeed(nspeed)
         speed = nspeed;
+    end
+    
+    function self:setDead(ndead)
+        dead = ndead;
     end
 
     return self;

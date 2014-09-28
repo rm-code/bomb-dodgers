@@ -36,8 +36,6 @@ function Dodger.new(arena, x, y, animations)
     local bombCapacity = 1; -- The total amount of bombs the player can carry.
     local blastRadius = 2; -- The blast radius of a bomb.
 
-    local dead = false;
-
     local upgrades = {};
     upgrades['fireup'] = {};
     upgrades['bombup'] = {};
@@ -189,10 +187,6 @@ function Dodger.new(arena, x, y, animations)
         liveBombs = liveBombs - 1;
     end
 
-    function self:kill()
-        dead = true;
-    end
-
     function self:infect(upgrade)
         upgrades[upgrade].activate();
     end
@@ -200,10 +194,6 @@ function Dodger.new(arena, x, y, animations)
     -- ------------------------------------------------
     -- Getters
     -- ------------------------------------------------
-
-    function self:isDead()
-        return dead;
-    end
 
     function self:getLivingBombs()
         return liveBombs;
