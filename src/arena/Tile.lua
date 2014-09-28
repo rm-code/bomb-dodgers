@@ -162,7 +162,7 @@ function Tile.new(x, y)
     end
 
     function self:setDanger(nd)
-        danger = danger + nd;
+        danger = danger + nd < 0 and 0 or danger + nd;
     end
 
     function self:setTileSheet(ts)

@@ -153,6 +153,7 @@ function Arena.new(ts)
                         grid[x][y]:clearContent();
                     end
                 end
+                tile:setDanger(-1000);
             end
         end
     end
