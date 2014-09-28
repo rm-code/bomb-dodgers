@@ -63,10 +63,13 @@ end
 function ScreenManager.pop()
     if #stack > 1 then
         -- Close the currently active screen.
-        ScreenManager.peek():close();
+        local tmp = ScreenManager.peek();
 
         -- Remove the now inactive screen from the stack.
         stack[#stack] = nil;
+
+        -- Close the previous screen.
+        tmp:close();
 
         -- Activate next screen on the stack.
         ScreenManager.peek():setActive(true);
