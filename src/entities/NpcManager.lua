@@ -9,16 +9,13 @@ local NpcManager = {};
 -- ------------------------------------------------
 
 local npcs = {};
-local uniqueID = 0;
 
 -- ------------------------------------------------
 -- Public Functions
 -- ------------------------------------------------
 
 function NpcManager.register(npc)
-    uniqueID = uniqueID + 1;
-    npcs[uniqueID] = npc;
-    return uniqueID;
+    npcs[#npcs + 1] = npc;
 end
 
 function NpcManager.update(dt)

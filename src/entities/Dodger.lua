@@ -30,8 +30,6 @@ function Dodger.new(arena, x, y, animations)
     -- Private Variables
     -- ------------------------------------------------
 
-    local id; -- The unique id which is used to store a reference to the entity.
-
     local liveBombs = 0; -- The amount of bombs currently on the field.
     local bombCapacity = 1; -- The total amount of bombs the player can carry.
     local blastRadius = 2; -- The blast radius of a bomb.

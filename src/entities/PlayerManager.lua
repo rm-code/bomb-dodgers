@@ -9,16 +9,13 @@ local PlayerManager = {};
 -- ------------------------------------------------
 
 local players = {};
-local uniqueID = 0;
 
 -- ------------------------------------------------
 -- Public Functions
 -- ------------------------------------------------
 
 function PlayerManager.register(player)
-    uniqueID = uniqueID + 1;
-    players[uniqueID] = player;
-    return uniqueID;
+    players[#players + 1] = player;
 end
 
 function PlayerManager.getClosest(x, y)
@@ -65,10 +62,6 @@ function PlayerManager.getCount()
         end
     end
     return cnt;
-end
-
-function PlayerManager.attachCamera(cam, id)
-    players[id]:setCamera(cam);
 end
 
 function PlayerManager.getPlayers()

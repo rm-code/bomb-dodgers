@@ -53,18 +53,17 @@ function LevelSwitcher.new()
         return arena;
     end
 
-    local function addPlayer(arena)
+    local function addPlayer(arena, camera)
         local count = PlayerManager.getCount();
         local player = Player.new(arena, SPAWNS[count + 1].x, SPAWNS[count + 1].y);
-        local id = PlayerManager.register(player);
-        player:setId(id);
+        player:setCamera(camera);
+        PlayerManager.register(player);
     end
 
     local function addNpc(arena)
         local count = NpcManager.getCount() + PlayerManager.getCount();
         local npc = Npc.new(arena, SPAWNS[count + 1].x, SPAWNS[count + 1].y);
-        local id = NpcManager.register(npc);
-        npc:setId(id);
+        NpcManager.register(npc);
     end
 
     local function createCamera()
@@ -123,11 +122,10 @@ function LevelSwitcher.new()
         scores = {};
         arena = createArena('stonegarden');
         camera = createCamera();
-        addPlayer(arena);
+        addPlayer(arena, camera);
         addNpc(arena);
         arena:clearSpawns(PlayerManager.getPlayers());
         arena:clearSpawns(NpcManager.getNpcs());
-        PlayerManager.attachCamera(camera, 1);
 
         ScreenManager.push(Level.new('stonegarden', arena, scores, camera));
     end

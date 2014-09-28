@@ -18,8 +18,6 @@ function Entity.new(arena, x, y, animations)
     -- Private Variables
     -- ------------------------------------------------
 
-    local id; -- The unique id which is used to store a reference to the entity.
-
     local arena = arena;
     local gridX = x;
     local gridY = y;
@@ -232,10 +230,6 @@ function Entity.new(arena, x, y, animations)
         return realY;
     end
 
-    function self:getId()
-        return id;
-    end
-
     function self:getTile()
         return arena:getTile(gridX, gridY);
     end
@@ -261,10 +255,6 @@ function Entity.new(arena, x, y, animations)
         gridY = y;
         realX = gridX * Constants.TILESIZE;
         realY = gridY * Constants.TILESIZE;
-    end
-
-    function self:setId(nid)
-        id = nid;
     end
 
     function self:setAlpha(nalpha)
