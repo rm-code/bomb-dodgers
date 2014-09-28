@@ -39,6 +39,18 @@ function PlayerManager.getClosest(x, y)
     end
 end
 
+function PlayerManager.update(dt)
+    for _, player in pairs(players) do
+        player:update(dt);
+    end
+end
+
+function PlayerManager.draw()
+    for _, player in pairs(players) do
+        player:draw();
+    end
+end
+
 function PlayerManager.clear()
     for i = 1, #players do
         players[i] = nil;
@@ -57,6 +69,10 @@ end
 
 function PlayerManager.attachCamera(cam, id)
     players[id]:setCamera(cam);
+end
+
+function PlayerManager.getPlayers()
+    return players;
 end
 
 -- ------------------------------------------------

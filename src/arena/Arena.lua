@@ -81,7 +81,7 @@ function Arena.new(ts)
                 if type == 1 then
                     grid[x][y]:addContent(HardWall.new(x, y));
                 elseif type == 0 then
-                    if love.math.random(0, 3) == 1 and not suppressSoftwalls then
+                    if love.math.random(0, 3) == 0 and not suppressSoftwalls then
                         grid[x][y]:addContent(SoftWall.new(x, y));
                     end
                 end
@@ -129,6 +129,29 @@ function Arena.new(ts)
             for _, tile in pairs(adjTiles) do
                 if tile:getContentType() == CONTENT.SOFTWALL then
                     tile:clearContent();
+                end
+            end
+        end
+    end
+
+    function self:reset()
+        for x = 1, #grid do
+            for y = 1, #grid[x] do
+                local tile = grid[x][y];
+
+                -- Add walls.
+                if tile:getContentType() == CONTENT.HARDWALL then
+                    -- Do nothing.
+                elseif tile:getContentType() == CONTENT.SOFTWALL then
+                    if love.math.random(0, 3) > 0 then
+                        grid[x][y]:clearContent();
+                    end
+                else
+                    if love.math.random(0, 3) == 0 then
+                        grid[x][y]:addContent(SoftWall.new(x, y));
+                    else
+                        grid[x][y]:clearContent();
+                    end
                 end
             end
         end

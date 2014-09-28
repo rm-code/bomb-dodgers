@@ -5,7 +5,7 @@ local Player = require('src/entities/Player');
 local Button = require('src/ui/Button');
 local ButtonManager = require('src/ui/ButtonManager');
 local InputManager = require('lib/InputManager');
-local Level = require('src/screens/Level');
+local LevelSwitcher = require('src/screens/LevelSwitcher');
 local Camera = require('lib/Camera');
 local Constants = require('src/Constants');
 local ResourceManager = require('lib/ResourceManager');
@@ -45,11 +45,11 @@ function LevelMenu.new()
     local shader;
 
     local function startOne()
-        ScreenManager.switch(Level.new('stonegarden'));
+        ScreenManager.switch(LevelSwitcher.new('stonegarden'));
     end
 
     local function startTwo()
-        ScreenManager.switch(Level.new('desert'));
+        ScreenManager.switch(LevelSwitcher.new('desert'));
     end
 
     function self:init()

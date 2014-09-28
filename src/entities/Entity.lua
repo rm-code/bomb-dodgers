@@ -256,6 +256,13 @@ function Entity.new(arena, x, y, animations)
     -- Setters
     -- ------------------------------------------------
 
+    function self:setPosition(x, y)
+        gridX = x;
+        gridY = y;
+        realX = gridX * Constants.TILESIZE;
+        realY = gridY * Constants.TILESIZE;
+    end
+
     function self:setId(nid)
         id = nid;
     end

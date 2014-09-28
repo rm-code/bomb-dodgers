@@ -114,12 +114,6 @@ function Player.new(arena, x, y)
 
     function self:draw()
         self:drawAnimation();
-        love.graphics.print('Bombs: ' .. self:getLivingBombs(), 800, 20);
-        love.graphics.print('Cap: ' .. self:getBombCapacity(), 800, 40);
-        love.graphics.print('Blast: ' .. self:getBlastRadius(), 800, 60);
-
-        love.graphics.print('RealX: ' .. self:getRealX() .. ' RealY: ' .. self:getRealY(), 800, 100);
-        love.graphics.print('GridX: ' .. self:getX() .. ' GridY: ' .. self:getY(), 800, 120);
     end
 
     return self;

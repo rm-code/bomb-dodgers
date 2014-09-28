@@ -191,6 +191,17 @@ function Dodger.new(arena, x, y, animations)
         upgrades[upgrade].activate();
     end
 
+    function self:reset()
+        liveBombs = 0;
+        bombCapacity = 1;
+        blastRadius = 2;
+        for name, upgrade in pairs(upgrades) do
+            upgrades[name].active = false;
+            upgrades[name].counter = nil;
+        end
+        self:setSpeed(normalSpeed);
+    end
+
     -- ------------------------------------------------
     -- Getters
     -- ------------------------------------------------

@@ -67,6 +67,10 @@ function NpcManager.clear()
     end
 end
 
+function NpcManager.getNpcs()
+    return npcs;
+end
+
 -- ------------------------------------------------
 -- Return Module
 -- ------------------------------------------------

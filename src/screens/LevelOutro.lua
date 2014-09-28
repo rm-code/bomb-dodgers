@@ -11,7 +11,7 @@ local LevelOutro = {};
 -- Constructor
 -- ------------------------------------------------
 
-function LevelOutro.new(level)
+function LevelOutro.new(level, scores)
     local self = Screen.new();
 
     local timer = 1;
@@ -26,6 +26,15 @@ function LevelOutro.new(level)
     function self:draw()
         love.graphics.print('Time: ' .. timer, 20, 20);
         love.graphics.print('Loading: ' .. level, 20, 40);
+        if scores[1] then
+            love.graphics.print('Round 1: ' .. scores[1], 20, 80);
+        end
+        if scores[2] then
+            love.graphics.print('Round 2: ' .. scores[2], 20, 100);
+        end
+        if scores[3] then
+            love.graphics.print('Round 3: ' .. scores[3], 20, 120);
+        end
     end
 
     return self;
