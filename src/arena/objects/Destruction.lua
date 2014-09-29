@@ -1,3 +1,7 @@
+--==================================================================================================
+-- Copyright (C) 2014 by Robert Machmer                                                            =
+--==================================================================================================
+
 local Content = require('src/arena/objects/Content');
 local Constants = require('src/Constants');
 local AniMAL = require('lib/AniMAL');
