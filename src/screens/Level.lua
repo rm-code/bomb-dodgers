@@ -32,6 +32,12 @@ function Level.new(level, arena, scores, camera)
         if InputManager.hasCommand('COL') then
             PaletteSwitcher.nextPalette();
         end
+        if InputManager.hasCommand('CHEAT') then
+            local npcs = NpcManager.getNpcs();
+            for i = 1, #npcs do
+                npcs[i]:setDead(true);
+            end
+        end
 
         if self:isActive() then
             arena:update(dt);

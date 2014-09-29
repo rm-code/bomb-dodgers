@@ -27,6 +27,7 @@ Controls.GAME.keyboard.up            = { cmd = 'UP',      rep = true, locked = f
 Controls.GAME.keyboard.down          = { cmd = 'DOWN',    rep = true, locked = false };
 Controls.GAME.keyboard[' ']          = { cmd = 'BOMB',    rep = false, locked = false };
 Controls.GAME.keyboard['tab']        = { cmd = 'COL',     rep = false, locked = false };
+Controls.GAME.keyboard['return']     = { cmd = 'CHEAT', rep = false, locked = false };
 
 Controls.MENU= {};
 Controls.MENU.keyboard = {};
