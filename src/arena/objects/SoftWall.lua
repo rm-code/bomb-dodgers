@@ -5,7 +5,7 @@
 local Content = require('src/arena/objects/Content');
 local Constants = require('src/Constants');
 local Upgrade = require('src/arena/objects/Upgrade');
-local ResourceManager = require('lib/ResourceManager');
+local Destruction = require('src/arena/objects/Destruction');
 
 -- ------------------------------------------------
 -- Module
@@ -18,23 +18,6 @@ local SoftWall = {};
 -- ------------------------------------------------
 
 local CONTENT = Constants.CONTENT;
-local TILESIZE = Constants.TILESIZE;
-
--- ------------------------------------------------
--- Resource Loading
--- ------------------------------------------------
-
-local images = {};
-
--- Register module with resource manager.
-ResourceManager.register(SoftWall);
-
----
--- Load images.
---
-function SoftWall.loadImages()
-    images['soft_wall'] = ResourceManager.loadImage('res/img/content/softwall.png');
-end
 
 -- ------------------------------------------------
 -- Constructor
@@ -57,6 +40,8 @@ function SoftWall.new(x, y)
             local upgrade = Upgrade.new(x, y);
             upgrade:init();
             self:getParent():addContent(upgrade);
+        else
+            self:getParent():addContent(Destruction.new(self:getParent():getTileSheet(), x, y));
         end
     end
 
@@ -65,24 +50,10 @@ function SoftWall.new(x, y)
     -- ------------------------------------------------
 
     function self:explode(_, _, _)
-        -- Remove the softwall from the tile.
-        -- TODO replace with burning animation.
         self:getParent():clearContent();
 
         -- Randomly drop upgrades.
         dropUpgrade(self:getX(), self:getY());
-    end
-
-    function self:increaseDanger(_, _, _)
-        return;
-    end
-
-    function self:decreaseDanger(_, _, _)
-        return;
-    end
-
-    function self:draw()
-        love.graphics.draw(images['soft_wall'], self:getX() * TILESIZE, self:getY() * TILESIZE);
     end
 
     -- ------------------------------------------------

@@ -24,7 +24,23 @@ function Content.new(type, passable, x, y)
     -- Public Functions
     -- ------------------------------------------------
 
+    function self:draw()
+        return;
+    end
+
     function self:update(_)
+        return;
+    end
+
+    function self:increaseDanger(_, _, _)
+        return;
+    end
+
+    function self:decreaseDanger(_, _, _)
+        return;
+    end
+
+    function self:explode(_, _, _)
         return;
     end
 

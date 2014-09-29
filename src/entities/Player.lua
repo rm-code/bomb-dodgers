@@ -3,8 +3,7 @@
 --==================================================================================================
 
 local Constants = require('src/Constants');
-local Entity = require('src/entities/Entity');
-local PlayerManager = require('src/entities/PlayerManager');
+local Dodger = require('src/entities/Dodger');
 local InputManager = require('lib/InputManager');
 local AniMAL = require('lib/AniMAL');
 local ResourceManager = require('lib/ResourceManager');
@@ -57,33 +56,31 @@ end
 -- ------------------------------------------------
 
 function Player.new(arena, x, y)
-    local self = Entity.new(arena, x, y, images.anims);
-
-    local id;
+    local self = Dodger.new(arena, x, y, images.anims);
 
     -- ------------------------------------------------
     -- Private Functions
     -- ------------------------------------------------
 
-    local function handleInput()
+    local function handleInput(dt)
         if InputManager.hasCommand('UP') and InputManager.hasCommand('RIGHT') then
-            self:move('n', 'e');
+            self:move(dt, 'n', 'e');
         elseif InputManager.hasCommand('UP') and InputManager.hasCommand('LEFT') then
-            self:move('n', 'w');
+            self:move(dt, 'n', 'w');
         elseif InputManager.hasCommand('DOWN') and InputManager.hasCommand('RIGHT') then
-            self:move('s', 'e');
+            self:move(dt, 's', 'e');
         elseif InputManager.hasCommand('DOWN') and InputManager.hasCommand('LEFT') then
-            self:move('s', 'w');
+            self:move(dt, 's', 'w');
         elseif InputManager.hasCommand('UP') then
-            self:move('n');
+            self:move(dt, 'n');
         elseif InputManager.hasCommand('DOWN') then
-            self:move('s');
+            self:move(dt, 's');
         elseif InputManager.hasCommand('RIGHT') then
-            self:move('e');
+            self:move(dt, 'e');
         elseif InputManager.hasCommand('LEFT') then
-            self:move('w');
+            self:move(dt, 'w');
         else
-            self:move();
+            self:move(dt);
         end
 
         if InputManager.hasCommand('BOMB') then
@@ -96,29 +93,26 @@ function Player.new(arena, x, y)
     -- ------------------------------------------------
 
     function self:update(dt)
-        handleInput();
+        handleInput(dt);
 
         if self:getTile():getContentType() == CONTENT.EXPLOSION then
-            self:kill();
-            PlayerManager.remove(id);
+            self:setDead(true);
+            return;
         end
 
-        self:updateCounters(dt);
+        self:takeUpgrade(self:getX(), self:getY());
+        if self:isActive('snail') or self:isActive('bombdown') then
+            self:pulse(dt);
+        else
+            self:setAlpha(255);
+        end
         self:updateAnimation(dt);
+        self:updateUpgrades(dt);
+        self:updateCamera(dt);
     end
 
     function self:draw()
         self:drawAnimation();
-        love.graphics.print('Bombs: ' .. self:getLivingBombs(), 800, 20);
-        love.graphics.print('Cap: ' .. self:getBombCapacity(), 800, 40);
-        love.graphics.print('Blast: ' .. self:getBlastRadius(), 800, 60);
-
-        love.graphics.print('RealX: ' .. self:getRealX() .. ' RealY: ' .. self:getRealY(), 800, 100);
-        love.graphics.print('GridX: ' .. self:getX() .. ' GridY: ' .. self:getY(), 800, 120);
-    end
-
-    function self:setId(nid)
-        id = nid;
     end
 
     return self;

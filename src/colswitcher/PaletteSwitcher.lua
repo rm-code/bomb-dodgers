@@ -8,7 +8,7 @@ local PaletteSwitcher = {};
 -- Local Variables
 -- ------------------------------------------------
 
-local shader = love.graphics.newShader('src/colswitcher/shader/gb.fs');
+local shader = love.graphics.newShader('res/shader/gb.fs');
 local palettes = require('src/colswitcher/Palettes');
 local curPalette = 1;
 local colors = palettes[curPalette].colors;
@@ -35,7 +35,7 @@ end
 --
 function PaletteSwitcher.set()
     love.graphics.setShader(shader);
-    shader:send('PALETTE', colors.black, colors.white, colors.lgrey, colors.dgrey);
+    shader:send('PALETTE', colors.black, colors.dgrey, colors.lgrey, colors.white);
 end
 
 ---

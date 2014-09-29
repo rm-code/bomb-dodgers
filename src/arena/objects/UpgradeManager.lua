@@ -22,9 +22,9 @@ local uniqueID = 0;
 -- @param x
 -- @param y
 --
-function UpgradeManager.register(x, y)
+function UpgradeManager.register(upgrade)
     uniqueID = uniqueID + 1;
-    upgrades[uniqueID] = { x = x, y = y };
+    upgrades[uniqueID] = upgrade;
     return uniqueID;
 end
 
@@ -41,24 +41,21 @@ end
 -- @param x
 -- @param y
 --
-function UpgradeManager.getClosestUpgrade(x, y)
+function UpgradeManager.getClosest(x, y)
     local distance;
     local targetId;
 
     for id, target in pairs(upgrades) do
-        local td = math.abs(x - target.x) + math.abs(y - target.y);
+        local td = math.abs(x - target:getX()) + math.abs(y - target:getY());
 
-        if not distance then
-            distance = td;
-            targetId = id;
-        elseif td < distance then
+        if not distance or td < distance then
             distance = td;
             targetId = id;
         end
     end
 
     if upgrades[targetId] then
-        return upgrades[targetId].x, upgrades[targetId].y;
+        return upgrades[targetId];
     end
 end
 

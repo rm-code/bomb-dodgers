@@ -9,47 +9,63 @@ local PlayerManager = {};
 -- ------------------------------------------------
 
 local players = {};
-local uniqueID = 0;
 
 -- ------------------------------------------------
 -- Public Functions
 -- ------------------------------------------------
 
 function PlayerManager.register(player)
-    uniqueID = uniqueID + 1;
-    players[uniqueID] = player;
-    return uniqueID;
+    players[#players + 1] = player;
 end
 
-function PlayerManager.remove(id)
-    players[id] = nil;
-end
-
-function PlayerManager.getClosestPlayer(x, y)
+function PlayerManager.getClosest(x, y)
     local distance;
     local targetId;
 
-    for id, target in pairs(players) do
-        local td = math.abs(x - target:getX()) + math.abs(y - target:getY());
+    for i = 1, #players do
+        local td = math.abs(x - players[i]:getX()) + math.abs(y - players[i]:getY());
 
-        if not distance then
+        if not distance or td < distance then
             distance = td;
-            targetId = id;
-        elseif td < distance then
-            distance = td;
-            targetId = id;
+            targetId = i;
         end
     end
 
-    return players[targetId]:getX(), players[targetId]:getY();
+    if players[targetId] then
+        return players[targetId];
+    end
 end
 
-function PlayerManager.getPlayerCount()
-    local i = 0;
-    for _, _ in pairs(players) do
-        i = i + 1;
+function PlayerManager.update(dt)
+    for _, player in pairs(players) do
+        player:update(dt);
     end
-    return i;
+end
+
+function PlayerManager.draw()
+    for _, player in pairs(players) do
+        player:draw();
+    end
+end
+
+function PlayerManager.clear()
+    for i = 1, #players do
+        players[i] = nil;
+    end
+end
+
+function PlayerManager.getCount()
+    local cnt = 0;
+    for i = 1, #players do
+        if not players[i]:isDead() then
+            cnt = cnt + 1;
+        end
+    end
+    return cnt;
+end
+
+function PlayerManager.getPlayers()
+    return players;
 end
 
 -- ------------------------------------------------

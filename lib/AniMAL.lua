@@ -5,10 +5,19 @@
 local AniMAL = {};
 
 -- ------------------------------------------------
+-- Constants
+-- ------------------------------------------------
+
+local mode = {
+    'loop',
+    'single',
+}
+
+-- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
-function AniMAL.new(img, w, h, speed)
+function AniMAL.new(img, w, h, speed, modeNo)
     local self = {};
 
     -- ------------------------------------------------
@@ -23,6 +32,8 @@ function AniMAL.new(img, w, h, speed)
     local totalFrames = spritesheet:getWidth() / width;
     local frames = {};
     local curFrame = 1;
+    local playMode = mode[modeNo or 1];
+    local done;
 
     for i = 1, totalFrames do
         frames[i] = love.graphics.newQuad((i - 1) * width, 0, width, height, spritesheet:getDimensions());
@@ -49,8 +60,16 @@ function AniMAL.new(img, w, h, speed)
         timer = timer + dt;
         if timer >= speed then
             timer = 0;
+            if curFrame == #frames and playMode == 'single' then
+                done = true;
+                return;
+            end
             curFrame = curFrame == #frames and 1 or curFrame + 1;
         end
+    end
+
+    function self:isDone()
+        return done;
     end
 
     -- ------------------------------------------------

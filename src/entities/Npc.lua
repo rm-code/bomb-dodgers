@@ -3,13 +3,14 @@
 --==================================================================================================
 
 local Constants = require('src/Constants');
-local Entity = require('src/entities/Entity');
+local Dodger = require('src/entities/Dodger');
 local StateManager = require('src/entities/states/StateManager');
-local Idle = require('src/entities/states/Idle');
-local Walk = require('src/entities/states/Walk');
+local Move = require('src/entities/states/Move');
 local Evade = require('src/entities/states/Evade');
+local Random = require('src/entities/states/Random');
 local AniMAL = require('lib/AniMAL');
 local ResourceManager = require('lib/ResourceManager');
+local PlayerManager = require('src/entities/PlayerManager');
 
 -- ------------------------------------------------
 -- Module
@@ -58,7 +59,7 @@ end
 -- ------------------------------------------------
 
 function NPC.new(arena, x, y)
-    local self = Entity.new(arena, x, y, images.anims);
+    local self = Dodger.new(arena, x, y, images.anims);
 
     -- ------------------------------------------------
     -- Private Variables
@@ -67,12 +68,12 @@ function NPC.new(arena, x, y)
     local fsm = StateManager.new();
 
     local states = {};
-    states.idle = Idle.new(fsm, self);
-    states.walk = Walk.new(fsm, self);
+    states.move = Move.new(fsm, self);
+    states.random = Random.new(fsm, self);
     states.evade = Evade.new(fsm, self);
 
     fsm:initStates(states);
-    fsm:switch('idle');
+    fsm:switch('move');
 
     local prevTile;
 
@@ -80,15 +81,51 @@ function NPC.new(arena, x, y)
     -- Public Functions
     -- ------------------------------------------------
 
-    function self:update(dt)
-        fsm:update(dt);
+    function self:isSafeToPlant(adjTiles)
+        for _, tile in pairs(adjTiles) do
+            if tile:isSafe() and tile:isPassable() then
+                return true;
+            end
+        end
+    end
 
-        if self:getTile():getContentType() == Constants.CONTENT.EXPLOSION then
-            self:kill();
+    function self:isGoodToPlant(adjTiles, x, y, radius)
+        -- Plant bombs next to soft walls.
+        for _, tile in pairs(adjTiles) do
+            if tile:getContentType() == Constants.CONTENT.SOFTWALL then
+                return true;
+            end
         end
 
-        self:updateCounters(dt);
+        -- Plant bombs if player is in bomb's blast radius.
+        local player = PlayerManager.getClosest(x, y);
+        if player:getX() == x then
+            if math.abs(player:getY() - y) < radius then
+                return true;
+            end
+        elseif player:getY() == y then
+            if math.abs(player:getX() - x) < radius then
+                return true;
+            end
+        end
+    end
+
+    function self:update(dt)
+        if self:getTile():getContentType() == Constants.CONTENT.EXPLOSION then
+            self:setDead(true);
+            return;
+        end
+
+        fsm:update(dt);
+
+        self:takeUpgrade(self:getX(), self:getY());
+        if self:isActive('snail') or self:isActive('bombdown') then
+            self:pulse(dt);
+        else
+            self:setAlpha(255);
+        end
         self:updateAnimation(dt);
+        self:updateUpgrades(dt);
     end
 
     function self:draw()

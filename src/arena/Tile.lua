@@ -5,7 +5,6 @@
 local Constants = require('src/Constants');
 local Explosion = require('src/arena/objects/Explosion');
 local Bomb = require('src/arena/objects/Bomb');
-local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
@@ -18,23 +17,6 @@ local Tile = {};
 -- ------------------------------------------------
 
 local CONTENT = Constants.CONTENT;
-local TILESIZE = Constants.TILESIZE;
-
--- ------------------------------------------------
--- Resource Loading
--- ------------------------------------------------
-
-local images = {};
-
--- Register module with resource manager.
-ResourceManager.register(Tile);
-
----
--- Load images.
---
-function Tile.loadImages()
-    images['floor'] = ResourceManager.loadImage('res/img/content/floor.png');
-end
 
 -- ------------------------------------------------
 -- Constructor
@@ -52,14 +34,13 @@ function Tile.new(x, y)
     local adjTiles;
     local content;
     local danger = 0;
+    local tilesheet;
 
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
 
     function self:draw()
-        love.graphics.draw(images['floor'], x * TILESIZE, y * TILESIZE);
-
         if content then
             content:draw();
         end
@@ -117,7 +98,7 @@ function Tile.new(x, y)
     end
 
     function self:kickBomb(direction)
-        content:move(direction);
+        content:setDirection(direction);
     end
 
     -- ------------------------------------------------
@@ -130,6 +111,14 @@ function Tile.new(x, y)
 
     function self:getY()
         return y;
+    end
+
+    function self:getRealX()
+        return x * Constants.TILESIZE;
+    end
+
+    function self:getRealY()
+        return y * Constants.TILESIZE;
     end
 
     function self:getAdjacentTiles()
@@ -156,6 +145,10 @@ function Tile.new(x, y)
         return content;
     end
 
+    function self:getTileSheet()
+        return tilesheet;
+    end
+
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
@@ -169,7 +162,11 @@ function Tile.new(x, y)
     end
 
     function self:setDanger(nd)
-        danger = danger + nd;
+        danger = danger + nd < 0 and 0 or danger + nd;
+    end
+
+    function self:setTileSheet(ts)
+        tilesheet = ts;
     end
 
     return self;

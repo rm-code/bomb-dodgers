@@ -6,6 +6,7 @@ local Constants = require('src/Constants');
 local Tile = require('src/arena/Tile');
 local SoftWall = require('src/arena/objects/SoftWall');
 local HardWall = require('src/arena/objects/HardWall');
+local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
@@ -18,12 +19,37 @@ local Arena = {}
 -- ------------------------------------------------
 
 local CONTENT = Constants.CONTENT;
+local TILESIZE = Constants.TILESIZE;
+
+-- ------------------------------------------------
+-- Resource Loading
+-- ------------------------------------------------
+
+local images = {};
+images.stonegarden = {};
+images.desert = {};
+
+-- Register module with resource manager.
+ResourceManager.register(Arena);
+
+---
+-- Load images.
+--
+function Arena.loadImages()
+    images.stonegarden['floor'] = ResourceManager.loadImage('res/img/levels/stonegarden/floor.png');
+    images.stonegarden['hwall'] = ResourceManager.loadImage('res/img/levels/stonegarden/hardwall.png');
+    images.stonegarden['swall'] = ResourceManager.loadImage('res/img/levels/stonegarden/softwall.png');
+
+    images.desert['floor'] = ResourceManager.loadImage('res/img/levels/desert/floor.png');
+    images.desert['hwall'] = ResourceManager.loadImage('res/img/levels/desert/hardwall.png');
+    images.desert['swall'] = ResourceManager.loadImage('res/img/levels/desert/softwall.png');
+end
 
 -- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
-function Arena.new()
+function Arena.new(ts)
     local self = {};
 
     -- ------------------------------------------------
@@ -31,6 +57,8 @@ function Arena.new()
     -- ------------------------------------------------
 
     local grid;
+    local canvas;
+    local tilesheet = ts or 'stonegarden';
 
     -- ------------------------------------------------
     -- Private Functions
@@ -42,17 +70,18 @@ function Arena.new()
     -- free places all over the grid.
     -- @param grid - The grid to fill.
     --
-    local function placeWalls(grid)
+    local function placeWalls(grid, suppressSoftwalls)
         for x = 1, #grid do
             for y = 1, #grid[x] do
                 local type = grid[x][y];
                 grid[x][y] = Tile.new(x, y);
+                grid[x][y]:setTileSheet(tilesheet);
 
                 -- Add walls.
                 if type == 1 then
                     grid[x][y]:addContent(HardWall.new(x, y));
                 elseif type == 0 then
-                    if love.math.random(0, 3) == 1 then
+                    if love.math.random(0, 3) == 0 and not suppressSoftwalls then
                         grid[x][y]:addContent(SoftWall.new(x, y));
                     end
                 end
@@ -75,6 +104,23 @@ function Arena.new()
                 grid[x][y]:setAdjacentTiles(n, s, e, w);
             end
         end
+    end
+
+    local function renderToCanvas(canvas, grid)
+        canvas:clear();
+
+        -- Draw to canvas.
+        canvas:renderTo(function()
+            for x = 1, #grid do
+                for y = 1, #grid[x] do
+                    if grid[x][y]:getContentType() == CONTENT.HARDWALL then
+                        love.graphics.draw(images[tilesheet]['hwall'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                    else
+                        love.graphics.draw(images[tilesheet]['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                    end
+                end
+            end
+        end)
     end
 
     -- ------------------------------------------------
@@ -105,15 +151,47 @@ function Arena.new()
         end
     end
 
-    function self:init()
+    function self:reset(level, suppressSoftwalls)
+        for x = 1, #grid do
+            for y = 1, #grid[x] do
+                local tile = grid[x][y];
+                tile:setTileSheet(level);
+
+                -- Add walls.
+                if tile:getContentType() == CONTENT.HARDWALL then
+                    -- Do nothing.
+                elseif tile:getContentType() == CONTENT.SOFTWALL then
+                    if love.math.random(0, 3) > 0 or suppressSoftwalls then
+                        tile:clearContent();
+                    end
+                else
+                    if love.math.random(0, 3) == 0 and not suppressSoftwalls then
+                        tile:addContent(SoftWall.new(x, y));
+                    else
+                        tile:clearContent();
+                    end
+                end
+                tile:setDanger(-1000);
+            end
+        end
+
+        renderToCanvas(canvas, grid);
+    end
+
+    function self:init(toLoad, suppressSoftwalls)
         -- Loads the basic grid layout of a level.
-        grid = love.filesystem.load('res/empty_level.lua')();
+        grid = love.filesystem.load(toLoad)();
+
+        -- Create canvas.
+        canvas = love.graphics.newCanvas(#grid * TILESIZE, #grid[1] * TILESIZE);
 
         -- Fills the grid with
-        placeWalls(grid);
+        placeWalls(grid, suppressSoftwalls);
 
         -- Set neighbours.
         setTileNeighbours(grid);
+
+        renderToCanvas(canvas, grid);
     end
 
     ---
@@ -132,8 +210,13 @@ function Arena.new()
     -- Draw all tiles on the grid.
     --
     function self:draw()
+        love.graphics.draw(canvas, TILESIZE, TILESIZE);
+
         for x = 1, #grid do
             for y = 1, #grid[x] do
+                if grid[x][y]:getContentType() == CONTENT.SOFTWALL then
+                    love.graphics.draw(images[tilesheet]['swall'], x * TILESIZE, y * TILESIZE);
+                end
                 grid[x][y]:draw();
             end
         end
@@ -166,6 +249,14 @@ function Arena.new()
     --
     function self:getAdjacentTiles(x, y)
         return grid[x][y]:getAdjacentTiles();
+    end
+
+    -- ------------------------------------------------
+    -- Setters
+    -- ------------------------------------------------
+
+    function self:setTilesheet(ntilesheet)
+        tilesheet = ntilesheet;
     end
 
     -- ------------------------------------------------

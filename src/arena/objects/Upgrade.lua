@@ -34,9 +34,9 @@ ResourceManager.register(Upgrade);
 -- Load images.
 --
 function Upgrade.loadImages()
-    images['fireUp'] = love.graphics.newImage('res/img/upgrades/fireup.png');
-    images['bombUp'] = love.graphics.newImage('res/img/upgrades/bombup.png');
-    images['bombDown'] = love.graphics.newImage('res/img/upgrades/bombdown.png');
+    images['fireup'] = love.graphics.newImage('res/img/upgrades/fireup.png');
+    images['bombup'] = love.graphics.newImage('res/img/upgrades/bombup.png');
+    images['bombdown'] = love.graphics.newImage('res/img/upgrades/bombdown.png');
     images['snail'] = love.graphics.newImage('res/img/upgrades/snail.png');
 end
 
@@ -52,6 +52,7 @@ function Upgrade.new(x, y)
     -- ------------------------------------------------
 
     local upgradeType;
+    local sprite;
     local id;
 
     -- ------------------------------------------------
@@ -59,8 +60,11 @@ function Upgrade.new(x, y)
     -- ------------------------------------------------
 
     local function assignUpgradeType()
-        local rnd = love.math.random(1, #TYPES + 1);
-        return TYPES[rnd];
+        return TYPES[love.math.random(1, #TYPES)];
+    end
+
+    local function assignSprite(type)
+        return images[type];
     end
 
     -- ------------------------------------------------
@@ -75,25 +79,15 @@ function Upgrade.new(x, y)
         -- the AI to actively hunt for downgrades.
         if upgradeType == TYPES[1] or upgradeType == TYPES[2] then
             -- Save the id used in the upgrade manager.
-            id = UpgradeManager.register(self:getX(), self:getY());
+            id = UpgradeManager.register(self);
         end
+
+        -- Assign a sprite.
+        sprite = assignSprite(upgradeType);
     end
 
-    function self:update(_)
-        return;
-    end
-
-    -- TODO decide upgrade type when it is created
     function self:draw()
-        if upgradeType == TYPES[1] then
-            love.graphics.draw(images['fireUp'], self:getX() * TILESIZE, self:getY() * TILESIZE);
-        elseif upgradeType == TYPES[2] then
-            love.graphics.draw(images['bombUp'], self:getX() * TILESIZE, self:getY() * TILESIZE);
-        elseif upgradeType == TYPES[3] then
-            love.graphics.draw(images['bombDown'], self:getX() * TILESIZE, self:getY() * TILESIZE);
-        elseif upgradeType == TYPES[4] then
-            love.graphics.draw(images['snail'], self:getX() * TILESIZE, self:getY() * TILESIZE);
-        end
+        love.graphics.draw(sprite, self:getX() * TILESIZE, self:getY() * TILESIZE);
     end
 
     function self:explode()
@@ -105,14 +99,6 @@ function Upgrade.new(x, y)
             UpgradeManager.remove(id);
         end
         self:getParent():clearContent();
-    end
-
-    function self:increaseDanger(_, _, _)
-        return;
-    end
-
-    function self:decreaseDanger(_, _, _)
-        return;
     end
 
     -- ------------------------------------------------

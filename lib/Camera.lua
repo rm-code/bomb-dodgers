@@ -23,7 +23,7 @@ function Camera.new(x, y, zoom)
 
     local x = x or 0;
     local y = y or 0;
-    local zoom = zoom or 0;
+    local zoom = zoom or 2;
     local minX, minY, maxX, maxY;
 
     local screenW, screenH = love.graphics.getDimensions();
@@ -44,36 +44,26 @@ function Camera.new(x, y, zoom)
     end
 
     function self:zoom(dZoom)
-        zoom = Math.clamp(0.5, zoom + dZoom, 5);
+        zoom = Math.clamp(0.5, zoom + dZoom, 10);
     end
 
     function self:track(tarX, tarY, speed, dt)
         local nX = x - (x - math.floor(tarX)) * dt * speed;
         local nY = y - (y - math.floor(tarY)) * dt * speed;
-
-        if minX and maxX then
-            x = Math.clamp(minX + screenW / (2 * zoom), nX, maxX - screenW / (2 * zoom));
-        else
-            x = nX;
-        end
-
-        if minY and maxY then
-            y = Math.clamp(minY + screenH / (2 * zoom), nY, maxY - screenH / (2 * zoom));
-        else
-            y = nY;
-        end
+        x = (minX and maxX) and Math.clamp(minX + screenW / (2 * zoom), nX, maxX - screenW / (2 * zoom)) or nX;
+        y = (minY and maxY) and Math.clamp(minY + screenH / (2 * zoom), nY, maxY - screenH / (2 * zoom)) or nY;
     end
 
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
 
-    function self:setZoom(_zoom)
-        zoom = Math.clamp(0.5, _zoom, 5);
+    function self:setZoom(z)
+        zoom = Math.clamp(0.5, z, 5);
     end
 
-    function self:setBoundaries(_minX, _minY, _maxX, _maxY)
-        minX, maxX, minY, maxY = _minX, _maxX, _minY, _maxY;
+    function self:setBoundaries(mX, mY, mxX, mxY)
+        minX, maxX, minY, maxY = mX, mxX, mY, mxY;
     end
 
     -- ------------------------------------------------
