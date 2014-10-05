@@ -58,6 +58,7 @@ function MainMenu.new()
     end
 
     local function options()
+        ScreenManager.switch(Options.new());
     end
 
     local function exit()

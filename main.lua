@@ -14,6 +14,7 @@ LevelMenu = require('src/screens/LevelMenu');
 LevelOutro = require('src/screens/LevelOutro');
 LevelSwitcher = require('src/screens/LevelSwitcher');
 MainMenu = require('src/screens/MainMenu');
+Options = require('src/screens/Options');
 
 -- ------------------------------------------------
 -- Local variables
