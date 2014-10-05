@@ -35,6 +35,9 @@ function Dodger.loadSounds()
     sounds['plant'] = ResourceManager.loadSound('res/snd/plant.ogg');
     sounds['plant']:setVolume(0.5);
     sounds['plant']:setRolloff(0.02);
+    sounds['upgrade'] = ResourceManager.loadSound('res/snd/upgrade.ogg');
+    sounds['upgrade']:setVolume(0.5);
+    sounds['upgrade']:setRolloff(0.02);
 end
 
 -- ------------------------------------------------
@@ -155,6 +158,9 @@ function Dodger.new(arena, x, y, animations)
             elseif upgrade:getUpgradeType() == 'snail' and not upgrades.snail.active then
                 upgrades.snail.activate();
             end
+            sounds['upgrade']:stop();
+            sounds['upgrade']:play();
+            sounds['upgrade']:setPosition(x * Constants.TILESIZE, y * Constants.TILESIZE, 0);
             upgrade:remove();
         end
     end
