@@ -2,29 +2,36 @@
 -- Copyright (C) 2014 by Robert Machmer                                                            =
 --==================================================================================================
 
+local ResourceManager = require('lib/ResourceManager');
+
+-- ------------------------------------------------
+-- Module
+-- ------------------------------------------------
+
 local PaletteSwitcher = {};
+
+-- ------------------------------------------------
+-- Resource Loading
+-- ------------------------------------------------
+
+local lut;
+
+-- Register module with resource manager.
+ResourceManager.register(PaletteSwitcher);
+
+---
+-- Load images.
+--
+function PaletteSwitcher.loadImages()
+    lut = love.graphics.newImage('res/img/lut/palettes.png');
+end
 
 -- ------------------------------------------------
 -- Local Variables
 -- ------------------------------------------------
 
-local shader = love.graphics.newShader('res/shader/gb.fs');
-local palettes = require('src/colswitcher/Palettes');
-local curPalette = 1;
-local colors = palettes[curPalette].colors;
-
--- ------------------------------------------------
--- Local Functions
--- ------------------------------------------------
-
----
--- Sets the current palette to a new one.
--- @param pal - The palette to which to switch.
---
-local function setPalette(pal)
-    print('Switch palette to: ' .. pal.name);
-    colors = pal.colors;
-end
+local shader = love.graphics.newShader('res/shader/palette.fs');
+local index = 0;
 
 -- ------------------------------------------------
 -- Public Functions
@@ -35,7 +42,9 @@ end
 --
 function PaletteSwitcher.set()
     love.graphics.setShader(shader);
-    shader:send('PALETTE', colors.black, colors.dgrey, colors.lgrey, colors.white);
+    shader:send('lut', lut);
+    shader:send('index', index);
+    shader:send('palettes', lut:getHeight() - 1);
 end
 
 ---
@@ -50,8 +59,7 @@ end
 -- it jumps back to the first one.
 --
 function PaletteSwitcher.nextPalette()
-    curPalette = curPalette == #palettes and 1 or curPalette + 1;
-    setPalette(palettes[curPalette]);
+    index = index == lut:getHeight() - 1 and 0 or index + 1;
 end
 
 ---
@@ -59,8 +67,7 @@ end
 -- it jumps to the last palette instead.
 --
 function PaletteSwitcher.previousPalette()
-    curPalette = curPalette == 1 and #palettes or curPalette - 1;
-    setPalette(palettes[curPalette]);
+    index = index == 0 and lut:getHeight() - 1 or index - 1;
 end
 
 -- ------------------------------------------------
