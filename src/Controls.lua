@@ -33,6 +33,8 @@ Controls.MENU= {};
 Controls.MENU.keyboard = {};
 Controls.MENU.keyboard.up            = { cmd = 'UP',      rep = true, locked = false };
 Controls.MENU.keyboard.down          = { cmd = 'DOWN',    rep = true, locked = false };
+Controls.MENU.keyboard.right         = { cmd = 'RIGHT',    rep = true, locked = false };
+Controls.MENU.keyboard.left          = { cmd = 'LEFT',    rep = true, locked = false };
 Controls.MENU.keyboard[' ']          = { cmd = 'SELECT',  rep = false, locked = false };
 Controls.MENU.keyboard['tab']        = { cmd = 'COL',     rep = false, locked = false };
 

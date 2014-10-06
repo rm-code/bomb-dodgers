@@ -10,6 +10,7 @@ Constants.CONTENT.HARDWALL = 'hardwall';
 Constants.CONTENT.BOMB = 'bomb';
 Constants.CONTENT.EXPLOSION = 'explosion';
 Constants.CONTENT.UPGRADE = 'upgrade';
+Constants.CONTENT.DOOR = 'door';
 
 Constants.TILESIZE = 32;
 Constants.BOMBTIMER = 2.5;

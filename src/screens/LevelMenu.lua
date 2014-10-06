@@ -6,14 +6,14 @@ local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
 local Arena = require('src/arena/Arena');
 local Player = require('src/entities/Player');
-local Button = require('src/ui/Button');
-local ButtonManager = require('src/ui/ButtonManager');
 local InputManager = require('lib/InputManager');
 local LevelSwitcher = require('src/screens/LevelSwitcher');
 local Camera = require('lib/Camera');
 local Constants = require('src/Constants');
 local ResourceManager = require('lib/ResourceManager');
 local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
+local ProfileHandler = require('src/profile/ProfileHandler');
+local Door = require('src/arena/objects/Door');
 
 -- ------------------------------------------------
 -- Module
@@ -30,10 +30,37 @@ local images = {};
 ResourceManager.register(LevelMenu);
 
 function LevelMenu.loadImages()
-    images['button'] = ResourceManager.loadImage('res/img/ui/button.png');
     images['lvl1'] = ResourceManager.loadImage('res/img/ui/preview_lvl_1.png');
     images['lvl2'] = ResourceManager.loadImage('res/img/ui/preview_lvl_2.png');
+    images['lvl3'] = ResourceManager.loadImage('res/img/ui/missing.png');
+    images['lvl4'] = ResourceManager.loadImage('res/img/ui/missing.png');
+    images['lvl5'] = ResourceManager.loadImage('res/img/ui/missing.png');
+    images['lvl6'] = ResourceManager.loadImage('res/img/ui/missing.png');
 end
+
+-- ------------------------------------------------
+-- Constants
+-- ------------------------------------------------
+
+local TILESIZE = Constants.TILESIZE;
+
+local DOOR_POSITIONS = {
+    { x = 7, y = 4 },
+    { x = 9, y = 4 },
+    { x = 7, y = 10 },
+    { x = 9, y = 10 },
+    { x = 7, y = 16 },
+    { x = 9, y = 16 },
+}
+
+local TELEPORTER_POSITIONS = {
+    { x = 2, y = 2 },
+    { x = 10, y = 2 },
+    { x = 2, y = 8 },
+    { x = 10, y = 8 },
+    { x = 2, y = 14 },
+    { x = 10, y = 14 },
+}
 
 -- ------------------------------------------------
 -- Constructor
@@ -44,16 +71,39 @@ function LevelMenu.new()
 
     local arena;
     local player;
-    local buttons;
     local camera;
     local shader;
+    local profile;
 
-    local function startOne()
-        ScreenManager.switch(LevelSwitcher.new(1));
+    local function loadLevel(level)
+        ScreenManager.switch(LevelSwitcher.new(level));
     end
 
-    local function startTwo()
-        ScreenManager.switch(LevelSwitcher.new(2));
+    local function placeDoors(arena)
+        local grid = arena:getGrid()
+        for i = 1, #DOOR_POSITIONS do
+            local door = DOOR_POSITIONS[i];
+            grid[door.x][door.y]:addContent(Door.new(door.x, door.y, profile['door' .. i]));
+        end
+    end
+
+    local function doesCollide(x1, y1, w1, h1, x2, y2, w2, h2)
+        return x1 < x2 + w2 and x2 < x1 + w1 and y1 < y2 + h2 and y2 < y1 + h1;
+    end
+
+    local function enterTeleporter()
+        -- Take the center of the player sprite for the collision detection.
+        local px, py, pw, ph = player:getRealX() + TILESIZE * 0.5, player:getRealY() + TILESIZE * 0.5, 0, 0;
+        local tx, ty, tw, th;
+
+        for i = 1, #TELEPORTER_POSITIONS do
+            local teleporter = TELEPORTER_POSITIONS[i];
+            tx, ty, tw, th = teleporter.x * TILESIZE, teleporter.y * TILESIZE, 5 * TILESIZE, 5 * TILESIZE;
+
+            if doesCollide(px, py, pw, ph, tx, ty, tw, th) then
+                loadLevel(i);
+            end
+        end
     end
 
     function self:init()
@@ -65,26 +115,18 @@ function LevelMenu.new()
 
         shader = love.graphics.newShader('res/shader/wave.fs');
 
-        player = Player.new(arena, 2, 2);
+        player = Player.new(arena, 8, 2);
+        player:setCamera(camera);
 
-        buttons = ButtonManager.new();
-        buttons:register(Button.new(images['lvl1'], 128, 64, startOne));
-        buttons:register(Button.new(images['lvl2'], 128, 256, startTwo));
+        profile = ProfileHandler.load();
+        ProfileHandler.save(profile);
+
+        placeDoors(arena);
     end
 
     local function handleInput()
-        if InputManager.hasCommand('SELECT') then
-            buttons:press();
-        elseif InputManager.hasCommand('COL') then
+        if InputManager.hasCommand('COL') then
             PaletteSwitcher.nextPalette();
-        end
-    end
-
-    local function select()
-        if player:getY() >= 2 and player:getY() <= 6 then
-            buttons:select(1)
-        elseif player:getY() > 7 and player:getY() <= 12 then
-            buttons:select(2)
         end
     end
 
@@ -92,26 +134,27 @@ function LevelMenu.new()
         arena:update(dt);
         player:update(dt);
 
-        select();
         handleInput();
-
-        camera:track(player:getRealX() + Constants.TILESIZE * 2.5, player:getRealY(), 6, dt);
+        enterTeleporter(player);
 
         shader:send('time', love.timer.getTime());
-
-        buttons:update(dt);
     end
 
     function self:draw()
         PaletteSwitcher.set();
         camera:set();
         arena:draw();
-        player:draw();
         PaletteSwitcher.unset();
 
         love.graphics.setShader(shader);
-        buttons:draw();
+        for i = 1, #TELEPORTER_POSITIONS do
+            love.graphics.draw(images['lvl' .. i], TILESIZE * TELEPORTER_POSITIONS[i].x, TILESIZE * TELEPORTER_POSITIONS[i].y);
+        end
         love.graphics.setShader();
+
+        PaletteSwitcher.set();
+        player:draw();
+        PaletteSwitcher.unset();
 
         camera:unset();
     end
