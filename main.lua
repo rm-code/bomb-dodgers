@@ -6,7 +6,7 @@ local ScreenManager = require('lib/screens/ScreenManager');
 local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
 local ResourceManager = require('lib/ResourceManager');
-local MainMenu = require('src/menus/MainMenu');
+local MainMenu = require('src/screens/MainMenu');
 
 -- ------------------------------------------------
 -- Local variables

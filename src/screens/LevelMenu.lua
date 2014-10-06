@@ -9,7 +9,7 @@ local Player = require('src/entities/Player');
 local Button = require('src/ui/Button');
 local ButtonManager = require('src/ui/ButtonManager');
 local InputManager = require('lib/InputManager');
-local LevelMenu = require('src/menus/LevelMenu');
+local LevelSwitcher = require('src/screens/LevelSwitcher');
 local Camera = require('lib/Camera');
 local Constants = require('src/Constants');
 local ResourceManager = require('lib/ResourceManager');
@@ -19,7 +19,7 @@ local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 -- Module
 -- ------------------------------------------------
 
-local MainMenu = {};
+local LevelMenu = {};
 
 -- ------------------------------------------------
 -- Resource Loading
@@ -27,48 +27,49 @@ local MainMenu = {};
 
 local images = {};
 
-ResourceManager.register(MainMenu);
+ResourceManager.register(LevelMenu);
 
-function MainMenu.loadImages()
+function LevelMenu.loadImages()
     images['button'] = ResourceManager.loadImage('res/img/ui/button.png');
-    images['logo'] = ResourceManager.loadImage('res/img/ui/logo.png');
+    images['lvl1'] = ResourceManager.loadImage('res/img/ui/preview_lvl_1.png');
+    images['lvl2'] = ResourceManager.loadImage('res/img/ui/preview_lvl_2.png');
 end
 
 -- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
-function MainMenu.new()
+function LevelMenu.new()
     local self = Screen.new();
 
     local arena;
     local player;
     local buttons;
     local camera;
+    local shader;
 
-    local function start()
-        ScreenManager.switch(LevelMenu.new());
+    local function startOne()
+        ScreenManager.switch(LevelSwitcher.new(1));
     end
 
-    local function options()
-    end
-
-    local function exit()
+    local function startTwo()
+        ScreenManager.switch(LevelSwitcher.new(2));
     end
 
     function self:init()
         arena = Arena.new();
-        arena:init('res/menu_lvl.lua', true);
+        arena:init('res/arenas/layout_LevelMenu.lua', true);
 
         camera = Camera.new();
         camera:setZoom(2.0);
 
+        shader = love.graphics.newShader('res/shader/wave.fs');
+
         player = Player.new(arena, 2, 2);
 
         buttons = ButtonManager.new();
-        buttons:register(Button.new(images['button'], 128, 64, start));
-        buttons:register(Button.new(images['button'], 128, 96, options));
-        buttons:register(Button.new(images['button'], 128, 128, exit));
+        buttons:register(Button.new(images['lvl1'], 128, 64, startOne));
+        buttons:register(Button.new(images['lvl2'], 128, 256, startTwo));
     end
 
     local function handleInput()
@@ -80,12 +81,10 @@ function MainMenu.new()
     end
 
     local function select()
-        if player:getY() == 2 then
+        if player:getY() >= 2 and player:getY() <= 6 then
             buttons:select(1)
-        elseif player:getY() == 3 then
+        elseif player:getY() > 7 and player:getY() <= 12 then
             buttons:select(2)
-        elseif player:getY() == 4 then
-            buttons:select(3)
         end
     end
 
@@ -98,6 +97,8 @@ function MainMenu.new()
 
         camera:track(player:getRealX() + Constants.TILESIZE * 2.5, player:getRealY(), 6, dt);
 
+        shader:send('time', love.timer.getTime());
+
         buttons:update(dt);
     end
 
@@ -106,13 +107,13 @@ function MainMenu.new()
         camera:set();
         arena:draw();
         player:draw();
-
-        love.graphics.draw(images['logo'], Constants.TILESIZE * 2.0, -64, 0, 2, 2);
-
-        buttons:draw();
-        camera:unset();
-
         PaletteSwitcher.unset();
+
+        love.graphics.setShader(shader);
+        buttons:draw();
+        love.graphics.setShader();
+
+        camera:unset();
     end
 
     return self;
@@ -122,8 +123,8 @@ end
 -- Return Module
 -- ------------------------------------------------
 
-return MainMenu;
+return LevelMenu;
 
 --==================================================================================================
--- Created 11.09.14 - 17:52                                                                        =
+-- Created 12.09.14 - 00:33                                                                        =
 --==================================================================================================

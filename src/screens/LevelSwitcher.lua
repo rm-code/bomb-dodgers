@@ -66,7 +66,7 @@ function LevelSwitcher.new(level)
     --
     local function createArena(tileset)
         local arena = Arena.new(tileset);
-        arena:init('res/arenas/basicLayout.lua');
+        arena:init('res/arenas/layout_Arena.lua');
         return arena;
     end
 
