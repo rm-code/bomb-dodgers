@@ -14,6 +14,7 @@ local NpcManager = require('src/entities/NpcManager');
 local Npc = require('src/entities/Npc');
 local Boss = require('src/entities/Boss');
 local Camera = require('lib/Camera');
+local ProfileHandler = require('src/profile/ProfileHandler');
 
 -- ------------------------------------------------
 -- Module
@@ -54,6 +55,7 @@ function LevelSwitcher.new(level)
     local rounds;
 
     local arena;
+    local profile;
 
     -- ------------------------------------------------
     -- Private Functions
@@ -131,6 +133,11 @@ function LevelSwitcher.new(level)
 
         if stage == 4 and pScore == 1 then
             level = level + 1 > #LEVELS and 1 or level + 1;
+
+            -- Unlock the next level.
+            profile['door' .. level] = true;
+            ProfileHandler.save(profile);
+
             stage = 1;
             NpcManager.clear();
             addNpc(arena);
@@ -194,6 +201,8 @@ function LevelSwitcher.new(level)
         addNpc(arena);
         arena:clearSpawns(PlayerManager.getPlayers());
         arena:clearSpawns(NpcManager.getNpcs());
+
+        profile = ProfileHandler.load();
 
         ScreenManager.push(Level.new(LEVELS[level], arena, rounds, camera));
     end
