@@ -9,7 +9,6 @@ local Player = require('src/entities/Player');
 local Button = require('src/ui/Button');
 local ButtonManager = require('src/ui/ButtonManager');
 local InputManager = require('lib/InputManager');
-local LevelMenu = require('src/screens/LevelMenu');
 local Camera = require('lib/Camera');
 local Constants = require('src/Constants');
 local ResourceManager = require('lib/ResourceManager');

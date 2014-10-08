@@ -5,7 +5,6 @@
 local Constants = require('src/Constants');
 local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
-local Level = require('src/screens/Level');
 local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
 local Arena = require('src/arena/Arena');

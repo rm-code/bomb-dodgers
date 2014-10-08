@@ -7,7 +7,6 @@ local ScreenManager = require('lib/screens/ScreenManager');
 local Arena = require('src/arena/Arena');
 local Player = require('src/entities/Player');
 local InputManager = require('lib/InputManager');
-local LevelSwitcher = require('src/screens/LevelSwitcher');
 local Camera = require('lib/Camera');
 local Constants = require('src/Constants');
 local ResourceManager = require('lib/ResourceManager');

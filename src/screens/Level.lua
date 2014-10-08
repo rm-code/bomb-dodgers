@@ -6,8 +6,6 @@ local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
 local InputManager = require('lib/InputManager');
 local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
-local LevelIntro = require('src/screens/LevelIntro');
-local LevelOutro = require('src/screens/LevelOutro');
 local PlayerManager = require('src/entities/PlayerManager');
 local NpcManager = require('src/entities/NpcManager');
 

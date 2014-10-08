@@ -6,7 +6,14 @@ local ScreenManager = require('lib/screens/ScreenManager');
 local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
 local ResourceManager = require('lib/ResourceManager');
-local MainMenu = require('src/screens/MainMenu');
+
+-- Screens
+Level = require('src/screens/Level');
+LevelIntro = require('src/screens/LevelIntro');
+LevelMenu = require('src/screens/LevelMenu');
+LevelOutro = require('src/screens/LevelOutro');
+LevelSwitcher = require('src/screens/LevelSwitcher');
+MainMenu = require('src/screens/MainMenu');
 
 -- ------------------------------------------------
 -- Local variables
