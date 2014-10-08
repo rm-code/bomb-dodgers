@@ -38,6 +38,8 @@ local SPAWNS = {
 local LEVELS = {
     'stonegarden',
     'desert',
+    'snow',
+    'forest',
 }
 
 -- ------------------------------------------------

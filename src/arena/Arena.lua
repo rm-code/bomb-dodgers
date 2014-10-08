@@ -26,8 +26,6 @@ local TILESIZE = Constants.TILESIZE;
 -- ------------------------------------------------
 
 local images = {};
-images.stonegarden = {};
-images.desert = {};
 
 -- Register module with resource manager.
 ResourceManager.register(Arena);
@@ -36,13 +34,25 @@ ResourceManager.register(Arena);
 -- Load images.
 --
 function Arena.loadImages()
+    images.stonegarden = {};
     images.stonegarden['floor'] = ResourceManager.loadImage('res/img/levels/stonegarden/floor.png');
     images.stonegarden['hwall'] = ResourceManager.loadImage('res/img/levels/stonegarden/hardwall.png');
     images.stonegarden['swall'] = ResourceManager.loadImage('res/img/levels/stonegarden/softwall.png');
 
+    images.desert = {};
     images.desert['floor'] = ResourceManager.loadImage('res/img/levels/desert/floor.png');
     images.desert['hwall'] = ResourceManager.loadImage('res/img/levels/desert/hardwall.png');
     images.desert['swall'] = ResourceManager.loadImage('res/img/levels/desert/softwall.png');
+
+    images.snow = {};
+    images.snow['floor'] = ResourceManager.loadImage('res/img/levels/snow/floor.png');
+    images.snow['hwall'] = ResourceManager.loadImage('res/img/levels/snow/hardwall.png');
+    images.snow['swall'] = ResourceManager.loadImage('res/img/levels/snow/softwall.png');
+
+    images.forest = {};
+    images.forest['floor'] = ResourceManager.loadImage('res/img/levels/forest/floor.png');
+    images.forest['hwall'] = ResourceManager.loadImage('res/img/levels/forest/hardwall.png');
+    images.forest['swall'] = ResourceManager.loadImage('res/img/levels/forest/softwall.png');
 end
 
 -- ------------------------------------------------
