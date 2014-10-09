@@ -12,7 +12,7 @@ local PlayerManager = require('src/entities/PlayerManager');
 local Player = require('src/entities/Player');
 local NpcManager = require('src/entities/NpcManager');
 local Npc = require('src/entities/Npc');
-local Boss = require('src/entities/Boss');
+local Boss = require('src/entities/boss/Boss');
 local Camera = require('lib/Camera');
 local ProfileHandler = require('src/profile/ProfileHandler');
 

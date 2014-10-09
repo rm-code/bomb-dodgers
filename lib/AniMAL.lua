@@ -58,7 +58,7 @@ function AniMAL.new(img, w, h, speed, modeNo)
     --
     function self:update(dt)
         timer = timer + dt;
-        if timer >= speed then
+        if timer >= speed and not done then
             timer = 0;
             if curFrame == #frames and playMode == 'single' then
                 done = true;
@@ -68,8 +68,17 @@ function AniMAL.new(img, w, h, speed, modeNo)
         end
     end
 
+    function self:rewind()
+        curFrame = 1;
+        done = false;
+    end
+
     function self:isDone()
         return done;
+    end
+
+    function self:setDone(ndone)
+        done = ndone;
     end
 
     -- ------------------------------------------------
