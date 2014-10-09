@@ -30,6 +30,17 @@ Controls.GAME.keyboard['tab']        = { cmd = 'COL',     rep = false, locked = 
 Controls.GAME.keyboard['return']     = { cmd = 'CHEAT', rep = false, locked = false };
 
 Controls.MENU= {};
+Controls.MENU.gamepad = {};
+Controls.MENU.gamepad.axes = {};
+Controls.MENU.gamepad.axes.lXRight   = { cmd = 'RIGHT',  value = 0, rep = true, locked = false };
+Controls.MENU.gamepad.axes.lXLeft    = { cmd = 'LEFT',   value = 0, rep = true, locked = false };
+Controls.MENU.gamepad.axes.lYUp      = { cmd = 'UP',     value = 0, rep = true, locked = false };
+Controls.MENU.gamepad.axes.lYDown    = { cmd = 'DOWN',   value = 0, rep = true, locked = false };
+
+Controls.MENU.gamepad.buttons = {};
+Controls.MENU.gamepad.buttons.a      = { cmd = 'SELECT',     rep = false, locked = false };
+Controls.MENU.gamepad.buttons.x      = { cmd = 'COL',     rep = false, locked = false };
+
 Controls.MENU.keyboard = {};
 Controls.MENU.keyboard.up            = { cmd = 'UP',      rep = true, locked = false };
 Controls.MENU.keyboard.down          = { cmd = 'DOWN',    rep = true, locked = false };
