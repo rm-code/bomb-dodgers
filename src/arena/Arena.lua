@@ -290,6 +290,20 @@ function Arena.new(ts)
         return grid[x][y]:getAdjacentTiles();
     end
 
+    ---
+    -- Returns the width of the grid.
+    --
+    function self:getWidth()
+        return w;
+    end
+
+    ---
+    -- Returns the height of the grid.
+    --
+    function self:getHeight()
+        return h;
+    end
+
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------

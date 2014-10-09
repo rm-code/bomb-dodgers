@@ -18,6 +18,7 @@ function Content.new(type, passable, x, y)
     local x, y = x, y;
     local type = type;
     local passable = passable;
+    local hazardous = false;
     local parentTile;
 
     -- ------------------------------------------------
@@ -56,6 +57,10 @@ function Content.new(type, passable, x, y)
         return passable;
     end
 
+    function self:isHazardous()
+        return hazardous;
+    end
+
     function self:getX()
         return x;
     end
@@ -71,6 +76,10 @@ function Content.new(type, passable, x, y)
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
+
+    function self:setHazardous(nhazardous)
+        hazardous = nhazardous;
+    end
 
     function self:setType(ntype)
         type = ntype;

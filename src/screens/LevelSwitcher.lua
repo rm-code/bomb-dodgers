@@ -12,7 +12,6 @@ local PlayerManager = require('src/entities/PlayerManager');
 local Player = require('src/entities/Player');
 local NpcManager = require('src/entities/NpcManager');
 local Npc = require('src/entities/Npc');
-local Boss = require('src/entities/boss/Boss');
 local Camera = require('lib/Camera');
 local ProfileHandler = require('src/profile/ProfileHandler');
 
@@ -33,14 +32,21 @@ local SPAWNS = {
     { x = 20, y = 20 },
     { x = 2, y = 20 },
     { x = 20, y = 2 },
-}
+};
 
 local LEVELS = {
     'stonegarden',
     'desert',
     'snow',
     'forest',
-}
+};
+
+local BOSSES = {
+    require('src/entities/boss/robot/Robot'),
+    require('src/entities/boss/mummy/Mummy'),
+    require('src/entities/boss/mummy/Mummy'),
+    require('src/entities/boss/mummy/Mummy'),
+};
 
 -- ------------------------------------------------
 -- Constructor
@@ -102,7 +108,7 @@ function LevelSwitcher.new(level)
     local function addBoss(arena)
         NpcManager.clear();
 
-        local boss = Boss.new(arena, BOSS_SPAWN.x, BOSS_SPAWN.y);
+        local boss = BOSSES[level].new(arena, BOSS_SPAWN.x, BOSS_SPAWN.y);
         NpcManager.register(boss);
     end
 

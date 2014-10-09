@@ -95,7 +95,9 @@ function Player.new(arena, x, y)
     function self:update(dt)
         handleInput(dt);
 
-        if self:getTile():getContentType() == CONTENT.EXPLOSION then
+        if self:getTile():getContent() and
+                (self:getTile():getContentType() == CONTENT.EXPLOSION
+                        or self:getTile():getContent():isHazardous()) then
             self:setDead(true);
             return;
         end

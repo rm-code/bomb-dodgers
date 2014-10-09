@@ -4,11 +4,11 @@
 
 local Constants = require('src/Constants');
 local Entity = require('src/entities/Entity');
-local Missile = require('src/entities/boss/Missile');
-local Minion = require('src/entities/boss/Minion');
+local Missile = require('src/entities/boss/robot/Missile');
+local Minion = require('src/entities/boss/robot/Minion');
 local StateManager = require('src/entities/states/StateManager');
-local Move = require('src/entities/boss/states/Move');
-local Hurt = require('src/entities/boss/states/Hurt');
+local Move = require('src/entities/boss/robot/states/Move');
+local Hurt = require('src/entities/boss/robot/states/Hurt');
 local PlayerManager = require('src/entities/PlayerManager');
 local ResourceManager = require('lib/ResourceManager');
 local AniMAL = require('lib/AniMAL');
@@ -17,7 +17,7 @@ local AniMAL = require('lib/AniMAL');
 -- Module
 -- ------------------------------------------------
 
-local Boss = {};
+local Robot = {};
 
 -- ------------------------------------------------
 -- Constants
@@ -33,13 +33,13 @@ local SPEED = 125;
 local images = {};
 
 -- Register module with resource manager.
-ResourceManager.register(Boss);
+ResourceManager.register(Robot);
 
 ---
 -- Load images.
 --
-function Boss.loadImages()
-    images['boss'] = ResourceManager.loadImage('res/img/boss/boss.png');
+function Robot.loadImages()
+    images['boss'] = ResourceManager.loadImage('res/img/boss/robot.png');
     images['smoke'] = ResourceManager.loadImage('res/img/boss/smoke.png');
     images['anims'] = {
         idleS = AniMAL.new(images['boss'], 96, 96, 0.2);
@@ -55,7 +55,7 @@ end
 -- Constructor
 -- ------------------------------------------------
 
-function Boss.new(arena, x, y)
+function Robot.new(arena, x, y)
     local self = Entity.new(arena, x, y, images.anims);
 
     local fsm = StateManager.new();
@@ -109,6 +109,7 @@ function Boss.new(arena, x, y)
                 if arena:getTile(self:getX() + x, self:getY() + y):getContentType() == Constants.CONTENT.EXPLOSION then
                     lives = lives - 1;
                     fsm:switch('hurt');
+                    return;
                 end
             end
         end
@@ -245,7 +246,7 @@ end
 -- Return Module
 -- ------------------------------------------------
 
-return Boss;
+return Robot;
 
 --==================================================================================================
 -- Created 25.09.14 - 10:10                                                                        =
