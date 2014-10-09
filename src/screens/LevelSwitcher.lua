@@ -14,7 +14,6 @@ local NpcManager = require('src/entities/dodgers/NpcManager');
 local Npc = require('src/entities/dodgers/Npc');
 local Camera = require('lib/Camera');
 local ProfileHandler = require('src/profile/ProfileHandler');
-local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------
 -- Module
@@ -49,43 +48,6 @@ local BOSSES = {
     require('src/entities/boss/mummy/Mummy'),
 };
 
-
--- ------------------------------------------------
--- Resource Loading
--- ------------------------------------------------
-
-local images = {};
-local music = {};
-
-ResourceManager.register(LevelSwitcher);
-
-function LevelSwitcher.loadImages()
-    images['lvl1'] = ResourceManager.loadImage('res/img/ui/preview_lvl_1.png');
-    images['lvl2'] = ResourceManager.loadImage('res/img/ui/preview_lvl_2.png');
-    images['lvl3'] = ResourceManager.loadImage('res/img/ui/missing.png');
-    images['lvl4'] = ResourceManager.loadImage('res/img/ui/missing.png');
-    images['lvl5'] = ResourceManager.loadImage('res/img/ui/missing.png');
-    images['lvl6'] = ResourceManager.loadImage('res/img/ui/missing.png');
-end
-
-function LevelSwitcher.loadMusic()
-    music['level1'] = ResourceManager.loadMusic('res/music/level1.ogg', 'static');
-    music['level1']:setRelative(true);
-    music['level1']:setLooping(true);
-    music['level2'] = ResourceManager.loadMusic('res/music/level2.ogg', 'static');
-    music['level2']:setRelative(true);
-    music['level2']:setLooping(true);
-    music['level3'] = ResourceManager.loadMusic('res/music/level3.ogg', 'static');
-    music['level3']:setRelative(true);
-    music['level3']:setLooping(true);
-    music['level4'] = ResourceManager.loadMusic('res/music/level4.ogg', 'static');
-    music['level4']:setRelative(true);
-    music['level4']:setLooping(true);
-    music['boss'] = ResourceManager.loadMusic('res/music/boss.ogg', 'static');
-    music['boss']:setRelative(true);
-    music['boss']:setLooping(true);
-end
-
 -- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
@@ -102,7 +64,6 @@ function LevelSwitcher.new(level)
 
     local arena;
     local profile;
-    local curSong;
 
     -- ------------------------------------------------
     -- Private Functions
@@ -179,10 +140,7 @@ function LevelSwitcher.new(level)
         local pScore, npcScore = checkScore(rounds);
 
         if stage == 4 and pScore == 1 then
-            music['boss']:stop();
             level = level + 1 > #LEVELS and 1 or level + 1;
-            curSong = music['level' .. level];
-            curSong:play();
 
             -- Unlock the next level.
             profile['door' .. level] = true;
@@ -198,8 +156,6 @@ function LevelSwitcher.new(level)
         elseif pScore == 2 then
             if stage == 3 then
                 addBoss(arena);
-                curSong:stop();
-                music['boss']:play();
             else
                 addNpc(arena);
             end
@@ -260,16 +216,13 @@ function LevelSwitcher.new(level)
 
         profile = ProfileHandler.load();
 
-        ScreenManager.push(Level.new(LEVELS[level], arena, rounds, camera));
-
-        curSong = music['level' .. level];
-        curSong:play();
+        ScreenManager.push(Level.new(LEVELS[level], stage, arena, rounds, camera));
     end
 
     function self:update()
         if self:isActive() then
             endRound(arena, rounds);
-            ScreenManager.push(Level.new(LEVELS[level], arena, rounds, camera));
+            ScreenManager.push(Level.new(LEVELS[level], stage, arena, rounds, camera));
         end
     end
 

@@ -9,7 +9,6 @@ local ResourceManager = require('lib/ResourceManager');
 
 -- Screens
 Level = require('src/screens/Level');
-LevelIntro = require('src/screens/LevelIntro');
 LevelMenu = require('src/screens/LevelMenu');
 LevelOutro = require('src/screens/LevelOutro');
 LevelSwitcher = require('src/screens/LevelSwitcher');
