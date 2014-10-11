@@ -199,7 +199,7 @@ function LevelSwitcher.new(level)
         -- Set the input map for the game.
         InputManager.setMap(Controls.GAME);
 
-        stage = 3;
+        stage = 1;
         rounds = {};
         arena = createArena(LEVELS[level]);
         camera = createCamera();
