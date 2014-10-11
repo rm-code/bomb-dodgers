@@ -185,6 +185,10 @@ function LevelSwitcher.new(level)
         arena:reset(LEVELS[level], stage == 4);
         arena:clearSpawns(players);
         arena:clearSpawns(npcs);
+
+        if stage == 4 then
+            arena:spawnUpgrades(5);
+        end
     end
 
     -- ------------------------------------------------
@@ -195,7 +199,7 @@ function LevelSwitcher.new(level)
         -- Set the input map for the game.
         InputManager.setMap(Controls.GAME);
 
-        stage = 1;
+        stage = 3;
         rounds = {};
         arena = createArena(LEVELS[level]);
         camera = createCamera();

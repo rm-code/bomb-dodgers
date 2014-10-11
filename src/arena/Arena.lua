@@ -4,9 +4,10 @@
 
 local Constants = require('src/Constants');
 local Tile = require('src/arena/Tile');
+local ResourceManager = require('lib/ResourceManager');
 local SoftWall = require('src/arena/objects/SoftWall');
 local HardWall = require('src/arena/objects/HardWall');
-local ResourceManager = require('lib/ResourceManager');
+local Upgrade = require('src/arena/objects/Upgrade');
 
 -- ------------------------------------------------
 -- Module
@@ -67,6 +68,7 @@ function Arena.new(ts)
     -- ------------------------------------------------
 
     local grid;
+    local w, h;
     local canvas;
     local tilesheet = ts or 'stonegarden';
 
@@ -188,12 +190,39 @@ function Arena.new(ts)
         renderToCanvas(canvas, grid);
     end
 
+    ---
+    -- Spawns an upgrade somewhere on the grid.
+    -- @param amount
+    --
+    function self:spawnUpgrades(amount)
+        local rndX, rndY;
+        local upgrade;
+        local count = 0;
+        while count < amount do
+            rndX, rndY = love.math.random(1, w), love.math.random(1, h);
+
+            -- Only spawn upgrades on free tiles.
+            if not grid[rndX][rndY]:getContent() then
+                upgrade = Upgrade.new(rndX, rndY, true);
+                upgrade:init();
+
+                if upgrade:getUpgradeType() == 'fireup' or upgrade:getUpgradeType() == 'bombup' then
+                    grid[rndX][rndY]:addContent(upgrade);
+                    count = count + 1;
+                end
+            end
+        end
+    end
+
     function self:init(toLoad, suppressSoftwalls)
         -- Loads the basic grid layout of a level.
         grid = love.filesystem.load(toLoad)();
 
+        -- Save width and height.
+        w, h = #grid, #grid[1];
+
         -- Create canvas.
-        canvas = love.graphics.newCanvas(#grid * TILESIZE, #grid[1] * TILESIZE);
+        canvas = love.graphics.newCanvas(w * TILESIZE, h * TILESIZE);
 
         -- Fills the grid with
         placeWalls(grid, suppressSoftwalls);
