@@ -40,7 +40,7 @@ function Missile.new(arena, dir, x, y)
 
     local gridX, gridY = x, y;
     local realX, realY = gridX * 32, gridY * 32;
-    local speed = 200;
+    local speed = 150;
     local dead = false;
     local sprite = dir == 'n' and imgs.n or dir == 's' and imgs.s or dir == 'w' and imgs.w or dir == 'e' and imgs.e;
 

@@ -38,7 +38,7 @@ function Minion.new(arena, x, y)
 
     local gridX, gridY = x, y;
     local realX, realY = gridX * 32, gridY * 32;
-    local speed = 75;
+    local speed = 45;
     local dead = false;
     local validDirections = {};
     local prevTile;
