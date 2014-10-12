@@ -25,6 +25,7 @@ local LevelMenu = {};
 -- ------------------------------------------------
 
 local images = {};
+local music = {};
 
 ResourceManager.register(LevelMenu);
 
@@ -35,6 +36,14 @@ function LevelMenu.loadImages()
     images['lvl4'] = ResourceManager.loadImage('res/img/ui/missing.png');
     images['lvl5'] = ResourceManager.loadImage('res/img/ui/missing.png');
     images['lvl6'] = ResourceManager.loadImage('res/img/ui/missing.png');
+end
+
+function LevelMenu.loadMusic()
+    music['loadLevel'] = ResourceManager.loadMusic('res/music/loadLevel.ogg', 'static');
+    music['loadLevel']:setRelative(true);
+    music['main'] = ResourceManager.loadMusic('res/music/main.ogg', 'static');
+    music['main']:setRelative(true);
+    music['main']:setLooping(true);
 end
 
 -- ------------------------------------------------
@@ -85,6 +94,11 @@ function LevelMenu.new()
             self:draw();
         end);
 
+        if music['main']:isPlaying() then
+            music['main']:stop();
+        end
+
+        music['loadLevel']:play();
         nextLevel = level;
     end
 

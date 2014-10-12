@@ -25,12 +25,18 @@ local MainMenu = {};
 -- ------------------------------------------------
 
 local images = {};
+local music = {};
 
 ResourceManager.register(MainMenu);
 
 function MainMenu.loadImages()
     images['button'] = ResourceManager.loadImage('res/img/ui/button.png');
     images['logo'] = ResourceManager.loadImage('res/img/ui/logo.png');
+end
+
+function MainMenu.loadMusic()
+    music['main'] = ResourceManager.loadMusic('res/music/main.ogg', 'static');
+    music['main']:setRelative(true);
 end
 
 -- ------------------------------------------------
@@ -68,6 +74,8 @@ function MainMenu.new()
         buttons:register(Button.new(images['button'], 128, 64, start));
         buttons:register(Button.new(images['button'], 128, 96, options));
         buttons:register(Button.new(images['button'], 128, 128, exit));
+
+        music['main']:play();
     end
 
     local function handleInput()
