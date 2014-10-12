@@ -71,11 +71,21 @@ function LevelMenu.new()
     local arena;
     local player;
     local camera;
-    local shader;
+    local waveShader;
+    local blurShader;
+    local blurAmount = 0.2;
     local profile;
+    local timer = 1;
+    local nextLevel;
+    local canvas;
 
     local function loadLevel(level)
-        ScreenManager.switch(LevelSwitcher.new(level));
+        canvas = love.graphics.newCanvas();
+        canvas:renderTo(function()
+            self:draw();
+        end);
+
+        nextLevel = level;
     end
 
     local function placeDoors(arena)
@@ -112,7 +122,8 @@ function LevelMenu.new()
         camera = Camera.new();
         camera:setZoom(2.0);
 
-        shader = love.graphics.newShader('res/shader/wave.fs');
+        waveShader = love.graphics.newShader('res/shader/wave.fs');
+        blurShader = love.graphics.newShader('res/shader/blur.fs');
 
         player = Player.new(arena, 8, 2);
         player:setCamera(camera);
@@ -130,32 +141,48 @@ function LevelMenu.new()
     end
 
     function self:update(dt)
+        if nextLevel then
+            timer = timer - dt;
+            if timer <= 0 then
+                ScreenManager.switch(LevelSwitcher.new(nextLevel));
+                return;
+            end
+            blurAmount = blurAmount + dt;
+            blurShader:send('radius', blurAmount);
+            return;
+        end
+
         arena:update(dt);
         player:update(dt);
 
         handleInput();
         enterTeleporter(player);
 
-        shader:send('time', love.timer.getTime());
+        waveShader:send('time', love.timer.getTime());
     end
 
     function self:draw()
-        PaletteSwitcher.set();
-        camera:set();
-        arena:draw();
-        PaletteSwitcher.unset();
+        if not nextLevel then
+            PaletteSwitcher.set();
+            camera:set();
+            arena:draw();
+            PaletteSwitcher.unset();
 
-        love.graphics.setShader(shader);
-        for i = 1, #TELEPORTER_POSITIONS do
-            love.graphics.draw(images['lvl' .. i], TILESIZE * TELEPORTER_POSITIONS[i].x, TILESIZE * TELEPORTER_POSITIONS[i].y);
+            love.graphics.setShader(waveShader);
+            for i = 1, #TELEPORTER_POSITIONS do
+                love.graphics.draw(images['lvl' .. i], TILESIZE * TELEPORTER_POSITIONS[i].x, TILESIZE * TELEPORTER_POSITIONS[i].y);
+            end
+            love.graphics.setShader();
+
+            PaletteSwitcher.set();
+            player:draw();
+            PaletteSwitcher.unset();
+            camera:unset();
+        else
+            love.graphics.setShader(blurShader);
+            love.graphics.draw(canvas);
+            love.graphics.setShader();
         end
-        love.graphics.setShader();
-
-        PaletteSwitcher.set();
-        player:draw();
-        PaletteSwitcher.unset();
-
-        camera:unset();
     end
 
     return self;
