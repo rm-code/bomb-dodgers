@@ -179,6 +179,7 @@ function LevelSwitcher.new(level)
         local pScore, npcScore = checkScore(rounds);
 
         if stage == 4 and pScore == 1 then
+            music['boss']:stop();
             level = level + 1 > #LEVELS and 1 or level + 1;
             curSong = music['level' .. level];
             curSong:play();
