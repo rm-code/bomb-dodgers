@@ -2,7 +2,7 @@
 -- Copyright (C) 2014 by Robert Machmer                                                            =
 --==================================================================================================
 
-local PlayerManager = require('src/entities/PlayerManager');
+local PlayerManager = require('src/entities/dodgers/PlayerManager');
 local UpgradeManager = require('src/arena/objects/UpgradeManager');
 
 -- ------------------------------------------------

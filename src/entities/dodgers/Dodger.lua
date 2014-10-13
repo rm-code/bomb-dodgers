@@ -4,8 +4,8 @@
 
 local Constants = require('src/Constants');
 local Entity = require('src/entities/Entity');
-local NpcManager = require('src/entities/NpcManager');
-local PlayerManager = require('src/entities/PlayerManager');
+local NpcManager = require('src/entities/dodgers/NpcManager');
+local PlayerManager = require('src/entities/dodgers/PlayerManager');
 local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------

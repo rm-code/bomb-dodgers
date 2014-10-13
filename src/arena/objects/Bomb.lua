@@ -7,8 +7,8 @@ local Constants = require('src/Constants');
 local Explosion = require('src/arena/objects/Explosion');
 local AniMAL = require('lib/AniMAL');
 local ResourceManager = require('lib/ResourceManager');
-local PlayerManager = require('src/entities/PlayerManager');
-local NpcManager = require('src/entities/NpcManager');
+local PlayerManager = require('src/entities/dodgers/PlayerManager');
+local NpcManager = require('src/entities/dodgers/NpcManager');
 local Math = require('lib/Math');
 
 -- ------------------------------------------------

@@ -6,8 +6,8 @@ local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
 local InputManager = require('lib/InputManager');
 local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
-local PlayerManager = require('src/entities/PlayerManager');
-local NpcManager = require('src/entities/NpcManager');
+local PlayerManager = require('src/entities/dodgers/PlayerManager');
+local NpcManager = require('src/entities/dodgers/NpcManager');
 
 -- ------------------------------------------------
 -- Module

@@ -4,7 +4,7 @@
 
 local Math = require('lib/Math');
 local Constants = require('src/Constants');
-local PlayerManager = require('src/entities/PlayerManager');
+local PlayerManager = require('src/entities/dodgers/PlayerManager');
 local ResourceManager = require('lib/ResourceManager');
 
 -- ------------------------------------------------

@@ -4,7 +4,7 @@
 
 local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
-local NpcManager = require('src/entities/NpcManager');
+local NpcManager = require('src/entities/dodgers/NpcManager');
 
 -- ------------------------------------------------
 -- Module
