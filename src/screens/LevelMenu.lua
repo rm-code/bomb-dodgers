@@ -57,8 +57,6 @@ local DOOR_POSITIONS = {
     { x = 9, y = 4 },
     { x = 7, y = 10 },
     { x = 9, y = 10 },
-    { x = 7, y = 16 },
-    { x = 9, y = 16 },
 }
 
 local TELEPORTER_POSITIONS = {
@@ -66,8 +64,6 @@ local TELEPORTER_POSITIONS = {
     { x = 10, y = 2 },
     { x = 2, y = 8 },
     { x = 10, y = 8 },
-    { x = 2, y = 14 },
-    { x = 10, y = 14 },
 }
 
 -- ------------------------------------------------
@@ -87,6 +83,7 @@ function LevelMenu.new()
     local timer = 1;
     local nextLevel;
     local canvas;
+    local sw, sh;
 
     local function loadLevel(level)
         canvas = love.graphics.newCanvas();
@@ -135,6 +132,7 @@ function LevelMenu.new()
 
         camera = Camera.new();
         camera:setZoom(2.0);
+        camera:setBoundaries(Constants.TILESIZE, Constants.TILESIZE, 16 * Constants.TILESIZE, 14 * Constants.TILESIZE);
 
         waveShader = love.graphics.newShader('res/shader/wave.fs');
         blurShader = love.graphics.newShader('res/shader/blur.fs');
@@ -146,6 +144,8 @@ function LevelMenu.new()
         ProfileHandler.save(profile);
 
         placeDoors(arena);
+
+        sw, sh = love.graphics.getDimensions();
     end
 
     local function handleInput()
@@ -178,6 +178,7 @@ function LevelMenu.new()
     function self:draw()
         if not nextLevel then
             PaletteSwitcher.set();
+            love.graphics.rectangle('fill', 0, 0, sw, sh);
             camera:set();
             arena:draw();
             PaletteSwitcher.unset();

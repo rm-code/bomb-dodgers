@@ -213,7 +213,7 @@ function Entity.new(arena, x, y, animations)
 
     function self:updateCamera(dt)
         if camera then
-            camera:track(realX, realY, 6, dt);
+            camera:track(realX + Constants.TILESIZE * 0.5, realY + Constants.TILESIZE * 0.5, 6, dt);
         end
     end
 

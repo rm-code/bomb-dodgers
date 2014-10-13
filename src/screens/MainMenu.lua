@@ -50,6 +50,7 @@ function MainMenu.new()
     local player;
     local buttons;
     local camera;
+    local sw, sh;
 
     local function start()
         ScreenManager.switch(LevelMenu.new());
@@ -76,6 +77,8 @@ function MainMenu.new()
         buttons:register(Button.new(images['button'], 128, 128, exit));
 
         music['main']:play();
+
+        sw, sh = love.graphics.getDimensions();
     end
 
     local function handleInput()
@@ -110,6 +113,8 @@ function MainMenu.new()
 
     function self:draw()
         PaletteSwitcher.set();
+--        love.graphics.setColor(255, 255, 255);
+        love.graphics.rectangle('fill', 0, 0, sw, sh);
         camera:set();
         arena:draw();
         player:draw();

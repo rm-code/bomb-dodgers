@@ -31,13 +31,13 @@ function love.conf(t)
 
     t.window.title = GAME_TITLE;
     t.window.icon = nil;
-    t.window.width = 0;
-    t.window.height = 0;
+    t.window.width = 640;
+    t.window.height = 480;
     t.window.borderless = false;
     t.window.resizable = true;
-    t.window.minwidth = 800;
-    t.window.minheight = 600;
-    t.window.fullscreen = true;
+    t.window.minwidth = 640;
+    t.window.minheight = 480;
+    t.window.fullscreen = false;
     t.window.fullscreentype = "desktop";
     t.window.vsync = true;
     t.window.fsaa = 0;

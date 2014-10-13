@@ -156,7 +156,7 @@ function LevelSwitcher.new(level)
     --
     local function createCamera()
         local camera = Camera.new();
-        camera:setZoom(3);
+        camera:setZoom(2.0);
         camera:setBoundaries(Constants.TILESIZE, Constants.TILESIZE, 22 * Constants.TILESIZE, 22 * Constants.TILESIZE);
         return camera;
     end
