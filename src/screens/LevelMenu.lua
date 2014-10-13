@@ -138,7 +138,7 @@ function LevelMenu.new()
         arena:init('res/arenas/layout_LevelMenu.lua', true);
 
         camera = Camera.new();
-        camera:setZoom(2.0);
+        camera:setScale(2, 2);
         camera:setBoundaries(Constants.TILESIZE, Constants.TILESIZE, 16 * Constants.TILESIZE, 14 * Constants.TILESIZE);
 
         waveShader = Shader.new('res/shader/wave.fs');

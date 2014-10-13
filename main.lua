@@ -3,8 +3,8 @@
 --==================================================================================================
 
 local ScreenManager = require('lib/screens/ScreenManager');
+local ScreenScaler = require('lib/ScreenScaler');
 local InputManager = require('lib/InputManager');
-local Controls = require('src/Controls');
 local ResourceManager = require('lib/ResourceManager');
 local ProfileHandler = require('src/profile/ProfileHandler');
 local SoundManager = require('lib/SoundManager');
@@ -82,6 +82,8 @@ function love.load()
     -- Load resources.
     ResourceManager.loadResources();
 
+    ScreenScaler.init(profile.mode, profile.scaleX, profile.scaleY, profile.vsync);
+
     -- Start game on the main menu.
     ScreenManager.init(MainMenu.new());
 end
@@ -100,7 +102,11 @@ function love.draw()
     local lt = love.timer;
     local format = string.format;
 
+    ScreenScaler.push();
+
     ScreenManager.draw();
+
+    ScreenScaler.pop();
 
     -- InputManager.draw();
 

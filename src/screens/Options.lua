@@ -1,5 +1,6 @@
 local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
+local ScreenScaler = require('lib/ScreenScaler');
 local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local ResourceManager = require('lib/ResourceManager');
 local Button = require('src/ui/Button');
@@ -33,7 +34,6 @@ end
 
 function Options.loadImages()
     images['options'] = ResourceManager.loadImage('res/img/ui/options.png');
-    images['scale'] = ResourceManager.loadImage('res/img/ui/scale.png');
     images['fullscreen'] = ResourceManager.loadImage('res/img/ui/fullscreen.png');
     images['vsync'] = ResourceManager.loadImage('res/img/ui/vsync.png');
     images['back'] = ResourceManager.loadImage('res/img/ui/back.png');
@@ -53,6 +53,13 @@ function Options.loadImages()
     images[8] = ResourceManager.loadImage('res/img/ui/p08.png');
     images[9] = ResourceManager.loadImage('res/img/ui/p09.png');
     images[10] = ResourceManager.loadImage('res/img/ui/p10.png');
+    images['modes'] = {
+        ResourceManager.loadImage('res/img/ui/windowed.png');
+        ResourceManager.loadImage('res/img/ui/scale.png');
+        ResourceManager.loadImage('res/img/ui/stretched.png');
+    }
+    images['+'] = ResourceManager.loadImage('res/img/ui/plus.png');
+    images['-'] = ResourceManager.loadImage('res/img/ui/minus.png');
 end
 
 function Options.loadMusic()
@@ -72,13 +79,25 @@ function Options.new()
     local profile;
     local offset = 24;
 
-    local function changeScale()
+    local function increaseScale()
+        ScreenScaler.increaseScale();
+        profile.scaleX, profile.scaleY = ScreenScaler.getScale();
         ProfileHandler.save(profile);
+        paletteShader = PaletteSwitcher.new();
+    end
+
+    local function decreaseScale()
+        ScreenScaler.decreaseScale();
+        profile.scaleX, profile.scaleY = ScreenScaler.getScale();
+        ProfileHandler.save(profile);
+        paletteShader = PaletteSwitcher.new();
     end
 
     local function toggleFullscreen()
-        profile.fullscreen = not profile.fullscreen;
+        ScreenScaler.changeMode();
+        profile.mode = ScreenScaler.getMode();
         ProfileHandler.save(profile);
+        paletteShader = PaletteSwitcher.new();
     end
 
     local function toggleShaders()
@@ -90,9 +109,10 @@ function Options.new()
     end
 
     local function toggleVsync()
-        profile.vsync = not profile.vsync;
-        love.window.setMode(love.window.getWidth(), love.window.getHeight(), { vsync = profile.vsync });
+        ScreenScaler.toggleVSync();
+        profile.vsync = ScreenScaler.hasVSync();
         ProfileHandler.save(profile);
+        paletteShader = PaletteSwitcher.new();
     end
 
     local function adjustSound()
@@ -137,7 +157,8 @@ function Options.new()
 
         buttons:register(Button.new(images['vsync'], 64, offset + 64, 3, 3, toggleVsync));
         buttons:register(Button.new(images['fullscreen'], 64, offset + 112, 3, 3, toggleFullscreen));
-        buttons:register(Button.new(images['scale'], 64, offset + 160, 3, 3, changeScale));
+        buttons:register(Button.new(images['+'], 416, offset + 160, 3, 3, increaseScale));
+        buttons:register(Button.new(images['-'], 448, offset + 160, 3, 3, decreaseScale));
         buttons:register(Button.new(images['shaders'], 64, offset + 208, 3, 3, toggleShaders));
         buttons:register(Button.new(images['music'], 64, offset + 256, 3, 3, adjustMusic));
         buttons:register(Button.new(images['sound'], 64, offset + 304, 3, 3, adjustSound));
@@ -153,7 +174,7 @@ function Options.new()
 
         love.graphics.draw(images['options'], 164, 16, 0, 3, 3);
         love.graphics.draw(profile.vsync and images['on'] or images['off'], 416, offset + 64, 0, 3, 3);
-        love.graphics.draw(profile.fullscreen and images['on'] or images['off'], 416, offset + 112, 0, 3, 3);
+        love.graphics.draw(images['modes'][profile.mode], 416, offset + 112, 0, 3, 3);
         love.graphics.draw(profile.shaders and images['on'] or images['off'], 416, offset + 208, 0, 3, 3);
         love.graphics.draw(images[profile.music], 416, offset + 256, 0, 3, 3);
         love.graphics.draw(images[profile.sfx], 416, offset + 304, 0, 3, 3);
