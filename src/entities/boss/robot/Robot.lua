@@ -31,6 +31,7 @@ local SPEED = 125;
 -- ------------------------------------------------
 
 local images = {};
+local sounds = {};
 
 -- Register module with resource manager.
 ResourceManager.register(Robot);
@@ -49,6 +50,13 @@ function Robot.loadImages()
         walkE = AniMAL.new(images['boss'], 96, 96, 0.2);
         walkW = AniMAL.new(images['boss'], 96, 96, 0.2);
     }
+end
+
+function Robot.loadSounds()
+    sounds['explosion'] = ResourceManager.loadSound('res/snd/explosion.ogg');
+    sounds['explosion']:setRolloff(0.02);
+    sounds['hurt'] = ResourceManager.loadSound('res/snd/bosshurt.wav');
+    sounds['hurt']:setRolloff(0.02);
 end
 
 -- ------------------------------------------------
@@ -87,6 +95,9 @@ function Robot.new(arena, x, y)
     end
 
     local function updateSmoke(dt)
+        sounds['explosion']:stop();
+        sounds['explosion']:play();
+        sounds['explosion']:setPosition(self:getRealX(), self:getRealY(), 0);
         for i = 1, 5 do
             if not clouds[i] then
                 clouds[i] = {};
@@ -97,6 +108,9 @@ function Robot.new(arena, x, y)
                 clouds[i].x = randomPosition(self:getRealX());
                 clouds[i].y = randomPosition(self:getRealY());
                 clouds[i].anim:rewind();
+                sounds['explosion']:stop();
+                sounds['explosion']:play();
+                sounds['explosion']:setPosition(clouds[i].x, clouds[i].y, 0);
             else
                 clouds[i].anim:update(dt);
             end
@@ -107,6 +121,9 @@ function Robot.new(arena, x, y)
         for x = -1, 1 do
             for y = -1, 1 do
                 if arena:getTile(self:getX() + x, self:getY() + y):getContentType() == Constants.CONTENT.EXPLOSION then
+                    sounds['hurt']:stop();
+                    sounds['hurt']:play();
+                    sounds['hurt']:setPosition(self:getRealX(), self:getRealY(), 0);
                     lives = lives - 1;
                     fsm:switch('hurt');
                     return;
