@@ -41,7 +41,7 @@ function love.conf(t)
     t.window.fullscreentype = "desktop";
     t.window.vsync = true;
     t.window.fsaa = 0;
-    t.window.display = 2;
+    t.window.display = 1;
     t.window.highdpi = false;
     t.window.srgb = false;
 
