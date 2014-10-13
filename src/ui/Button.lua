@@ -8,15 +8,16 @@ local Button = {};
 -- Constructor
 -- ------------------------------------------------
 
-function Button.new(img, x, y, target)
+function Button.new(img, x, y, sx, sy, target)
     local self = {};
 
     local active;
     local alpha;
+    local sx, sy = sx or 1, sy or 1;
 
     function self:draw()
         love.graphics.setColor(255, 255, 255, alpha);
-        love.graphics.draw(img, x, y);
+        love.graphics.draw(img, x, y, 0, sx, sy);
         love.graphics.setColor(255, 255, 255, 255);
     end
 

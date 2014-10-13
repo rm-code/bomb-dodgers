@@ -33,7 +33,6 @@ function ButtonManager.new()
     local self = {};
 
     local buttons = {};
-    local curButton;
     local currentButton = 1;
 
     function self:register(button)
@@ -54,29 +53,32 @@ function ButtonManager.new()
 
     function self:press()
         sounds['select']:play();
-        curButton:press();
+        buttons[currentButton]:press();
     end
 
     function self:select(no)
-        if not curButton then
-            curButton = buttons[no];
-            curButton:setActive(true);
-        elseif curButton ~= buttons[no] then
-            curButton:setActive(false);
+        if buttons[currentButton] ~= buttons[no] then
+            buttons[currentButton]:setActive(false);
             sounds['beep']:play();
-            curButton = buttons[no];
-            curButton:setActive(true);
+            currentButton = no;
+            buttons[currentButton]:setActive(true);
+        else
+            buttons[currentButton]:setActive(true);
         end
     end
 
     function self:next()
         sounds['beep']:play();
+        buttons[currentButton]:setActive(false);
         currentButton = currentButton == #buttons and 1 or currentButton + 1;
+        buttons[currentButton]:setActive(true);
     end
 
     function self:prev()
         sounds['beep']:play();
+        buttons[currentButton]:setActive(false);
         currentButton = currentButton == 1 and #buttons or currentButton - 1;
+        buttons[currentButton]:setActive(true);
     end
 
     return self;

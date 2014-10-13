@@ -27,6 +27,7 @@ function AniMAL.new(img, w, h, speed, modeNo)
     local spritesheet = img;
     local width = w;
     local height = h;
+    local sx, sy = 1, 1;
     local speed = speed;
     local timer = 0;
     local totalFrames = spritesheet:getWidth() / width;
@@ -49,7 +50,7 @@ function AniMAL.new(img, w, h, speed, modeNo)
     -- @param y - The y position to draw the quad at.
     --
     function self:draw(x, y)
-        love.graphics.draw(spritesheet, frames[curFrame], x, y);
+        love.graphics.draw(spritesheet, frames[curFrame], x, y, 0, sx, sy);
     end
 
     ---
@@ -79,6 +80,10 @@ function AniMAL.new(img, w, h, speed, modeNo)
 
     function self:setDone(ndone)
         done = ndone;
+    end
+
+    function self:setScale(nsx, nsy)
+        sx, sy = nsx, nsy;
     end
 
     -- ------------------------------------------------
