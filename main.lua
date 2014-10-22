@@ -7,6 +7,7 @@ local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
 local ResourceManager = require('lib/ResourceManager');
 local ProfileHandler = require('src/profile/ProfileHandler');
+local SoundManager = require('lib/SoundManager');
 
 -- Screens
 Level = require('src/screens/Level');
@@ -72,6 +73,11 @@ function love.load()
 
     -- Set default filters.
     love.graphics.setDefaultFilter('nearest', 'nearest');
+
+    -- Set volume.
+    local profile = ProfileHandler.load();
+    SoundManager.setVolume('sfx', profile.sfx / 10);
+    SoundManager.setVolume('music', profile.music / 10);
 
     -- Load resources.
     ResourceManager.loadResources();

@@ -9,6 +9,7 @@ local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local PlayerManager = require('src/entities/dodgers/PlayerManager');
 local NpcManager = require('src/entities/dodgers/NpcManager');
 local ResourceManager = require('lib/ResourceManager');
+local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
@@ -64,7 +65,7 @@ function Level.new(level, stage, arena, scores, camera)
         else
             curSong = music[level];
         end
-        curSong:play();
+        SoundManager.play(curSong, 'music', 0, 0, 0);
     end
 
     function self:update(dt)

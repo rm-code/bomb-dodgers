@@ -10,6 +10,7 @@ local ResourceManager = require('lib/ResourceManager');
 local PlayerManager = require('src/entities/dodgers/PlayerManager');
 local NpcManager = require('src/entities/dodgers/NpcManager');
 local Math = require('lib/Math');
+local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
@@ -172,9 +173,7 @@ function Bomb.new(x, y)
     -- @param adjTiles - The tiles adjacent to the bomb's parent tile.
     --
     function self:explode(_, _, adjTiles)
-        sounds['explosion']:stop();
-        sounds['explosion']:play();
-        sounds['explosion']:setPosition(realX, realY, 0);
+        SoundManager.play(sounds['explosion'], 'sfx', realX, realY, 0);
 
         -- Send out a signal to decrease the danger value of the tiles within the blast radius.
         self:decreaseDanger(blastRadius, 'all', self:getParent():getAdjacentTiles(gridX, gridY));

@@ -36,6 +36,8 @@ function FileHandler.load()
         vsync = false,
         scale = 1,
         shaders = true,
+        sfx = 10,
+        music = 10,
     };
 end
 

@@ -14,6 +14,7 @@ local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local ProfileHandler = require('src/profile/ProfileHandler');
 local Door = require('src/arena/objects/Door');
 local Shader = require('lib/Shader');
+local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
@@ -97,7 +98,7 @@ function LevelMenu.new()
             music['main']:stop();
         end
 
-        music['loadLevel']:play();
+        SoundManager.play(music['loadLevel'], 'music', 0, 0, 0);
         nextLevel = level;
     end
 

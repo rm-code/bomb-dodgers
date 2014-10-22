@@ -12,6 +12,7 @@ local Hurt = require('src/entities/boss/robot/states/Hurt');
 local PlayerManager = require('src/entities/dodgers/PlayerManager');
 local ResourceManager = require('lib/ResourceManager');
 local AniMAL = require('lib/AniMAL');
+local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
@@ -95,9 +96,7 @@ function Robot.new(arena, x, y)
     end
 
     local function updateSmoke(dt)
-        sounds['explosion']:stop();
-        sounds['explosion']:play();
-        sounds['explosion']:setPosition(self:getRealX(), self:getRealY(), 0);
+        SoundManager.play(sounds['explosion'], 'sfx', self:getRealX(), self:getRealY(), 0);
         for i = 1, 5 do
             if not clouds[i] then
                 clouds[i] = {};
@@ -108,9 +107,7 @@ function Robot.new(arena, x, y)
                 clouds[i].x = randomPosition(self:getRealX());
                 clouds[i].y = randomPosition(self:getRealY());
                 clouds[i].anim:rewind();
-                sounds['explosion']:stop();
-                sounds['explosion']:play();
-                sounds['explosion']:setPosition(clouds[i].x, clouds[i].y, 0);
+                SoundManager.play(sounds['explosion'], 'sfx', clouds[i].x, clouds[i].y, 0);
             else
                 clouds[i].anim:update(dt);
             end
@@ -121,9 +118,7 @@ function Robot.new(arena, x, y)
         for x = -1, 1 do
             for y = -1, 1 do
                 if arena:getTile(self:getX() + x, self:getY() + y):getContentType() == Constants.CONTENT.EXPLOSION then
-                    sounds['hurt']:stop();
-                    sounds['hurt']:play();
-                    sounds['hurt']:setPosition(self:getRealX(), self:getRealY(), 0);
+                    SoundManager.play(sounds['hurt'], 'sfx', self:getRealX(), self:getRealY(), 0);
                     lives = lives - 1;
                     fsm:switch('hurt');
                     return;

@@ -11,6 +11,7 @@ local ResourceManager = require('lib/ResourceManager');
 local InputManager = require('lib/InputManager');
 local AniMAL = require('lib/AniMAL');
 local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
+local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
@@ -91,7 +92,7 @@ function MainMenu.new()
         buttons:register(Button.new(images['exit'],     172, 256 + 96, 3, 3, exit));
         buttons:select(1);
 
-        music['main']:play();
+        SoundManager.play(music['main'], 'music', 0, 0, 0);
 
         sw, sh = love.graphics.getDimensions();
     end

@@ -8,6 +8,7 @@ local Move = require('src/entities/boss/mummy/states/Move');
 local Hurt = require('src/entities/boss/mummy/states/Hurt');
 local SpawnTentacles = require('src/entities/boss/mummy/states/SpawnTentacles');
 local Charge = require('src/entities/boss/mummy/states/Charge');
+local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
@@ -89,9 +90,7 @@ function Mummy.new(arena, x, y)
     end
 
     local function updateSmoke(dt)
-        sounds['explosion']:stop();
-        sounds['explosion']:play();
-        sounds['explosion']:setPosition(self:getRealX(), self:getRealY(), 0);
+        SoundManager.play(sounds['explosion'], 'sfx', self:getRealX(), self:getRealY(), 0);
         for i = 1, 5 do
             if not clouds[i] then
                 clouds[i] = {};
@@ -102,9 +101,7 @@ function Mummy.new(arena, x, y)
                 clouds[i].x = randomPosition(self:getRealX());
                 clouds[i].y = randomPosition(self:getRealY());
                 clouds[i].anim:rewind();
-                sounds['explosion']:stop();
-                sounds['explosion']:play();
-                sounds['explosion']:setPosition(clouds[i].x, clouds[i].y, 0);
+                SoundManager.play(sounds['explosion'], 'sfx', clouds[i].x, clouds[i].y, 0);
             else
                 clouds[i].anim:update(dt);
             end
@@ -115,9 +112,7 @@ function Mummy.new(arena, x, y)
         for x = -1, 1 do
             for y = -1, 1 do
                 if arena:getTile(self:getX() + x, self:getY() + y):getContentType() == Constants.CONTENT.EXPLOSION then
-                    sounds['hurt']:stop();
-                    sounds['hurt']:play();
-                    sounds['hurt']:setPosition(self:getRealX(), self:getRealY(), 0);
+                    SoundManager.play(sounds['hurt'], 'sfx', self:getRealX(), self:getRealY(), 0);
                     lives = lives - 1;
                     fsm:switch('hurt');
                     return;

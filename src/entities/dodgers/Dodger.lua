@@ -7,6 +7,7 @@ local Entity = require('src/entities/Entity');
 local NpcManager = require('src/entities/dodgers/NpcManager');
 local PlayerManager = require('src/entities/dodgers/PlayerManager');
 local ResourceManager = require('lib/ResourceManager');
+local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
@@ -158,9 +159,7 @@ function Dodger.new(arena, x, y, animations)
             elseif upgrade:getUpgradeType() == 'snail' and not upgrades.snail.active then
                 upgrades.snail.activate();
             end
-            sounds['upgrade']:stop();
-            sounds['upgrade']:play();
-            sounds['upgrade']:setPosition(x * Constants.TILESIZE, y * Constants.TILESIZE, 0);
+            SoundManager.play(sounds['upgrade'], 'sfx', x * Constants.TILESIZE, y * Constants.TILESIZE, 0);
             upgrade:remove();
         end
     end
@@ -207,9 +206,7 @@ function Dodger.new(arena, x, y, animations)
             if self:getTile():isPassable() then
                 self:getTile():plantBomb(blastRadius, self);
                 liveBombs = liveBombs + 1;
-                sounds['plant']:stop();
-                sounds['plant']:play();
-                sounds['plant']:setPosition(self:getRealX(), self:getRealY(), 0);
+                SoundManager.play(sounds['plant'], 'sfx', self:getRealX(), self:getRealY(), 0);
             end
         end
     end

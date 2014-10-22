@@ -7,6 +7,7 @@ local ScreenManager = require('lib/screens/ScreenManager');
 local ResourceManager = require('lib/ResourceManager');
 local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local AniMAL = require('lib/AniMAL');
+local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
@@ -76,9 +77,9 @@ function LevelOutro.new(level, scores)
         end
 
         if scores[#scores] == 'player' then
-            sounds['win']:play();
+            SoundManager.play(sounds['win'], 'music', 0, 0, 0);
         else
-            sounds['lose']:play();
+            SoundManager.play(sounds['lose'], 'music', 0, 0, 0);
         end
     end
 

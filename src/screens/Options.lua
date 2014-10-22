@@ -6,6 +6,7 @@ local Button = require('src/ui/Button');
 local ButtonManager = require('src/ui/ButtonManager');
 local InputManager = require('lib/InputManager');
 local ProfileHandler = require('src/profile/ProfileHandler');
+local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
@@ -18,8 +19,17 @@ local Options = {};
 -- ------------------------------------------------
 
 local images = {};
+local music = {};
+local options = {};
 
 ResourceManager.register(Options);
+
+function Options.loadSounds()
+    options['select'] = ResourceManager.loadSound('res/snd/select.wav', 'static');
+    options['select']:setRelative(true);
+    options['beep'] = ResourceManager.loadSound('res/snd/beep.wav', 'static');
+    options['beep']:setRelative(true);
+end
 
 function Options.loadImages()
     images['options'] = ResourceManager.loadImage('res/img/ui/options.png');
@@ -28,8 +38,26 @@ function Options.loadImages()
     images['vsync'] = ResourceManager.loadImage('res/img/ui/vsync.png');
     images['back'] = ResourceManager.loadImage('res/img/ui/back.png');
     images['shaders'] = ResourceManager.loadImage('res/img/ui/shaders.png');
+    images['music'] = ResourceManager.loadImage('res/img/ui/music.png');
+    images['sound'] = ResourceManager.loadImage('res/img/ui/sound.png');
     images['on'] = ResourceManager.loadImage('res/img/ui/on.png');
     images['off'] = ResourceManager.loadImage('res/img/ui/off.png');
+    images[0] = ResourceManager.loadImage('res/img/ui/p00.png');
+    images[1] = ResourceManager.loadImage('res/img/ui/p01.png');
+    images[2] = ResourceManager.loadImage('res/img/ui/p02.png');
+    images[3] = ResourceManager.loadImage('res/img/ui/p03.png');
+    images[4] = ResourceManager.loadImage('res/img/ui/p04.png');
+    images[5] = ResourceManager.loadImage('res/img/ui/p05.png');
+    images[6] = ResourceManager.loadImage('res/img/ui/p06.png');
+    images[7] = ResourceManager.loadImage('res/img/ui/p07.png');
+    images[8] = ResourceManager.loadImage('res/img/ui/p08.png');
+    images[9] = ResourceManager.loadImage('res/img/ui/p09.png');
+    images[10] = ResourceManager.loadImage('res/img/ui/p10.png');
+end
+
+function Options.loadMusic()
+    music['main'] = ResourceManager.loadMusic('res/music/main.ogg', 'static');
+    music['main']:setRelative(true);
 end
 
 -- ------------------------------------------------
@@ -42,6 +70,7 @@ function Options.new()
     local paletteShader;
     local buttons;
     local profile;
+    local offset = 24;
 
     local function changeScale()
         ProfileHandler.save(profile);
@@ -63,6 +92,19 @@ function Options.new()
     local function toggleVsync()
         profile.vsync = not profile.vsync;
         love.window.setMode(love.window.getWidth(), love.window.getHeight(), { vsync = profile.vsync });
+        ProfileHandler.save(profile);
+    end
+
+    local function adjustSound()
+        profile.sfx = profile.sfx == 10 and 0 or profile.sfx + 1;
+        SoundManager.setVolume('sfx', profile.sfx / 10);
+        ProfileHandler.save(profile);
+    end
+
+    local function adjustMusic()
+        profile.music = profile.music == 10 and 0 or profile.music + 1;
+        SoundManager.setVolume('music', profile.music / 10);
+        SoundManager.play(music['main'], 'music', 0, 0, 0);
         ProfileHandler.save(profile);
     end
 
@@ -92,11 +134,14 @@ function Options.new()
         profile = ProfileHandler.load();
 
         buttons = ButtonManager.new();
-        buttons:register(Button.new(images['vsync'], 64, 160, 3, 3, toggleVsync));
-        buttons:register(Button.new(images['fullscreen'], 64, 208, 3, 3, toggleFullscreen));
-        buttons:register(Button.new(images['scale'], 64, 256, 3, 3, changeScale));
-        buttons:register(Button.new(images['shaders'], 64, 304, 3, 3, toggleShaders));
-        buttons:register(Button.new(images['back'], 64, 352, 3, 3, back));
+
+        buttons:register(Button.new(images['vsync'], 64, offset + 64, 3, 3, toggleVsync));
+        buttons:register(Button.new(images['fullscreen'], 64, offset + 112, 3, 3, toggleFullscreen));
+        buttons:register(Button.new(images['scale'], 64, offset + 160, 3, 3, changeScale));
+        buttons:register(Button.new(images['shaders'], 64, offset + 208, 3, 3, toggleShaders));
+        buttons:register(Button.new(images['music'], 64, offset + 256, 3, 3, adjustMusic));
+        buttons:register(Button.new(images['sound'], 64, offset + 304, 3, 3, adjustSound));
+        buttons:register(Button.new(images['back'], 64, offset + 368, 3, 3, back));
         buttons:select(1);
     end
 
@@ -107,9 +152,11 @@ function Options.new()
         love.graphics.setColor(255, 255, 255);
 
         love.graphics.draw(images['options'], 164, 16, 0, 3, 3);
-        love.graphics.draw(profile.vsync and images['on'] or images['off'], 416, 160, 0, 3, 3);
-        love.graphics.draw(profile.fullscreen and images['on'] or images['off'], 416, 208, 0, 3, 3);
-        love.graphics.draw(profile.shaders and images['on'] or images['off'], 416, 304, 0, 3, 3);
+        love.graphics.draw(profile.vsync and images['on'] or images['off'], 416, offset + 64, 0, 3, 3);
+        love.graphics.draw(profile.fullscreen and images['on'] or images['off'], 416, offset + 112, 0, 3, 3);
+        love.graphics.draw(profile.shaders and images['on'] or images['off'], 416, offset + 208, 0, 3, 3);
+        love.graphics.draw(images[profile.music], 416, offset + 256, 0, 3, 3);
+        love.graphics.draw(images[profile.sfx], 416, offset + 304, 0, 3, 3);
         buttons:draw();
 
         paletteShader:unset();

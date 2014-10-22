@@ -3,6 +3,7 @@
 --==================================================================================================
 
 local ResourceManager = require('lib/ResourceManager');
+local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
@@ -20,8 +21,8 @@ ResourceManager.register(ButtonManager);
 
 function ButtonManager.loadSounds()
     sounds['select'] = ResourceManager.loadSound('res/snd/select.wav', 'static');
-    sounds['beep'] = ResourceManager.loadSound('res/snd/beep.wav', 'static');
     sounds['select']:setRelative(true);
+    sounds['beep'] = ResourceManager.loadSound('res/snd/beep.wav', 'static');
     sounds['beep']:setRelative(true);
 end
 
@@ -52,14 +53,14 @@ function ButtonManager.new()
     end
 
     function self:press()
-        sounds['select']:play();
+        SoundManager.play(sounds['select'], 'sfx', 0, 0, 0);
         buttons[currentButton]:press();
     end
 
     function self:select(no)
         if buttons[currentButton] ~= buttons[no] then
             buttons[currentButton]:setActive(false);
-            sounds['beep']:play();
+            SoundManager.play(sounds['beep'], 'sfx', 0, 0, 0);
             currentButton = no;
             buttons[currentButton]:setActive(true);
         else
@@ -68,14 +69,14 @@ function ButtonManager.new()
     end
 
     function self:next()
-        sounds['beep']:play();
+        SoundManager.play(sounds['beep'], 'sfx', 0, 0, 0);
         buttons[currentButton]:setActive(false);
         currentButton = currentButton == #buttons and 1 or currentButton + 1;
         buttons[currentButton]:setActive(true);
     end
 
     function self:prev()
-        sounds['beep']:play();
+        SoundManager.play(sounds['beep'], 'sfx', 0, 0, 0);
         buttons[currentButton]:setActive(false);
         currentButton = currentButton == 1 and #buttons or currentButton - 1;
         buttons[currentButton]:setActive(true);
