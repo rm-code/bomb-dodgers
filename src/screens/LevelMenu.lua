@@ -13,6 +13,7 @@ local ResourceManager = require('lib/ResourceManager');
 local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local ProfileHandler = require('src/profile/ProfileHandler');
 local Door = require('src/arena/objects/Door');
+local Shader = require('lib/Shader');
 
 -- ------------------------------------------------
 -- Module
@@ -76,6 +77,7 @@ function LevelMenu.new()
     local arena;
     local player;
     local camera;
+    local paletteShader;
     local waveShader;
     local blurShader;
     local blurAmount = 0.2;
@@ -127,6 +129,8 @@ function LevelMenu.new()
     end
 
     function self:init()
+        paletteShader = PaletteSwitcher.new();
+
         arena = Arena.new();
         arena:init('res/arenas/layout_LevelMenu.lua', true);
 
@@ -134,8 +138,8 @@ function LevelMenu.new()
         camera:setZoom(2.0);
         camera:setBoundaries(Constants.TILESIZE, Constants.TILESIZE, 16 * Constants.TILESIZE, 14 * Constants.TILESIZE);
 
-        waveShader = love.graphics.newShader('res/shader/wave.fs');
-        blurShader = love.graphics.newShader('res/shader/blur.fs');
+        waveShader = Shader.new('res/shader/wave.fs');
+        blurShader = Shader.new('res/shader/blur.fs');
 
         player = Player.new(arena, 8, 2);
         player:setCamera(camera);
@@ -177,26 +181,26 @@ function LevelMenu.new()
 
     function self:draw()
         if not nextLevel then
-            PaletteSwitcher.set();
+            paletteShader:set();
             love.graphics.rectangle('fill', 0, 0, sw, sh);
             camera:set();
             arena:draw();
-            PaletteSwitcher.unset();
+            paletteShader:unset();
 
-            love.graphics.setShader(waveShader);
+            waveShader:set();
             for i = 1, #TELEPORTER_POSITIONS do
                 love.graphics.draw(images['lvl' .. i], TILESIZE * TELEPORTER_POSITIONS[i].x, TILESIZE * TELEPORTER_POSITIONS[i].y);
             end
-            love.graphics.setShader();
+            waveShader:unset();
 
-            PaletteSwitcher.set();
+            paletteShader:set();
             player:draw();
-            PaletteSwitcher.unset();
+            paletteShader:unset();
             camera:unset();
         else
-            love.graphics.setShader(blurShader);
+            blurShader:set();
             love.graphics.draw(canvas);
-            love.graphics.setShader();
+            blurShader:unset();
         end
     end
 

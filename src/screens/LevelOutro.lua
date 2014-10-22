@@ -52,12 +52,15 @@ end
 function LevelOutro.new(level, scores)
     local self = Screen.new();
 
+    local paletteShader;
     local timer = 4;
     local anim;
     local one, two, three;
     local sw, sh;
 
     function self:init()
+        paletteShader = PaletteSwitcher.new();
+
         sw, sh = love.graphics.getDimensions();
 
         anim = scores[#scores] == 'player' and anims['winner'] or anims['loser'];
@@ -89,7 +92,7 @@ function LevelOutro.new(level, scores)
     end
 
     function self:draw()
-        PaletteSwitcher.set();
+        paletteShader:set();
         love.graphics.rectangle('fill', 0, 0, sw, sh);
         love.graphics.draw(images['round1'], 192, 32, 0, 2, 2);
         love.graphics.draw(images['round2'], 288, 32, 0, 2, 2);
@@ -107,7 +110,7 @@ function LevelOutro.new(level, scores)
 
         anim:draw(220, 200);
 
-        PaletteSwitcher.unset();
+        paletteShader:unset();
     end
 
     return self;

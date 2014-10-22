@@ -39,6 +39,7 @@ end
 function Options.new()
     local self = Screen.new();
 
+    local paletteShader;
     local buttons;
     local profile;
 
@@ -52,6 +53,9 @@ function Options.new()
     end
 
     local function toggleShaders()
+        if not love.graphics.isSupported('shader') then
+            return;
+        end
         profile.shaders = not profile.shaders;
         ProfileHandler.save(profile);
     end
@@ -67,6 +71,10 @@ function Options.new()
     end
 
     local function handleInput()
+        if InputManager.hasCommand('COL') then
+            PaletteSwitcher.nextPalette();
+        end
+
         if InputManager.hasCommand('UP') or InputManager.hasCommand('LEFT') then
             buttons:prev();
         elseif InputManager.hasCommand('DOWN') or InputManager.hasCommand('RIGHT') then
@@ -79,28 +87,32 @@ function Options.new()
     end
 
     function self:init()
+        paletteShader = PaletteSwitcher.new();
+
         profile = ProfileHandler.load();
 
         buttons = ButtonManager.new();
-        buttons:register(Button.new(images['vsync'],      64, 160, 3, 3, toggleVsync));
+        buttons:register(Button.new(images['vsync'], 64, 160, 3, 3, toggleVsync));
         buttons:register(Button.new(images['fullscreen'], 64, 208, 3, 3, toggleFullscreen));
-        buttons:register(Button.new(images['scale'],      64, 256, 3, 3, changeScale));
-        buttons:register(Button.new(images['shaders'],    64, 304, 3, 3, toggleShaders));
-        buttons:register(Button.new(images['back'],       64, 352, 3, 3, back));
+        buttons:register(Button.new(images['scale'], 64, 256, 3, 3, changeScale));
+        buttons:register(Button.new(images['shaders'], 64, 304, 3, 3, toggleShaders));
+        buttons:register(Button.new(images['back'], 64, 352, 3, 3, back));
         buttons:select(1);
     end
 
     function self:draw()
-        PaletteSwitcher.set();
+        paletteShader:set();
+        love.graphics.setColor(215, 232, 148);
         love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight());
+        love.graphics.setColor(255, 255, 255);
 
         love.graphics.draw(images['options'], 164, 16, 0, 3, 3);
-        love.graphics.draw(profile.vsync      and images['on'] or images['off'], 416, 160, 0, 3, 3);
+        love.graphics.draw(profile.vsync and images['on'] or images['off'], 416, 160, 0, 3, 3);
         love.graphics.draw(profile.fullscreen and images['on'] or images['off'], 416, 208, 0, 3, 3);
-        love.graphics.draw(profile.shaders    and images['on'] or images['off'], 416, 304, 0, 3, 3);
+        love.graphics.draw(profile.shaders and images['on'] or images['off'], 416, 304, 0, 3, 3);
         buttons:draw();
 
-        PaletteSwitcher.unset();
+        paletteShader:unset();
     end
 
     function self:update(dt)

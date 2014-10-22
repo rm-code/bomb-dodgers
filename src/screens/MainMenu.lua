@@ -48,6 +48,7 @@ end
 function MainMenu.new()
     local self = Screen.new();
 
+    local paletteShader;
     local buttons;
     local sw, sh;
 
@@ -66,6 +67,10 @@ function MainMenu.new()
     end
 
     local function handleInput(dt)
+        if InputManager.hasCommand('COL') then
+            PaletteSwitcher.nextPalette();
+        end
+
         if InputManager.hasCommand('UP') or InputManager.hasCommand('LEFT') then
             buttons:prev();
         elseif InputManager.hasCommand('DOWN') or InputManager.hasCommand('RIGHT') then
@@ -78,6 +83,8 @@ function MainMenu.new()
     end
 
     function self:init()
+        paletteShader = PaletteSwitcher.new();
+
         buttons = ButtonManager.new();
         buttons:register(Button.new(images['start'],    172, 256, 3, 3, start));
         buttons:register(Button.new(images['options'],  172, 256 + 48, 3, 3, options));
@@ -96,11 +103,13 @@ function MainMenu.new()
     end
 
     function self:draw()
-        PaletteSwitcher.set();
+        paletteShader:set();
+        love.graphics.setColor(215, 232, 148);
         love.graphics.rectangle('fill', 0, 0, sw, sh);
+        love.graphics.setColor(255, 255, 255);
         images['anim']:draw(40);
         buttons:draw();
-        PaletteSwitcher.unset();
+        paletteShader:unset();
     end
 
     return self;

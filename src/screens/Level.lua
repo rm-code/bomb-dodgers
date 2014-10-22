@@ -49,6 +49,7 @@ end
 function Level.new(level, stage, arena, scores, camera)
     local self = Screen.new();
 
+    local paletteShader;
     local curSong;
 
     -- ------------------------------------------------
@@ -56,6 +57,8 @@ function Level.new(level, stage, arena, scores, camera)
     -- ------------------------------------------------
 
     function self:init()
+        paletteShader = PaletteSwitcher.new();
+
         if stage == 4 then
             curSong = music['boss'];
         else
@@ -96,7 +99,7 @@ function Level.new(level, stage, arena, scores, camera)
 
     function self:draw()
         if self:isActive() then
-            PaletteSwitcher.set();
+            paletteShader:set();
             camera:set();
             arena:draw();
 
@@ -105,7 +108,7 @@ function Level.new(level, stage, arena, scores, camera)
             PlayerManager.draw();
 
             camera:unset();
-            PaletteSwitcher.unset();
+            paletteShader:unset();
         end
     end
 

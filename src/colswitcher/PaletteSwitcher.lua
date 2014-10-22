@@ -3,6 +3,7 @@
 --==================================================================================================
 
 local ResourceManager = require('lib/ResourceManager');
+local Shader = require('lib/Shader');
 
 -- ------------------------------------------------
 -- Module
@@ -30,7 +31,6 @@ end
 -- Local Variables
 -- ------------------------------------------------
 
-local shader = love.graphics.newShader('res/shader/palette.fs');
 local index = 0;
 
 -- ------------------------------------------------
@@ -38,27 +38,10 @@ local index = 0;
 -- ------------------------------------------------
 
 ---
--- Makes the palette switcher active.
---
-function PaletteSwitcher.set()
-    love.graphics.setShader(shader);
-    shader:send('lut', lut);
-    shader:send('index', index);
-    shader:send('palettes', lut:getHeight() - 1);
-end
-
----
--- Makes the palette switcher inactive.
---
-function PaletteSwitcher.unset()
-    love.graphics.setShader();
-end
-
----
 -- Circles to the next palette. If the last one is reached
 -- it jumps back to the first one.
 --
-function PaletteSwitcher.nextPalette()
+function PaletteSwitcher:nextPalette()
     index = index == lut:getHeight() - 1 and 0 or index + 1;
 end
 
@@ -66,8 +49,33 @@ end
 -- Circles to the previous palette. If the first one is reached
 -- it jumps to the last palette instead.
 --
-function PaletteSwitcher.previousPalette()
+function PaletteSwitcher:previousPalette()
     index = index == 0 and lut:getHeight() - 1 or index - 1;
+end
+
+function PaletteSwitcher.new()
+    local self = {};
+
+    local shader = Shader.new('res/shader/palette.fs');
+    shader:send('lut', lut);
+
+    ---
+    -- Makes the palette switcher active.
+    --
+    function self:set()
+        shader:set();
+        shader:send('index', index);
+        shader:send('palettes', lut:getHeight() - 1);
+    end
+
+    ---
+    -- Makes the palette switcher inactive.
+    --
+    function self:unset()
+        shader:unset();
+    end
+
+    return self;
 end
 
 -- ------------------------------------------------

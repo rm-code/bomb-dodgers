@@ -32,6 +32,10 @@ function FileHandler.load()
         door4 = false,
         door5 = false,
         door6 = false,
+        fullscreen = false,
+        vsync = false,
+        scale = 1,
+        shaders = true,
     };
 end
 

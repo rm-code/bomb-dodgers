@@ -6,6 +6,7 @@ local ScreenManager = require('lib/screens/ScreenManager');
 local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
 local ResourceManager = require('lib/ResourceManager');
+local ProfileHandler = require('src/profile/ProfileHandler');
 
 -- Screens
 Level = require('src/screens/Level');
@@ -44,6 +45,12 @@ local function checkSupport()
     print("\n---- RENDERER  ---- ");
     local name, version, vendor, device = love.graphics.getRendererInfo()
     print(string.format("Name: %s \nVersion: %s \nVendor: %s \nDevice: %s", name, version, vendor, device));
+
+    if not love.graphics.isSupported('shader') then
+        local profile = ProfileHandler.load();
+        profile.shaders = false;
+        ProfileHandler.save(profile);
+    end
 end
 
 -- ------------------------------------------------
