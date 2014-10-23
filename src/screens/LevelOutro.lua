@@ -94,7 +94,9 @@ function LevelOutro.new(level, scores)
 
     function self:draw()
         paletteShader:set();
+        love.graphics.setColor(215, 232, 148);
         love.graphics.rectangle('fill', 0, 0, sw, sh);
+        love.graphics.setColor(255, 255, 255);
         love.graphics.draw(images['round1'], 192, 32, 0, 2, 2);
         love.graphics.draw(images['round2'], 288, 32, 0, 2, 2);
         love.graphics.draw(images['round3'], 384, 32, 0, 2, 2);
