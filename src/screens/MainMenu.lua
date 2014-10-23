@@ -54,8 +54,6 @@ function MainMenu.new()
     local sw, sh;
 
     local function start()
-        -- Set the default control map.
-        InputManager.setMap(Controls.LEVELMENU);
         ScreenManager.switch(LevelMenu.new());
     end
 
@@ -84,6 +82,9 @@ function MainMenu.new()
     end
 
     function self:init()
+        InputManager.clear();
+        InputManager.setMap(Controls.MENU);
+
         paletteShader = PaletteSwitcher.new();
 
         buttons = ButtonManager.new();

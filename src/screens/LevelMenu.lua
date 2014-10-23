@@ -2,6 +2,7 @@
 -- Copyright (C) 2014 by Robert Machmer                                                            =
 --==================================================================================================
 
+local Controls = require('src/Controls');
 local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
 local Arena = require('src/arena/Arena');
@@ -130,6 +131,9 @@ function LevelMenu.new()
     end
 
     function self:init()
+        InputManager.clear();
+        InputManager.setMap(Controls.LEVELMENU);
+
         paletteShader = PaletteSwitcher.new();
 
         arena = Arena.new();
@@ -156,6 +160,9 @@ function LevelMenu.new()
     local function handleInput()
         if InputManager.hasCommand('COL') then
             PaletteSwitcher.nextPalette();
+        end
+        if InputManager.hasCommand('BACK') then
+            ScreenManager.switch(MainMenu.new());
         end
     end
 

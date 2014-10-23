@@ -27,7 +27,7 @@ Controls.GAME.keyboard.up            = { cmd = 'UP',      rep = true, locked = f
 Controls.GAME.keyboard.down          = { cmd = 'DOWN',    rep = true, locked = false };
 Controls.GAME.keyboard[' ']          = { cmd = 'BOMB',    rep = false, locked = false };
 Controls.GAME.keyboard['tab']        = { cmd = 'COL',     rep = false, locked = false };
-Controls.GAME.keyboard['return']     = { cmd = 'CHEAT', rep = false, locked = false };
+Controls.GAME.keyboard['return']     = { cmd = 'CHEAT',   rep = false, locked = false };
 
 Controls.MENU= {};
 Controls.MENU.gamepad = {};
@@ -38,8 +38,8 @@ Controls.MENU.gamepad.axes.lYUp      = { cmd = 'UP',     value = 0, rep = false,
 Controls.MENU.gamepad.axes.lYDown    = { cmd = 'DOWN',   value = 0, rep = false, locked = false };
 
 Controls.MENU.gamepad.buttons = {};
-Controls.MENU.gamepad.buttons.a      = { cmd = 'SELECT',    rep = false, locked = false };
-Controls.MENU.gamepad.buttons.x      = { cmd = 'COL',       rep = false, locked = false };
+Controls.MENU.gamepad.buttons.a      = { cmd = 'SELECT', rep = false, locked = false };
+Controls.MENU.gamepad.buttons.x      = { cmd = 'COL',    rep = false, locked = false };
 
 Controls.MENU.keyboard = {};
 Controls.MENU.keyboard.up            = { cmd = 'UP',     rep = false, locked = false };
@@ -58,16 +58,16 @@ Controls.LEVELMENU.gamepad.axes.lYUp      = { cmd = 'UP',     value = 0, rep = t
 Controls.LEVELMENU.gamepad.axes.lYDown    = { cmd = 'DOWN',   value = 0, rep = true, locked = false };
 
 Controls.LEVELMENU.gamepad.buttons = {};
-Controls.LEVELMENU.gamepad.buttons.a      = { cmd = 'SELECT',    rep = false, locked = false };
 Controls.LEVELMENU.gamepad.buttons.x      = { cmd = 'COL',       rep = false, locked = false };
+Controls.LEVELMENU.gamepad.buttons.b      = { cmd = 'BACK',       rep = false, locked = false };
 
 Controls.LEVELMENU.keyboard = {};
 Controls.LEVELMENU.keyboard.up            = { cmd = 'UP',     rep = true, locked = false };
 Controls.LEVELMENU.keyboard.down          = { cmd = 'DOWN',   rep = true, locked = false };
 Controls.LEVELMENU.keyboard.right         = { cmd = 'RIGHT',  rep = true, locked = false };
 Controls.LEVELMENU.keyboard.left          = { cmd = 'LEFT',   rep = true, locked = false };
-Controls.LEVELMENU.keyboard[' ']          = { cmd = 'SELECT', rep = false, locked = false };
 Controls.LEVELMENU.keyboard['tab']        = { cmd = 'COL',    rep = false, locked = false };
+Controls.LEVELMENU.keyboard['escape']     = { cmd = 'BACK',   rep = false, locked = false };
 
 return Controls;
 

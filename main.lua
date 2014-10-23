@@ -84,9 +84,6 @@ function love.load()
 
     -- Start game on the main menu.
     ScreenManager.init(MainMenu.new());
-
-    -- Set the default control map.
-    InputManager.setMap(Controls.MENU);
 end
 
 -- ------------------------------------------------
