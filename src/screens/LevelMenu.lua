@@ -35,10 +35,8 @@ ResourceManager.register(LevelMenu);
 function LevelMenu.loadImages()
     images['lvl1'] = ResourceManager.loadImage('res/img/ui/preview_lvl_1.png');
     images['lvl2'] = ResourceManager.loadImage('res/img/ui/preview_lvl_2.png');
-    images['lvl3'] = ResourceManager.loadImage('res/img/ui/missing.png');
-    images['lvl4'] = ResourceManager.loadImage('res/img/ui/missing.png');
-    images['lvl5'] = ResourceManager.loadImage('res/img/ui/missing.png');
-    images['lvl6'] = ResourceManager.loadImage('res/img/ui/missing.png');
+    images['lvl3'] = ResourceManager.loadImage('res/img/ui/preview_lvl_3.png');
+    images['lvl4'] = ResourceManager.loadImage('res/img/ui/preview_lvl_4.png');
 end
 
 function LevelMenu.loadMusic()
