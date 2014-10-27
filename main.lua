@@ -8,6 +8,7 @@ local InputManager = require('lib/InputManager');
 local ResourceManager = require('lib/ResourceManager');
 local ProfileHandler = require('src/profile/ProfileHandler');
 local SoundManager = require('lib/SoundManager');
+local PaletteSwitcher = require('lib/colswitcher/PaletteSwitcher');
 
 -- Screens
 Level = require('src/screens/Level');
@@ -84,6 +85,8 @@ function love.load()
 
     ScreenScaler.init(profile.mode, profile.scaleX, profile.scaleY, profile.vsync);
 
+    PaletteSwitcher.init('lib/colswitcher/palettes.png', 'lib/colswitcher/palette.fs');
+
     -- Start game on the main menu.
     ScreenManager.init(MainMenu.new());
 end
@@ -102,11 +105,13 @@ function love.draw()
     local lt = love.timer;
     local format = string.format;
 
+    PaletteSwitcher.set();
     ScreenScaler.push();
 
     ScreenManager.draw();
 
     ScreenScaler.pop();
+    PaletteSwitcher.unset();
 
     -- InputManager.draw();
 
@@ -140,6 +145,10 @@ end
 function love.keypressed(key)
     if key == 'f1' then
         info = not info;
+    end
+
+    if key == 'tab' then
+        PaletteSwitcher.next();
     end
 
     ScreenManager.keypressed(key);

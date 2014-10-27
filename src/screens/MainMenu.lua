@@ -10,7 +10,6 @@ local ButtonManager = require('src/ui/ButtonManager');
 local ResourceManager = require('lib/ResourceManager');
 local InputManager = require('lib/InputManager');
 local AniMAL = require('lib/AniMAL');
-local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
@@ -49,7 +48,6 @@ end
 function MainMenu.new()
     local self = Screen.new();
 
-    local paletteShader;
     local buttons;
     local sw, sh;
 
@@ -66,10 +64,6 @@ function MainMenu.new()
     end
 
     local function handleInput(dt)
-        if InputManager.hasCommand('COL') then
-            PaletteSwitcher.nextPalette();
-        end
-
         if InputManager.hasCommand('UP') or InputManager.hasCommand('LEFT') then
             buttons:prev();
         elseif InputManager.hasCommand('DOWN') or InputManager.hasCommand('RIGHT') then
@@ -84,8 +78,6 @@ function MainMenu.new()
     function self:init()
         InputManager.clear();
         InputManager.setMap(Controls.MENU);
-
-        paletteShader = PaletteSwitcher.new();
 
         buttons = ButtonManager.new();
         buttons:register(Button.new(images['start'],    172, 256, 3, 3, start));
@@ -105,13 +97,11 @@ function MainMenu.new()
     end
 
     function self:draw()
-        paletteShader:set();
         love.graphics.setColor(215, 232, 148);
         love.graphics.rectangle('fill', 0, 0, sw, sh);
         love.graphics.setColor(255, 255, 255);
         images['anim']:draw(40);
         buttons:draw();
-        paletteShader:unset();
     end
 
     return self;

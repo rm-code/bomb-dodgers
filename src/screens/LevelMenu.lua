@@ -11,7 +11,6 @@ local InputManager = require('lib/InputManager');
 local Camera = require('lib/Camera');
 local Constants = require('src/Constants');
 local ResourceManager = require('lib/ResourceManager');
-local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local ProfileHandler = require('src/profile/ProfileHandler');
 local Door = require('src/arena/objects/Door');
 local Shader = require('lib/Shader');
@@ -77,7 +76,6 @@ function LevelMenu.new()
     local arena;
     local player;
     local camera;
-    local paletteShader;
     local waveShader;
     local blurShader;
     local blurAmount = 0.2;
@@ -132,8 +130,6 @@ function LevelMenu.new()
         InputManager.clear();
         InputManager.setMap(Controls.LEVELMENU);
 
-        paletteShader = PaletteSwitcher.new();
-
         arena = Arena.new();
         arena:init('res/arenas/layout_LevelMenu.lua', true);
 
@@ -156,9 +152,6 @@ function LevelMenu.new()
     end
 
     local function handleInput()
-        if InputManager.hasCommand('COL') then
-            PaletteSwitcher.nextPalette();
-        end
         if InputManager.hasCommand('BACK') then
             ScreenManager.switch(MainMenu.new());
         end
@@ -187,11 +180,9 @@ function LevelMenu.new()
 
     function self:draw()
         if not nextLevel then
-            paletteShader:set();
             love.graphics.rectangle('fill', 0, 0, sw, sh);
             camera:set();
             arena:draw();
-            paletteShader:unset();
 
             waveShader:set();
             for i = 1, #TELEPORTER_POSITIONS do
@@ -199,9 +190,7 @@ function LevelMenu.new()
             end
             waveShader:unset();
 
-            paletteShader:set();
             player:draw();
-            paletteShader:unset();
             camera:unset();
         else
             blurShader:set();

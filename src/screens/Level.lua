@@ -5,7 +5,6 @@
 local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
 local InputManager = require('lib/InputManager');
-local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local PlayerManager = require('src/entities/dodgers/PlayerManager');
 local NpcManager = require('src/entities/dodgers/NpcManager');
 local ResourceManager = require('lib/ResourceManager');
@@ -50,7 +49,6 @@ end
 function Level.new(level, stage, arena, scores, camera)
     local self = Screen.new();
 
-    local paletteShader;
     local curSong;
 
     -- ------------------------------------------------
@@ -58,8 +56,6 @@ function Level.new(level, stage, arena, scores, camera)
     -- ------------------------------------------------
 
     function self:init()
-        paletteShader = PaletteSwitcher.new();
-
         if stage == 4 then
             curSong = music['boss'];
         else
@@ -69,9 +65,6 @@ function Level.new(level, stage, arena, scores, camera)
     end
 
     function self:update(dt)
-        if InputManager.hasCommand('COL') then
-            PaletteSwitcher.nextPalette();
-        end
         if InputManager.hasCommand('CHEAT') then
             local npcs = NpcManager.getNpcs();
             for i = 1, #npcs do
@@ -100,7 +93,6 @@ function Level.new(level, stage, arena, scores, camera)
 
     function self:draw()
         if self:isActive() then
-            paletteShader:set();
             camera:set();
             arena:draw();
 
@@ -109,7 +101,6 @@ function Level.new(level, stage, arena, scores, camera)
             PlayerManager.draw();
 
             camera:unset();
-            paletteShader:unset();
         end
     end
 

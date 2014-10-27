@@ -1,13 +1,13 @@
 local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
 local ScreenScaler = require('lib/ScreenScaler');
-local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local ResourceManager = require('lib/ResourceManager');
 local Button = require('src/ui/Button');
 local ButtonManager = require('src/ui/ButtonManager');
 local InputManager = require('lib/InputManager');
 local ProfileHandler = require('src/profile/ProfileHandler');
 local SoundManager = require('lib/SoundManager');
+local PaletteSwitcher = require('lib/colswitcher/PaletteSwitcher');
 
 -- ------------------------------------------------
 -- Module
@@ -74,7 +74,6 @@ end
 function Options.new()
     local self = Screen.new();
 
-    local paletteShader;
     local buttons;
     local profile;
     local offset = 24;
@@ -83,21 +82,21 @@ function Options.new()
         ScreenScaler.increaseScale();
         profile.scaleX, profile.scaleY = ScreenScaler.getScale();
         ProfileHandler.save(profile);
-        paletteShader = PaletteSwitcher.new();
+        PaletteSwitcher.init('lib/colswitcher/palettes.png', 'lib/colswitcher/palette.fs');
     end
 
     local function decreaseScale()
         ScreenScaler.decreaseScale();
         profile.scaleX, profile.scaleY = ScreenScaler.getScale();
         ProfileHandler.save(profile);
-        paletteShader = PaletteSwitcher.new();
+        PaletteSwitcher.init('lib/colswitcher/palettes.png', 'lib/colswitcher/palette.fs');
     end
 
     local function toggleFullscreen()
         ScreenScaler.changeMode();
         profile.mode = ScreenScaler.getMode();
         ProfileHandler.save(profile);
-        paletteShader = PaletteSwitcher.new();
+        PaletteSwitcher.init('lib/colswitcher/palettes.png', 'lib/colswitcher/palette.fs');
     end
 
     local function toggleShaders()
@@ -112,7 +111,7 @@ function Options.new()
         ScreenScaler.toggleVSync();
         profile.vsync = ScreenScaler.hasVSync();
         ProfileHandler.save(profile);
-        paletteShader = PaletteSwitcher.new();
+        PaletteSwitcher.init('lib/colswitcher/palettes.png', 'lib/colswitcher/palette.fs');
     end
 
     local function adjustSound()
@@ -133,10 +132,6 @@ function Options.new()
     end
 
     local function handleInput()
-        if InputManager.hasCommand('COL') then
-            PaletteSwitcher.nextPalette();
-        end
-
         if InputManager.hasCommand('UP') or InputManager.hasCommand('LEFT') then
             buttons:prev();
         elseif InputManager.hasCommand('DOWN') or InputManager.hasCommand('RIGHT') then
@@ -149,8 +144,6 @@ function Options.new()
     end
 
     function self:init()
-        paletteShader = PaletteSwitcher.new();
-
         profile = ProfileHandler.load();
 
         buttons = ButtonManager.new();
@@ -167,7 +160,6 @@ function Options.new()
     end
 
     function self:draw()
-        paletteShader:set();
         love.graphics.setColor(215, 232, 148);
         love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight());
         love.graphics.setColor(255, 255, 255);
@@ -179,8 +171,6 @@ function Options.new()
         love.graphics.draw(images[profile.music], 416, offset + 256, 0, 3, 3);
         love.graphics.draw(images[profile.sfx], 416, offset + 304, 0, 3, 3);
         buttons:draw();
-
-        paletteShader:unset();
     end
 
     function self:update(dt)

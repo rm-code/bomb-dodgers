@@ -5,7 +5,6 @@
 local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
 local ResourceManager = require('lib/ResourceManager');
-local PaletteSwitcher = require('src/colswitcher/PaletteSwitcher');
 local AniMAL = require('lib/AniMAL');
 local SoundManager = require('lib/SoundManager');
 
@@ -53,15 +52,12 @@ end
 function LevelOutro.new(level, scores)
     local self = Screen.new();
 
-    local paletteShader;
     local timer = 4;
     local anim;
     local one, two, three;
     local sw, sh;
 
     function self:init()
-        paletteShader = PaletteSwitcher.new();
-
         sw, sh = love.graphics.getDimensions();
 
         anim = scores[#scores] == 'player' and anims['winner'] or anims['loser'];
@@ -93,7 +89,6 @@ function LevelOutro.new(level, scores)
     end
 
     function self:draw()
-        paletteShader:set();
         love.graphics.setColor(215, 232, 148);
         love.graphics.rectangle('fill', 0, 0, sw, sh);
         love.graphics.setColor(255, 255, 255);
@@ -112,8 +107,6 @@ function LevelOutro.new(level, scores)
         end
 
         anim:draw(220, 200);
-
-        paletteShader:unset();
     end
 
     return self;
