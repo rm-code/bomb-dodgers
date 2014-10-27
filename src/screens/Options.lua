@@ -105,6 +105,7 @@ function Options.new()
         end
         profile.shaders = not profile.shaders;
         ProfileHandler.save(profile);
+        PaletteSwitcher.setActive(profile.shaders);
     end
 
     local function toggleVsync()

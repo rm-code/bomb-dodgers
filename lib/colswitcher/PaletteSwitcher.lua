@@ -29,6 +29,7 @@ local PaletteSwitcher = {};
 local index;
 local lut;
 local shader;
+local active;
 
 -- ------------------------------------------------
 -- Public Functions
@@ -62,21 +63,46 @@ function PaletteSwitcher.init(ppath, spath)
     shader = love.graphics.newShader(spath);
     shader:send('lut', lut);
     shader:send('palettes', lut:getHeight() - 1);
+    active = true;
 end
 
 ---
 -- Makes the palette switcher active.
 --
 function PaletteSwitcher.set()
-    love.graphics.setShader(shader);
-    shader:send('index', index);
+    if active then
+        love.graphics.setShader(shader);
+        shader:send('index', index);
+    end
 end
 
 ---
 -- Makes the palette switcher inactive.
 --
 function PaletteSwitcher.unset()
-    love.graphics.setShader();
+    if active then
+        love.graphics.setShader();
+    end
+end
+
+---
+-- Makes the switcher active when it was inactive, and inactive
+-- when when it was active.
+--
+function PaletteSwitcher.toggle()
+    active = not active;
+end
+
+-- ------------------------------------------------
+-- Setters
+-- ------------------------------------------------
+
+---
+-- Sets wether the switcher is active or not.
+-- @param nactive
+--
+function PaletteSwitcher.setActive(nactive)
+    active = nactive;
 end
 
 -- ------------------------------------------------
