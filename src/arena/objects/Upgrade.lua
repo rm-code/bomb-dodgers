@@ -95,15 +95,15 @@ function Upgrade.new(x, y)
         love.graphics.draw(sprite, self:getX() * TILESIZE, self:getY() * TILESIZE);
     end
 
-    function self:explode()
-        self:getParent():clearContent();
-    end
-
     function self:remove()
         if id then
             UpgradeManager.remove(id);
         end
         self:getParent():clearContent();
+    end
+
+    function self:explode()
+        self:remove()
     end
 
     -- ------------------------------------------------
