@@ -83,6 +83,7 @@ function LevelMenu.new()
     local timer = 1;
     local nextLevel;
     local canvas;
+    local previews;
     local sw, sh;
 
     local function loadLevel(level)
@@ -148,6 +149,8 @@ function LevelMenu.new()
 
         placeDoors(arena);
 
+        previews = love.graphics.newCanvas();
+
         sw, sh = love.graphics.getDimensions();
     end
 
@@ -157,7 +160,21 @@ function LevelMenu.new()
         end
     end
 
+    local function updatePreviews()
+        previews:clear();
+        waveShader:send('time', love.timer.getTime());
+        previews:renderTo(function()
+            waveShader:set();
+            for i = 1, #TELEPORTER_POSITIONS do
+                love.graphics.draw(images['lvl' .. i], TILESIZE * TELEPORTER_POSITIONS[i].x, TILESIZE * TELEPORTER_POSITIONS[i].y);
+            end
+            waveShader:unset();
+        end);
+    end
+
     function self:update(dt)
+        updatePreviews();
+
         if nextLevel then
             timer = timer - dt;
             if timer <= 0 then
@@ -174,8 +191,6 @@ function LevelMenu.new()
 
         handleInput();
         enterTeleporter(player);
-
-        waveShader:send('time', love.timer.getTime());
     end
 
     function self:draw()
@@ -184,11 +199,7 @@ function LevelMenu.new()
             camera:set();
             arena:draw();
 
-            waveShader:set();
-            for i = 1, #TELEPORTER_POSITIONS do
-                love.graphics.draw(images['lvl' .. i], TILESIZE * TELEPORTER_POSITIONS[i].x, TILESIZE * TELEPORTER_POSITIONS[i].y);
-            end
-            waveShader:unset();
+            love.graphics.draw(previews);
 
             player:draw();
             camera:unset();
