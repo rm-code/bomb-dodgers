@@ -45,7 +45,7 @@ local BOSSES = {
     require('src/entities/boss/robot/Robot'),
     require('src/entities/boss/mummy/Mummy'),
     require('src/entities/boss/mummy/Mummy'),
-    require('src/entities/boss/mummy/Mummy'),
+    require('src/entities/boss/ant/Ant'),
 };
 
 -- ------------------------------------------------

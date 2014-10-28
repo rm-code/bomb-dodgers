@@ -254,9 +254,23 @@ function Entity.new(arena, x, y, animations)
         return dead;
     end
 
+    function self:getSpeed()
+        return speed;
+    end
+
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
+
+    function self:setRealX(nx)
+        realX = nx;
+        gridX = math.floor((realX / Constants.TILESIZE) + 0.5);
+    end
+
+    function self:setRealY(ny)
+        realY = ny;
+        gridY = math.floor((realY / Constants.TILESIZE) + 0.5);
+    end
 
     function self:setPosition(x, y)
         gridX = x;

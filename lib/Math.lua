@@ -31,6 +31,13 @@ function Math.lerp(a, b, t)
     return (1 - t) * a + t * b;
 end
 
+---
+-- Returns a random sign.
+--
+function Math.rndsign()
+    return love.math.random(0, 1) == 0 and -1 or 1;
+end
+
 -- ------------------------------------------------
 -- Return Module
 -- ------------------------------------------------
