@@ -43,8 +43,11 @@ local function applyMode(mode)
     print('Switch to mode: ' .. mode);
 
     if mode == 'windowed' then
-        love.window.setMode(width * scaleX, height * scaleY, { fullscreen = false, fullscreentype = 'desktop', vsync = vsync });
+        if scaleX ~= scaleY then
+            scaleX = scaleY;
+        end
         offsetX, offsetY = 0, 0;
+        love.window.setMode(width * scaleX, height * scaleY, { fullscreen = false, fullscreentype = 'desktop', vsync = vsync });
     else
         love.window.setMode(0, 0, { fullscreen = true, fullscreentype = 'desktop', vsync = vsync });
         local sw, sh = love.graphics.getDimensions();
