@@ -60,7 +60,12 @@ function Upgrade.new(x, y)
     -- ------------------------------------------------
 
     local function assignUpgradeType()
-        return TYPES[love.math.random(1, #TYPES)];
+        local rnd = love.math.random(1, 4);
+        if rnd == 1 then
+            return TYPES[love.math.random(3, 4)];
+        else
+            return TYPES[love.math.random(1, 2)];
+        end
     end
 
     local function assignSprite(type)
