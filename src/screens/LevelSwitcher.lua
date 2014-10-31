@@ -44,7 +44,7 @@ local LEVELS = {
 local BOSSES = {
     require('src/entities/boss/robot/Robot'),
     require('src/entities/boss/mummy/Mummy'),
-    require('src/entities/boss/mummy/Mummy'),
+    require('src/entities/boss/yeti/Yeti'),
     require('src/entities/boss/ant/Ant'),
 };
 
