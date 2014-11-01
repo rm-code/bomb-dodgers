@@ -3,10 +3,20 @@
 --==================================================================================================
 
 local ScreenManager = require('lib/screens/ScreenManager');
+local ScreenScaler = require('lib/ScreenScaler');
 local InputManager = require('lib/InputManager');
-local Controls = require('src/Controls');
 local ResourceManager = require('lib/ResourceManager');
-local MainMenu = require('src/menus/MainMenu');
+local ProfileHandler = require('src/profile/ProfileHandler');
+local SoundManager = require('lib/SoundManager');
+local PaletteSwitcher = require('lib/colswitcher/PaletteSwitcher');
+
+-- Screens
+Level = require('src/screens/Level');
+LevelMenu = require('src/screens/LevelMenu');
+LevelOutro = require('src/screens/LevelOutro');
+LevelSwitcher = require('src/screens/LevelSwitcher');
+MainMenu = require('src/screens/MainMenu');
+Options = require('src/screens/Options');
 
 -- ------------------------------------------------
 -- Local variables
@@ -37,6 +47,12 @@ local function checkSupport()
     print("\n---- RENDERER  ---- ");
     local name, version, vendor, device = love.graphics.getRendererInfo()
     print(string.format("Name: %s \nVersion: %s \nVendor: %s \nDevice: %s", name, version, vendor, device));
+
+    if not love.graphics.isSupported('shader') then
+        local profile = ProfileHandler.load();
+        profile.shaders = false;
+        ProfileHandler.save(profile);
+    end
 end
 
 -- ------------------------------------------------
@@ -59,14 +75,20 @@ function love.load()
     -- Set default filters.
     love.graphics.setDefaultFilter('nearest', 'nearest');
 
+    -- Set volume.
+    local profile = ProfileHandler.load();
+    SoundManager.setVolume('sfx', profile.sfx / 10);
+    SoundManager.setVolume('music', profile.music / 10);
+
     -- Load resources.
     ResourceManager.loadResources();
 
+    ScreenScaler.init(profile.mode, profile.scaleX, profile.scaleY, profile.vsync);
+
+    PaletteSwitcher.init('lib/colswitcher/palettes.png', 'lib/colswitcher/palette.fs');
+
     -- Start game on the main menu.
     ScreenManager.init(MainMenu.new());
-
-    -- Set the default control map.
-    InputManager.setMap(Controls.MENU);
 end
 
 -- ------------------------------------------------
@@ -83,7 +105,13 @@ function love.draw()
     local lt = love.timer;
     local format = string.format;
 
+    PaletteSwitcher.set();
+    ScreenScaler.push();
+
     ScreenManager.draw();
+
+    ScreenScaler.pop();
+    PaletteSwitcher.unset();
 
     -- InputManager.draw();
 
@@ -117,6 +145,10 @@ end
 function love.keypressed(key)
     if key == 'f1' then
         info = not info;
+    end
+
+    if key == 'tab' then
+        PaletteSwitcher.next();
     end
 
     ScreenManager.keypressed(key);

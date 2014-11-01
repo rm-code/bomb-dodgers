@@ -60,7 +60,12 @@ function Upgrade.new(x, y)
     -- ------------------------------------------------
 
     local function assignUpgradeType()
-        return TYPES[love.math.random(1, #TYPES)];
+        local rnd = love.math.random(1, 4);
+        if rnd == 1 then
+            return TYPES[love.math.random(3, 4)];
+        else
+            return TYPES[love.math.random(1, 2)];
+        end
     end
 
     local function assignSprite(type)
@@ -90,15 +95,15 @@ function Upgrade.new(x, y)
         love.graphics.draw(sprite, self:getX() * TILESIZE, self:getY() * TILESIZE);
     end
 
-    function self:explode()
-        self:getParent():clearContent();
-    end
-
     function self:remove()
         if id then
             UpgradeManager.remove(id);
         end
         self:getParent():clearContent();
+    end
+
+    function self:explode()
+        self:remove()
     end
 
     -- ------------------------------------------------

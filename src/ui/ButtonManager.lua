@@ -3,6 +3,7 @@
 --==================================================================================================
 
 local ResourceManager = require('lib/ResourceManager');
+local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
@@ -14,13 +15,15 @@ local ButtonManager = {};
 -- Load Resources
 -- ------------------------------------------------
 
-local SOUNDS = {};
+local sounds = {};
 
 ResourceManager.register(ButtonManager);
 
 function ButtonManager.loadSounds()
-    SOUNDS['select'] = ResourceManager.loadSound('res/snd/select.wav', 'static');
-    SOUNDS['beep'] = ResourceManager.loadSound('res/snd/beep.wav', 'static');
+    sounds['select'] = ResourceManager.loadSound('res/snd/select.wav', 'static');
+    sounds['select']:setRelative(true);
+    sounds['beep'] = ResourceManager.loadSound('res/snd/beep.wav', 'static');
+    sounds['beep']:setRelative(true);
 end
 
 -- ------------------------------------------------
@@ -31,7 +34,6 @@ function ButtonManager.new()
     local self = {};
 
     local buttons = {};
-    local curButton;
     local currentButton = 1;
 
     function self:register(button)
@@ -51,30 +53,33 @@ function ButtonManager.new()
     end
 
     function self:press()
-        SOUNDS['select']:play();
-        curButton:press();
+        SoundManager.play(sounds['select'], 'sfx', 0, 0, 0);
+        buttons[currentButton]:press();
     end
 
     function self:select(no)
-        if not curButton then
-            curButton = buttons[no];
-            curButton:setActive(true);
-        elseif curButton ~= buttons[no] then
-            curButton:setActive(false);
-            SOUNDS['beep']:play();
-            curButton = buttons[no];
-            curButton:setActive(true);
+        if buttons[currentButton] ~= buttons[no] then
+            buttons[currentButton]:setActive(false);
+            SoundManager.play(sounds['beep'], 'sfx', 0, 0, 0);
+            currentButton = no;
+            buttons[currentButton]:setActive(true);
+        else
+            buttons[currentButton]:setActive(true);
         end
     end
 
     function self:next()
-        SOUNDS['beep']:play();
+        SoundManager.play(sounds['beep'], 'sfx', 0, 0, 0);
+        buttons[currentButton]:setActive(false);
         currentButton = currentButton == #buttons and 1 or currentButton + 1;
+        buttons[currentButton]:setActive(true);
     end
 
     function self:prev()
-        SOUNDS['beep']:play();
+        SoundManager.play(sounds['beep'], 'sfx', 0, 0, 0);
+        buttons[currentButton]:setActive(false);
         currentButton = currentButton == 1 and #buttons or currentButton - 1;
+        buttons[currentButton]:setActive(true);
     end
 
     return self;

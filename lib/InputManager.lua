@@ -160,7 +160,7 @@ end
 --
 function InputManager.draw()
     local cnt = 0;
-    for i, v in pairs(gpCommands) do
+    for i, v in pairs(keyCommands) do
         cnt = cnt + 1;
         love.graphics.print(i .. " " .. tostring(v), 20, 100 + cnt * 20);
     end
@@ -182,6 +182,11 @@ function InputManager.removeJoystick(joystick)
     if joystick == gamepad then
         gamepad = nil;
     end
+end
+
+function InputManager.clear()
+    keyCommands = {};
+    gpCommands = {};
 end
 
 -- ------------------------------------------------

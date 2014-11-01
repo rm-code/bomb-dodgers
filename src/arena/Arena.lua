@@ -4,9 +4,10 @@
 
 local Constants = require('src/Constants');
 local Tile = require('src/arena/Tile');
+local ResourceManager = require('lib/ResourceManager');
 local SoftWall = require('src/arena/objects/SoftWall');
 local HardWall = require('src/arena/objects/HardWall');
-local ResourceManager = require('lib/ResourceManager');
+local Upgrade = require('src/arena/objects/Upgrade');
 
 -- ------------------------------------------------
 -- Module
@@ -26,8 +27,6 @@ local TILESIZE = Constants.TILESIZE;
 -- ------------------------------------------------
 
 local images = {};
-images.stonegarden = {};
-images.desert = {};
 
 -- Register module with resource manager.
 ResourceManager.register(Arena);
@@ -36,13 +35,25 @@ ResourceManager.register(Arena);
 -- Load images.
 --
 function Arena.loadImages()
+    images.stonegarden = {};
     images.stonegarden['floor'] = ResourceManager.loadImage('res/img/levels/stonegarden/floor.png');
     images.stonegarden['hwall'] = ResourceManager.loadImage('res/img/levels/stonegarden/hardwall.png');
     images.stonegarden['swall'] = ResourceManager.loadImage('res/img/levels/stonegarden/softwall.png');
 
+    images.desert = {};
     images.desert['floor'] = ResourceManager.loadImage('res/img/levels/desert/floor.png');
     images.desert['hwall'] = ResourceManager.loadImage('res/img/levels/desert/hardwall.png');
     images.desert['swall'] = ResourceManager.loadImage('res/img/levels/desert/softwall.png');
+
+    images.snow = {};
+    images.snow['floor'] = ResourceManager.loadImage('res/img/levels/snow/floor.png');
+    images.snow['hwall'] = ResourceManager.loadImage('res/img/levels/snow/hardwall.png');
+    images.snow['swall'] = ResourceManager.loadImage('res/img/levels/snow/softwall.png');
+
+    images.forest = {};
+    images.forest['floor'] = ResourceManager.loadImage('res/img/levels/forest/floor.png');
+    images.forest['hwall'] = ResourceManager.loadImage('res/img/levels/forest/hardwall.png');
+    images.forest['swall'] = ResourceManager.loadImage('res/img/levels/forest/softwall.png');
 end
 
 -- ------------------------------------------------
@@ -57,6 +68,7 @@ function Arena.new(ts)
     -- ------------------------------------------------
 
     local grid;
+    local w, h;
     local canvas;
     local tilesheet = ts or 'stonegarden';
 
@@ -178,12 +190,39 @@ function Arena.new(ts)
         renderToCanvas(canvas, grid);
     end
 
+    ---
+    -- Spawns an upgrade somewhere on the grid.
+    -- @param amount
+    --
+    function self:spawnUpgrades(amount)
+        local rndX, rndY;
+        local upgrade;
+        local count = 0;
+        while count < amount do
+            rndX, rndY = love.math.random(1, w), love.math.random(1, h);
+
+            -- Only spawn upgrades on free tiles.
+            if not grid[rndX][rndY]:getContent() then
+                upgrade = Upgrade.new(rndX, rndY, true);
+                upgrade:init();
+
+                if upgrade:getUpgradeType() == 'fireup' or upgrade:getUpgradeType() == 'bombup' then
+                    grid[rndX][rndY]:addContent(upgrade);
+                    count = count + 1;
+                end
+            end
+        end
+    end
+
     function self:init(toLoad, suppressSoftwalls)
         -- Loads the basic grid layout of a level.
         grid = love.filesystem.load(toLoad)();
 
+        -- Save width and height.
+        w, h = #grid, #grid[1];
+
         -- Create canvas.
-        canvas = love.graphics.newCanvas(#grid * TILESIZE, #grid[1] * TILESIZE);
+        canvas = love.graphics.newCanvas(w * TILESIZE, h * TILESIZE);
 
         -- Fills the grid with
         placeWalls(grid, suppressSoftwalls);
@@ -249,6 +288,20 @@ function Arena.new(ts)
     --
     function self:getAdjacentTiles(x, y)
         return grid[x][y]:getAdjacentTiles();
+    end
+
+    ---
+    -- Returns the width of the grid.
+    --
+    function self:getWidth()
+        return w;
+    end
+
+    ---
+    -- Returns the height of the grid.
+    --
+    function self:getHeight()
+        return h;
     end
 
     -- ------------------------------------------------

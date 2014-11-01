@@ -5,16 +5,15 @@
 local Constants = require('src/Constants');
 local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
-local Level = require('src/screens/Level');
 local InputManager = require('lib/InputManager');
 local Controls = require('src/Controls');
 local Arena = require('src/arena/Arena');
-local PlayerManager = require('src/entities/PlayerManager');
-local Player = require('src/entities/Player');
-local NpcManager = require('src/entities/NpcManager');
-local Npc = require('src/entities/Npc');
-local Boss = require('src/entities/Boss');
+local PlayerManager = require('src/entities/dodgers/PlayerManager');
+local Player = require('src/entities/dodgers/Player');
+local NpcManager = require('src/entities/dodgers/NpcManager');
+local Npc = require('src/entities/dodgers/Npc');
 local Camera = require('lib/Camera');
+local ProfileHandler = require('src/profile/ProfileHandler');
 
 -- ------------------------------------------------
 -- Module
@@ -33,12 +32,21 @@ local SPAWNS = {
     { x = 20, y = 20 },
     { x = 2, y = 20 },
     { x = 20, y = 2 },
-}
+};
 
 local LEVELS = {
     'stonegarden',
     'desert',
-}
+    'snow',
+    'forest',
+};
+
+local BOSSES = {
+    require('src/entities/boss/robot/Robot'),
+    require('src/entities/boss/mummy/Mummy'),
+    require('src/entities/boss/yeti/Yeti'),
+    require('src/entities/boss/ant/Ant'),
+};
 
 -- ------------------------------------------------
 -- Constructor
@@ -55,6 +63,7 @@ function LevelSwitcher.new(level)
     local rounds;
 
     local arena;
+    local profile;
 
     -- ------------------------------------------------
     -- Private Functions
@@ -66,7 +75,7 @@ function LevelSwitcher.new(level)
     --
     local function createArena(tileset)
         local arena = Arena.new(tileset);
-        arena:init('res/arenas/basicLayout.lua');
+        arena:init('res/arenas/layout_Arena.lua');
         return arena;
     end
 
@@ -99,7 +108,7 @@ function LevelSwitcher.new(level)
     local function addBoss(arena)
         NpcManager.clear();
 
-        local boss = Boss.new(arena, BOSS_SPAWN.x, BOSS_SPAWN.y);
+        local boss = BOSSES[level].new(arena, BOSS_SPAWN.x, BOSS_SPAWN.y);
         NpcManager.register(boss);
     end
 
@@ -108,7 +117,7 @@ function LevelSwitcher.new(level)
     --
     local function createCamera()
         local camera = Camera.new();
-        camera:setZoom(3);
+        camera:setScale(2, 2);
         camera:setBoundaries(Constants.TILESIZE, Constants.TILESIZE, 22 * Constants.TILESIZE, 22 * Constants.TILESIZE);
         return camera;
     end
@@ -132,6 +141,11 @@ function LevelSwitcher.new(level)
 
         if stage == 4 and pScore == 1 then
             level = level + 1 > #LEVELS and 1 or level + 1;
+
+            -- Unlock the next level.
+            profile['door' .. level] = true;
+            ProfileHandler.save(profile);
+
             stage = 1;
             NpcManager.clear();
             addNpc(arena);
@@ -177,6 +191,10 @@ function LevelSwitcher.new(level)
         arena:reset(LEVELS[level], stage == 4);
         arena:clearSpawns(players);
         arena:clearSpawns(npcs);
+
+        if stage == 4 then
+            arena:spawnUpgrades(5);
+        end
     end
 
     -- ------------------------------------------------
@@ -196,13 +214,15 @@ function LevelSwitcher.new(level)
         arena:clearSpawns(PlayerManager.getPlayers());
         arena:clearSpawns(NpcManager.getNpcs());
 
-        ScreenManager.push(Level.new(LEVELS[level], arena, rounds, camera));
+        profile = ProfileHandler.load();
+
+        ScreenManager.push(Level.new(LEVELS[level], stage, arena, rounds, camera));
     end
 
     function self:update()
         if self:isActive() then
             endRound(arena, rounds);
-            ScreenManager.push(Level.new(LEVELS[level], arena, rounds, camera));
+            ScreenManager.push(Level.new(LEVELS[level], stage, arena, rounds, camera));
         end
     end
 

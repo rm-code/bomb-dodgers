@@ -4,6 +4,7 @@
 
 local Math = require('lib/Math');
 local Constants = require('src/Constants');
+local ScreenScaler = require('lib/ScreenScaler');
 
 -- ------------------------------------------------
 -- Module
@@ -213,7 +214,7 @@ function Entity.new(arena, x, y, animations)
 
     function self:updateCamera(dt)
         if camera then
-            camera:track(realX, realY, 6, dt);
+            camera:track(realX + Constants.TILESIZE * 0.5, realY + Constants.TILESIZE * 0.5, 6, dt);
         end
     end
 
@@ -253,9 +254,23 @@ function Entity.new(arena, x, y, animations)
         return dead;
     end
 
+    function self:getSpeed()
+        return speed;
+    end
+
     -- ------------------------------------------------
     -- Setters
     -- ------------------------------------------------
+
+    function self:setRealX(nx)
+        realX = nx;
+        gridX = math.floor((realX / Constants.TILESIZE) + 0.5);
+    end
+
+    function self:setRealY(ny)
+        realY = ny;
+        gridY = math.floor((realY / Constants.TILESIZE) + 0.5);
+    end
 
     function self:setPosition(x, y)
         gridX = x;
