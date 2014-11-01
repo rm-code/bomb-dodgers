@@ -8,7 +8,7 @@ local GAME_TITLE = "Bomb Dodgers";
 
 local LOVE_VERSION = "0.9.1";
 
-local GAME_VERSION = "v0155-6038";
+local GAME_VERSION = "v0205";
 
 -- ------------------------------------------------
 -- Local variables
