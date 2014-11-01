@@ -86,7 +86,6 @@ function Evade.new(fsm, npc)
     end
 
     function self:enter()
-        print('Evade');
         direction = evadeBombs(npc:getAdjacentTiles());
         prevDirection = getPrevDirection(direction);
     end

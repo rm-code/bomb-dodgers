@@ -84,7 +84,6 @@ function Random.new(fsm, npc)
     -- ------------------------------------------------
 
     function self:enter()
-        print('Random');
         direction = getRndDirection();
         prevDirection = getPrevDirection(direction);
         curTile = npc:getTile();

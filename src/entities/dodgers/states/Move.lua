@@ -75,7 +75,6 @@ function Move.new(fsm, npc)
     end
 
     function self:enter()
-        print('Move');
         tarX, tarY = aquireTarget(npc:getPosition());
         direction = getBestDirection(tarX, tarY);
         prevDirection = getPrevDirection(direction);
