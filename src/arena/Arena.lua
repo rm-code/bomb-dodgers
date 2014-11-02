@@ -38,24 +38,24 @@ function Arena.loadImages()
     images['tiles'] = ResourceManager.loadImage('res/img/levels/tiles.png');
 
     images.stone = {};
-    images.stone['floor'] = love.graphics.newQuad(0, 0, 32, 32, images['tiles']:getDimensions());
-    images.stone['hwall'] = love.graphics.newQuad(32, 0, 32, 32, images['tiles']:getDimensions());
-    images.stone['swall'] = love.graphics.newQuad(64, 0, 32, 32, images['tiles']:getDimensions());
+    images.stone['floor'] = love.graphics.newQuad(1, 1, 32, 32, images['tiles']:getDimensions());
+    images.stone['hwall'] = love.graphics.newQuad(35, 1, 32, 32, images['tiles']:getDimensions());
+    images.stone['swall'] = love.graphics.newQuad(69, 1, 32, 32, images['tiles']:getDimensions());
 
     images.desert = {};
-    images.desert['floor'] = love.graphics.newQuad(0, 32, 32, 32, images['tiles']:getDimensions());
-    images.desert['hwall'] = love.graphics.newQuad(32, 32, 32, 32, images['tiles']:getDimensions());
-    images.desert['swall'] = love.graphics.newQuad(64, 32, 32, 32, images['tiles']:getDimensions());
+    images.desert['floor'] = love.graphics.newQuad(1, 35, 32, 32, images['tiles']:getDimensions());
+    images.desert['hwall'] = love.graphics.newQuad(35, 35, 32, 32, images['tiles']:getDimensions());
+    images.desert['swall'] = love.graphics.newQuad(69, 35, 32, 32, images['tiles']:getDimensions());
 
     images.snow = {};
-    images.snow['floor'] = love.graphics.newQuad(0, 64, 32, 32, images['tiles']:getDimensions());
-    images.snow['hwall'] = love.graphics.newQuad(32, 64, 32, 32, images['tiles']:getDimensions());
-    images.snow['swall'] = love.graphics.newQuad(64, 64, 32, 32, images['tiles']:getDimensions());
+    images.snow['floor'] = love.graphics.newQuad(1, 69, 32, 32, images['tiles']:getDimensions());
+    images.snow['hwall'] = love.graphics.newQuad(35, 69, 32, 32, images['tiles']:getDimensions());
+    images.snow['swall'] = love.graphics.newQuad(69, 69, 32, 32, images['tiles']:getDimensions());
 
     images.forest = {};
-    images.forest['floor'] = love.graphics.newQuad(0, 96, 32, 32, images['tiles']:getDimensions());
-    images.forest['hwall'] = love.graphics.newQuad(32, 96, 32, 32, images['tiles']:getDimensions());
-    images.forest['swall'] = love.graphics.newQuad(64, 96, 32, 32, images['tiles']:getDimensions());
+    images.forest['floor'] = love.graphics.newQuad(1, 103, 32, 32, images['tiles']:getDimensions());
+    images.forest['hwall'] = love.graphics.newQuad(35, 103, 32, 32, images['tiles']:getDimensions());
+    images.forest['swall'] = love.graphics.newQuad(69, 103, 32, 32, images['tiles']:getDimensions());
 end
 
 -- ------------------------------------------------
