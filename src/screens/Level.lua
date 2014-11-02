@@ -25,9 +25,9 @@ local music = {};
 ResourceManager.register(Level);
 
 function Level.loadMusic()
-    music['stonegarden'] = ResourceManager.loadMusic('res/music/level1.ogg', 'static');
-    music['stonegarden']:setRelative(true);
-    music['stonegarden']:setLooping(true);
+    music['stone'] = ResourceManager.loadMusic('res/music/level1.ogg', 'static');
+    music['stone']:setRelative(true);
+    music['stone']:setLooping(true);
     music['desert'] = ResourceManager.loadMusic('res/music/level2.ogg', 'static');
     music['desert']:setRelative(true);
     music['desert']:setLooping(true);

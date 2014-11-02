@@ -35,25 +35,27 @@ ResourceManager.register(Arena);
 -- Load images.
 --
 function Arena.loadImages()
-    images.stonegarden = {};
-    images.stonegarden['floor'] = ResourceManager.loadImage('res/img/levels/stonegarden/floor.png');
-    images.stonegarden['hwall'] = ResourceManager.loadImage('res/img/levels/stonegarden/hardwall.png');
-    images.stonegarden['swall'] = ResourceManager.loadImage('res/img/levels/stonegarden/softwall.png');
+    images['tiles'] = ResourceManager.loadImage('res/img/levels/tiles.png');
+
+    images.stone = {};
+    images.stone['floor'] = love.graphics.newQuad(0, 0, 32, 32, images['tiles']:getDimensions());
+    images.stone['hwall'] = love.graphics.newQuad(32, 0, 32, 32, images['tiles']:getDimensions());
+    images.stone['swall'] = love.graphics.newQuad(64, 0, 32, 32, images['tiles']:getDimensions());
 
     images.desert = {};
-    images.desert['floor'] = ResourceManager.loadImage('res/img/levels/desert/floor.png');
-    images.desert['hwall'] = ResourceManager.loadImage('res/img/levels/desert/hardwall.png');
-    images.desert['swall'] = ResourceManager.loadImage('res/img/levels/desert/softwall.png');
+    images.desert['floor'] = love.graphics.newQuad(0, 32, 32, 32, images['tiles']:getDimensions());
+    images.desert['hwall'] = love.graphics.newQuad(32, 32, 32, 32, images['tiles']:getDimensions());
+    images.desert['swall'] = love.graphics.newQuad(64, 32, 32, 32, images['tiles']:getDimensions());
 
     images.snow = {};
-    images.snow['floor'] = ResourceManager.loadImage('res/img/levels/snow/floor.png');
-    images.snow['hwall'] = ResourceManager.loadImage('res/img/levels/snow/hardwall.png');
-    images.snow['swall'] = ResourceManager.loadImage('res/img/levels/snow/softwall.png');
+    images.snow['floor'] = love.graphics.newQuad(0, 64, 32, 32, images['tiles']:getDimensions());
+    images.snow['hwall'] = love.graphics.newQuad(32, 64, 32, 32, images['tiles']:getDimensions());
+    images.snow['swall'] = love.graphics.newQuad(64, 64, 32, 32, images['tiles']:getDimensions());
 
     images.forest = {};
-    images.forest['floor'] = ResourceManager.loadImage('res/img/levels/forest/floor.png');
-    images.forest['hwall'] = ResourceManager.loadImage('res/img/levels/forest/hardwall.png');
-    images.forest['swall'] = ResourceManager.loadImage('res/img/levels/forest/softwall.png');
+    images.forest['floor'] = love.graphics.newQuad(0, 96, 32, 32, images['tiles']:getDimensions());
+    images.forest['hwall'] = love.graphics.newQuad(32, 96, 32, 32, images['tiles']:getDimensions());
+    images.forest['swall'] = love.graphics.newQuad(64, 96, 32, 32, images['tiles']:getDimensions());
 end
 
 -- ------------------------------------------------
@@ -70,7 +72,7 @@ function Arena.new(ts)
     local grid;
     local w, h;
     local canvas;
-    local tilesheet = ts or 'stonegarden';
+    local tilesheet = ts or 'stone';
 
     -- ------------------------------------------------
     -- Private Functions
@@ -126,9 +128,9 @@ function Arena.new(ts)
             for x = 1, #grid do
                 for y = 1, #grid[x] do
                     if grid[x][y]:getContentType() == CONTENT.HARDWALL then
-                        love.graphics.draw(images[tilesheet]['hwall'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                        love.graphics.draw(images['tiles'], images[tilesheet]['hwall'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
                     else
-                        love.graphics.draw(images[tilesheet]['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                        love.graphics.draw(images['tiles'], images[tilesheet]['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
                     end
                 end
             end
@@ -254,7 +256,7 @@ function Arena.new(ts)
         for x = 1, #grid do
             for y = 1, #grid[x] do
                 if grid[x][y]:getContentType() == CONTENT.SOFTWALL then
-                    love.graphics.draw(images[tilesheet]['swall'], x * TILESIZE, y * TILESIZE);
+                    love.graphics.draw(images['tiles'], images[tilesheet]['swall'], x * TILESIZE, y * TILESIZE);
                 end
                 grid[x][y]:draw();
             end
