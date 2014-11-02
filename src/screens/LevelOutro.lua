@@ -25,11 +25,13 @@ local anims = {};
 ResourceManager.register(LevelOutro);
 
 function LevelOutro.loadImages()
-    images['round1'] = ResourceManager.loadImage('res/img/ui/round1.png');
-    images['round2'] = ResourceManager.loadImage('res/img/ui/round2.png');
-    images['round3'] = ResourceManager.loadImage('res/img/ui/round3.png');
-    images['x'] = ResourceManager.loadImage('res/img/ui/x.png');
-    images['o'] = ResourceManager.loadImage('res/img/ui/o.png');
+    images['rounds'] = ResourceManager.loadImage('res/img/ui/rounds.png');
+    images['round1'] = love.graphics.newQuad(0, 0, 32, 32, images['rounds']:getDimensions());
+    images['round2'] = love.graphics.newQuad(32, 0, 32, 32, images['rounds']:getDimensions());
+    images['round3'] = love.graphics.newQuad(64, 0, 32, 32, images['rounds']:getDimensions());
+    images['xo'] = ResourceManager.loadImage('res/img/ui/xo.png');
+    images['x'] = love.graphics.newQuad(0, 0, 32, 32, images['xo']:getDimensions());
+    images['o'] = love.graphics.newQuad(32, 0, 32, 32, images['xo']:getDimensions());
     images['loser'] = ResourceManager.loadImage('res/img/ui/loser.png');
     images['winner'] = ResourceManager.loadImage('res/img/ui/winner.png');
     anims['loser'] = AniMAL.new(images['loser'], 50, 50, 0.4);
@@ -92,18 +94,18 @@ function LevelOutro.new(level, scores)
         love.graphics.setColor(215, 232, 148);
         love.graphics.rectangle('fill', 0, 0, sw, sh);
         love.graphics.setColor(255, 255, 255);
-        love.graphics.draw(images['round1'], 192, 32, 0, 2, 2);
-        love.graphics.draw(images['round2'], 288, 32, 0, 2, 2);
-        love.graphics.draw(images['round3'], 384, 32, 0, 2, 2);
+        love.graphics.draw(images['rounds'], images['round1'], 192, 32, 0, 2, 2);
+        love.graphics.draw(images['rounds'], images['round2'], 288, 32, 0, 2, 2);
+        love.graphics.draw(images['rounds'], images['round3'], 384, 32, 0, 2, 2);
 
         if one then
-            love.graphics.draw(one, 192, 112, 0, 2, 2);
+            love.graphics.draw(images['xo'], one, 192, 112, 0, 2, 2);
         end
         if two then
-            love.graphics.draw(two, 288, 112, 0, 2, 2);
+            love.graphics.draw(images['xo'], two, 288, 112, 0, 2, 2);
         end
         if three then
-            love.graphics.draw(three, 384, 112, 0, 2, 2);
+            love.graphics.draw(images['xo'], three, 384, 112, 0, 2, 2);
         end
 
         anim:draw(220, 200);

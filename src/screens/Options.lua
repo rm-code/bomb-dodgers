@@ -44,8 +44,9 @@ function Options.loadImages()
     images['shaders'] = ResourceManager.loadImage('res/img/ui/shaders.png');
     images['music'] = ResourceManager.loadImage('res/img/ui/music.png');
     images['sound'] = ResourceManager.loadImage('res/img/ui/sound.png');
-    images['on'] = ResourceManager.loadImage('res/img/ui/on.png');
-    images['off'] = ResourceManager.loadImage('res/img/ui/off.png');
+    images['onoff'] = ResourceManager.loadImage('res/img/ui/onoff.png');
+    images['on'] =  love.graphics.newQuad(0, 0, 30, 12,  images['onoff']:getDimensions());
+    images['off'] = love.graphics.newQuad(30, 0, 30, 12, images['onoff']:getDimensions());
     images['numbers'] = ResourceManager.loadImage('res/img/ui/numbers.png');
     images[0] = love.graphics.newQuad(0, 0, 20, 12, images['numbers']:getDimensions());
     images[1] = love.graphics.newQuad(20, 0, 20, 12, images['numbers']:getDimensions());
@@ -171,9 +172,9 @@ function Options.new()
         love.graphics.setColor(255, 255, 255);
 
         love.graphics.draw(images['options'], 164, 16, 0, 3, 3);
-        love.graphics.draw(profile.vsync and images['on'] or images['off'], 416, offset + 64, 0, 3, 3);
+        love.graphics.draw(images['onoff'], profile.vsync and images['on'] or images['off'], 416, offset + 64, 0, 3, 3);
         love.graphics.draw(images['modes'][profile.mode], 416, offset + 112, 0, 3, 3);
-        love.graphics.draw(profile.shaders and images['on'] or images['off'], 416, offset + 208, 0, 3, 3);
+        love.graphics.draw(images['onoff'], profile.shaders and images['on'] or images['off'], 416, offset + 208, 0, 3, 3);
         love.graphics.draw(images['numbers'], images[profile.music], 416, offset + 256, 0, 3, 3);
         love.graphics.draw(images['numbers'], images[profile.sfx], 416, offset + 304, 0, 3, 3);
         buttons:draw();
