@@ -25,10 +25,10 @@ ResourceManager.register(Destruction);
 -- Load images.
 --
 function Destruction.loadImages()
-    images['stonegarden'] = ResourceManager.loadImage('res/img/levels/stonegarden/destruction.png');
-    images['desert'] = ResourceManager.loadImage('res/img/ui/missing.png');
-    images['snow'] = ResourceManager.loadImage('res/img/ui/missing.png');
-    images['forest'] = ResourceManager.loadImage('res/img/ui/missing.png');
+    images['stone'] = ResourceManager.loadImage('res/img/levels/stone_des.png');
+    images['desert'] = ResourceManager.loadImage('res/img/levels/desert_des.png');
+    images['snow'] = ResourceManager.loadImage('res/img/levels/snow_des.png');
+    images['forest'] = ResourceManager.loadImage('res/img/levels/forest_des.png');
 end
 
 -- ------------------------------------------------
