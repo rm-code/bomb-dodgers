@@ -46,17 +46,18 @@ function Options.loadImages()
     images['sound'] = ResourceManager.loadImage('res/img/ui/sound.png');
     images['on'] = ResourceManager.loadImage('res/img/ui/on.png');
     images['off'] = ResourceManager.loadImage('res/img/ui/off.png');
-    images[0] = ResourceManager.loadImage('res/img/ui/p00.png');
-    images[1] = ResourceManager.loadImage('res/img/ui/p01.png');
-    images[2] = ResourceManager.loadImage('res/img/ui/p02.png');
-    images[3] = ResourceManager.loadImage('res/img/ui/p03.png');
-    images[4] = ResourceManager.loadImage('res/img/ui/p04.png');
-    images[5] = ResourceManager.loadImage('res/img/ui/p05.png');
-    images[6] = ResourceManager.loadImage('res/img/ui/p06.png');
-    images[7] = ResourceManager.loadImage('res/img/ui/p07.png');
-    images[8] = ResourceManager.loadImage('res/img/ui/p08.png');
-    images[9] = ResourceManager.loadImage('res/img/ui/p09.png');
-    images[10] = ResourceManager.loadImage('res/img/ui/p10.png');
+    images['numbers'] = ResourceManager.loadImage('res/img/ui/numbers.png');
+    images[0] = love.graphics.newQuad(0, 0, 20, 12, images['numbers']:getDimensions());
+    images[1] = love.graphics.newQuad(20, 0, 20, 12, images['numbers']:getDimensions());
+    images[2] = love.graphics.newQuad(40, 0, 20, 12, images['numbers']:getDimensions());
+    images[3] = love.graphics.newQuad(60, 0, 20, 12, images['numbers']:getDimensions());
+    images[4] = love.graphics.newQuad(80, 0, 20, 12, images['numbers']:getDimensions());
+    images[5] = love.graphics.newQuad(100, 0, 20, 12, images['numbers']:getDimensions());
+    images[6] = love.graphics.newQuad(120, 0, 20, 12, images['numbers']:getDimensions());
+    images[7] = love.graphics.newQuad(140, 0, 20, 12, images['numbers']:getDimensions());
+    images[8] = love.graphics.newQuad(160, 0, 20, 12, images['numbers']:getDimensions());
+    images[9] = love.graphics.newQuad(180, 0, 20, 12, images['numbers']:getDimensions());
+    images[10] = love.graphics.newQuad(200, 0, 20, 12, images['numbers']:getDimensions());
     images['modes'] = {
         ResourceManager.loadImage('res/img/ui/windowed.png');
         ResourceManager.loadImage('res/img/ui/scale.png');
@@ -173,8 +174,8 @@ function Options.new()
         love.graphics.draw(profile.vsync and images['on'] or images['off'], 416, offset + 64, 0, 3, 3);
         love.graphics.draw(images['modes'][profile.mode], 416, offset + 112, 0, 3, 3);
         love.graphics.draw(profile.shaders and images['on'] or images['off'], 416, offset + 208, 0, 3, 3);
-        love.graphics.draw(images[profile.music], 416, offset + 256, 0, 3, 3);
-        love.graphics.draw(images[profile.sfx], 416, offset + 304, 0, 3, 3);
+        love.graphics.draw(images['numbers'], images[profile.music], 416, offset + 256, 0, 3, 3);
+        love.graphics.draw(images['numbers'], images[profile.sfx], 416, offset + 304, 0, 3, 3);
         buttons:draw();
     end
 
