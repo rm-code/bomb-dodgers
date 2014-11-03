@@ -60,9 +60,6 @@ end
 -- ------------------------------------------------
 
 function love.load()
-    -- ZeroBrane Debugging Hook
-    if arg[#arg] == "-debug" then require("mobdebug").start() end
-
     print("===================")
     print(string.format("Title: '%s'", getTitle()));
     print(string.format("Version: %s", getVersion()));
