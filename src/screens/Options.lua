@@ -1,6 +1,24 @@
---==================================================================================================
--- Copyright (C) 2014 by Robert Machmer                                                            =
---==================================================================================================
+--===============================================================================--
+--                                                                               --
+-- Copyright (c) 2014 Robert Machmer                                             --
+--                                                                               --
+-- This software is provided 'as-is', without any express or implied             --
+-- warranty. In no event will the authors be held liable for any damages         --
+-- arising from the use of this software.                                        --
+--                                                                               --
+-- Permission is granted to anyone to use this software for any purpose,         --
+-- including commercial applications, and to alter it and redistribute it        --
+-- freely, subject to the following restrictions:                                --
+--                                                                               --
+--  1. The origin of this software must not be misrepresented; you must not      --
+--      claim that you wrote the original software. If you use this software     --
+--      in a product, an acknowledgment in the product documentation would be    --
+--      appreciated but is not required.                                         --
+--  2. Altered source versions must be plainly marked as such, and must not be   --
+--      misrepresented as being the original software.                           --
+--  3. This notice may not be removed or altered from any source distribution.   --
+--                                                                               --
+--===============================================================================--
 
 local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
@@ -45,7 +63,7 @@ function Options.loadImages()
     images['music'] = ResourceManager.loadImage('res/img/ui/music.png');
     images['sound'] = ResourceManager.loadImage('res/img/ui/sound.png');
     images['onoff'] = ResourceManager.loadImage('res/img/ui/onoff.png');
-    images['on'] =  love.graphics.newQuad(0, 0, 30, 12,  images['onoff']:getDimensions());
+    images['on'] = love.graphics.newQuad(0, 0, 30, 12, images['onoff']:getDimensions());
     images['off'] = love.graphics.newQuad(30, 0, 30, 12, images['onoff']:getDimensions());
     images['numbers'] = ResourceManager.loadImage('res/img/ui/numbers.png');
     images[0] = love.graphics.newQuad(0, 0, 20, 12, images['numbers']:getDimensions());
