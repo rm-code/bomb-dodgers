@@ -25,8 +25,9 @@ ResourceManager.register(Door);
 -- Load images.
 --
 function Door.loadImages()
-    images['open'] = ResourceManager.loadImage('res/img/levels/stonegarden/door_open.png');
-    images['closed'] = ResourceManager.loadImage('res/img/levels/stonegarden/door_closed.png');
+    images['tiles'] = ResourceManager.loadImage('res/img/levels/door.png')
+    images['closed'] = love.graphics.newQuad(0, 0, 32, 32, images['tiles']:getDimensions());
+    images['open'] = love.graphics.newQuad(32, 0, 32, 32, images['tiles']:getDimensions());
 end
 
 -- ------------------------------------------------
@@ -39,7 +40,7 @@ function Door.new(x, y, open)
     local sprite = open and images['open'] or images['closed'];
 
     function self:draw()
-        love.graphics.draw(sprite, self:getX() * Constants.TILESIZE, self:getY() * Constants.TILESIZE);
+        love.graphics.draw(images['tiles'], sprite, self:getX() * Constants.TILESIZE, self:getY() * Constants.TILESIZE);
     end
 
     return self;
