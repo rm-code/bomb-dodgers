@@ -65,13 +65,6 @@ function Level.new(level, stage, arena, scores, camera)
     end
 
     function self:update(dt)
-        if InputManager.hasCommand('CHEAT') then
-            local npcs = NpcManager.getNpcs();
-            for i = 1, #npcs do
-                npcs[i]:setDead(true);
-            end
-        end
-
         if self:isActive() then
             arena:update(dt);
 
