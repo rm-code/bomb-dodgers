@@ -2,7 +2,7 @@
 -- Copyright (C) 2014 by Robert Machmer                                                            =
 --==================================================================================================
 
-local Tentacles = require('src/arena/objects/ClothTentacle');
+local Tentacles = require('src/entities/boss/mummy/ClothTentacle');
 
 -- ------------------------------------------------
 -- Module
