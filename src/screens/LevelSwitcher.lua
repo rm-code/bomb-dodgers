@@ -136,6 +136,12 @@ function LevelSwitcher.new(level)
         return pScore, npcScore;
     end
 
+    local function clearScores(rounds)
+        for i = 1, #rounds do
+            rounds[i] = nil;
+        end
+    end
+
     local function endRound(arena, rounds)
         local pScore, npcScore = checkScore(rounds);
 
@@ -149,10 +155,9 @@ function LevelSwitcher.new(level)
             stage = 1;
             NpcManager.clear();
             addNpc(arena);
+            clearScores(rounds);
         elseif stage == 4 then
-            for i = 1, #rounds do
-                rounds[i] = nil;
-            end
+            clearScores(rounds);
         elseif pScore == 2 then
             if stage == 3 then
                 addBoss(arena);
@@ -160,13 +165,9 @@ function LevelSwitcher.new(level)
                 addNpc(arena);
             end
             stage = stage + 1;
-            for i = 1, #rounds do
-                rounds[i] = nil;
-            end
+            clearScores(rounds);
         elseif npcScore == 2 then
-            for i = 1, #rounds do
-                rounds[i] = nil;
-            end
+            clearScores(rounds);
         end
 
         local players = PlayerManager.getPlayers();
