@@ -16,7 +16,7 @@ local Missile = {};
 -- Resource Loading
 -- ------------------------------------------------
 
-local imgs = {};
+local images = {};
 
 -- Register module with resource manager.
 ResourceManager.register(Missile);
@@ -25,10 +25,11 @@ ResourceManager.register(Missile);
 -- Load images.
 --
 function Missile.loadImages()
-    imgs['n'] = ResourceManager.loadImage('res/img/boss/missile_n.png');
-    imgs['s'] = ResourceManager.loadImage('res/img/boss/missile_s.png');
-    imgs['e'] = ResourceManager.loadImage('res/img/boss/missile_e.png');
-    imgs['w'] = ResourceManager.loadImage('res/img/boss/missile_w.png');
+    images['sprites'] = ResourceManager.loadImage('res/img/boss/missiles.png');
+    images['n'] = love.graphics.newQuad(0, 0, 32, 32, images['sprites']:getDimensions());
+    images['s'] = love.graphics.newQuad(32, 0, 32, 32, images['sprites']:getDimensions());
+    images['e'] = love.graphics.newQuad(64, 0, 32, 32, images['sprites']:getDimensions());
+    images['w'] = love.graphics.newQuad(96, 0, 32, 32, images['sprites']:getDimensions());
 end
 
 -- ------------------------------------------------
@@ -42,7 +43,7 @@ function Missile.new(arena, dir, x, y)
     local realX, realY = gridX * 32, gridY * 32;
     local speed = 150;
     local dead = false;
-    local sprite = dir == 'n' and imgs.n or dir == 's' and imgs.s or dir == 'w' and imgs.w or dir == 'e' and imgs.e;
+    local sprite = dir == 'n' and images.n or dir == 's' and images.s or dir == 'w' and images.w or dir == 'e' and images.e;
 
     local function move(dt, dir)
         if dir == 'n' then
@@ -75,7 +76,7 @@ function Missile.new(arena, dir, x, y)
     end
 
     function self:draw()
-        love.graphics.draw(sprite, realX, realY);
+        love.graphics.draw(images['sprites'], sprite, realX, realY);
     end
 
     function self:isDead()
