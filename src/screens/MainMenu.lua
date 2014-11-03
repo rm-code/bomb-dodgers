@@ -20,12 +20,12 @@
 --                                                                               --
 --===============================================================================--
 
-local Controls = require('src/Controls');
 local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
 local Button = require('src/ui/Button');
 local ButtonManager = require('src/ui/ButtonManager');
 local ResourceManager = require('lib/ResourceManager');
+local Controls = require('src/Controls');
 local InputManager = require('lib/InputManager');
 local AniMAL = require('lib/AniMAL');
 local SoundManager = require('lib/SoundManager');
@@ -98,9 +98,9 @@ function MainMenu.new()
         InputManager.setMap(Controls.MENU);
 
         buttons = ButtonManager.new();
-        buttons:register(Button.new(images['start'],    172, 256, 3, 3, start));
-        buttons:register(Button.new(images['options'],  172, 256 + 48, 3, 3, options));
-        buttons:register(Button.new(images['exit'],     172, 256 + 96, 3, 3, exit));
+        buttons:register(Button.new(images['start'], 172, 256, 3, 3, start));
+        buttons:register(Button.new(images['options'], 172, 256 + 48, 3, 3, options));
+        buttons:register(Button.new(images['exit'], 172, 256 + 96, 3, 3, exit));
         buttons:select(1);
 
         SoundManager.play(music['main'], 'music', 0, 0, 0);

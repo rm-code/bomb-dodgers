@@ -23,12 +23,12 @@
 local ScreenManager = require('lib/screens/ScreenManager');
 local ScreenScaler = require('lib/ScreenScaler');
 local InputManager = require('lib/InputManager');
-local ResourceManager = require('lib/ResourceManager');
 local ProfileHandler = require('src/profile/ProfileHandler');
 local SoundManager = require('lib/SoundManager');
 local PaletteSwitcher = require('lib/colswitcher/PaletteSwitcher');
 
 -- Screens
+Intro = require('src/screens/Intro');
 Level = require('src/screens/Level');
 LevelMenu = require('src/screens/LevelMenu');
 LevelOutro = require('src/screens/LevelOutro');
@@ -95,15 +95,12 @@ function love.load()
     SoundManager.setVolume('sfx', profile.sfx / 10);
     SoundManager.setVolume('music', profile.music / 10);
 
-    -- Load resources.
-    ResourceManager.loadResources();
-
     ScreenScaler.init(profile.mode, profile.scaleX, profile.scaleY, profile.vsync);
 
     PaletteSwitcher.init('lib/colswitcher/palettes.png', 'lib/colswitcher/palette.fs');
 
     -- Start game on the main menu.
-    ScreenManager.init(MainMenu.new());
+    ScreenManager.init(Intro.new());
 end
 
 -- ------------------------------------------------

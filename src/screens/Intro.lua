@@ -20,103 +20,64 @@
 --                                                                               --
 --===============================================================================--
 
-local Screen = require('lib/screens/Screen');
 local ScreenManager = require('lib/screens/ScreenManager');
-local PlayerManager = require('src/entities/dodgers/PlayerManager');
-local NpcManager = require('src/entities/dodgers/NpcManager');
+local Screen = require('lib/screens/Screen');
 local ResourceManager = require('lib/ResourceManager');
-local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
 -- ------------------------------------------------
 
-local Level = {};
-
--- ------------------------------------------------
--- Resource Loading
--- ------------------------------------------------
-
-local music = {};
-
-ResourceManager.register(Level);
-
-function Level.loadMusic()
-    music['stone'] = ResourceManager.loadMusic('res/music/level1.ogg', 'static');
-    music['stone']:setRelative(true);
-    music['stone']:setLooping(true);
-    music['desert'] = ResourceManager.loadMusic('res/music/level2.ogg', 'static');
-    music['desert']:setRelative(true);
-    music['desert']:setLooping(true);
-    music['snow'] = ResourceManager.loadMusic('res/music/level3.ogg', 'static');
-    music['snow']:setRelative(true);
-    music['snow']:setLooping(true);
-    music['forest'] = ResourceManager.loadMusic('res/music/level4.ogg', 'static');
-    music['forest']:setRelative(true);
-    music['forest']:setLooping(true);
-    music['boss'] = ResourceManager.loadMusic('res/music/boss.ogg', 'static');
-    music['boss']:setRelative(true);
-    music['boss']:setLooping(true);
-end
+local Intro = {};
 
 -- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
-function Level.new(level, stage, arena, scores, camera)
+function Intro.new()
     local self = Screen.new();
 
-    local curSong;
-
-    -- ------------------------------------------------
-    -- Public Functions
-    -- ------------------------------------------------
+    local logos = {};
+    local loading = false;
+    local index = 1;
+    local x, y;
 
     function self:init()
-        if stage == 4 then
-            curSong = music['boss'];
-        else
-            curSong = music[level];
-        end
-        SoundManager.play(curSong, 'music', 0, 0, 0);
-    end
+        logos[1] = love.graphics.newImage('res/img/ui/rmcode.png');
+        logos[2] = love.graphics.newImage('res/img/ui/love.png');
 
-    function self:update(dt)
-        if self:isActive() then
-            arena:update(dt);
-
-            PlayerManager.update(dt);
-            if PlayerManager.getCount() == 0 then
-                scores[#scores + 1] = 'npc';
-                ScreenManager.pop();
-                return;
-            end
-
-            NpcManager.update(dt);
-            if NpcManager.getCount() == 0 then
-                scores[#scores + 1] = 'player';
-                ScreenManager.pop();
-                return;
-            end
-        end
+        x = 640 * 0.5 - logos[index]:getWidth() * 0.5;
+        y = 480 * 0.5 - logos[index]:getHeight() * 0.5;
     end
 
     function self:draw()
-        if self:isActive() then
-            camera:set();
-            arena:draw();
+        love.graphics.draw(logos[index], x, y);
+    end
 
-            NpcManager.draw();
+    local counter = 0;
+    function self:update(dt)
+        counter = counter + dt;
+        if not loading and counter > 0.05 then
+            -- Load resources.
+            ResourceManager.loadResources();
+            loading = true;
+        end
 
-            PlayerManager.draw();
+        if index == 1 and counter > 5 then
+            index = 2;
+            x = 640 * 0.5 - logos[index]:getWidth() * 0.5;
+            y = 480 * 0.5 - logos[index]:getHeight() * 0.5;
+        end
 
-            camera:unset();
+        if index == 2 and counter > 10 then
+            ScreenManager.switch(MainMenu.new());
         end
     end
 
-    function self:close()
-        curSong:stop();
-        ScreenManager.push(LevelOutro.new(level, scores));
+    function self:keypressed(key)
+        if key ~= ' ' then
+            ScreenManager.switch(MainMenu.new());
+        end
     end
 
     return self;
@@ -126,8 +87,8 @@ end
 -- Return Module
 -- ------------------------------------------------
 
-return Level;
+return Intro;
 
 --==================================================================================================
--- Created 14.09.14 - 01:01                                                                        =
+-- Created 03.11.14 - 18:03                                                                        =
 --==================================================================================================

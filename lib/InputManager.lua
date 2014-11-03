@@ -166,11 +166,13 @@ end
 -- the keyboard.
 --
 function InputManager.update()
-    if gamepad then
-        updateGamepadAxes();
-        updateGamepadButtons();
+    if map then
+        if gamepad then
+            updateGamepadAxes();
+            updateGamepadButtons();
+        end
+        updateKeyboardButtons();
     end
-    updateKeyboardButtons();
 end
 
 ---
