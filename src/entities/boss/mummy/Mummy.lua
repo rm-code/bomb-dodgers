@@ -8,10 +8,10 @@ local StateManager = require('src/entities/StateManager');
 local ResourceManager = require('lib/ResourceManager');
 local PlayerManager = require('src/entities/dodgers/PlayerManager');
 local AniMAL = require('lib/AniMAL');
-local Move = require('src/entities/boss/mummy/states/Move');
+local Move = require('src/entities/boss/mummy/Move');
+local SpawnTentacles = require('src/entities/boss/mummy/SpawnTentacles');
+local Charge = require('src/entities/boss/mummy/Charge');
 local Hurt = require('src/entities/boss/Hurt');
-local SpawnTentacles = require('src/entities/boss/mummy/states/SpawnTentacles');
-local Charge = require('src/entities/boss/mummy/states/Charge');
 local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------

@@ -9,7 +9,7 @@ local ResourceManager = require('lib/ResourceManager');
 local PlayerManager = require('src/entities/dodgers/PlayerManager');
 local Missile = require('src/entities/boss/ant/Missile');
 local AniMAL = require('lib/AniMAL');
-local Move = require('src/entities/boss/ant/states/Move');
+local Move = require('src/entities/boss/ant/Move');
 local Hurt = require('src/entities/boss/Hurt');
 local SoundManager = require('lib/SoundManager');
 
