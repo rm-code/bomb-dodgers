@@ -22,7 +22,6 @@
 
 local Math = require('lib/Math');
 local Constants = require('src/Constants');
-local ScreenScaler = require('lib/ScreenScaler');
 
 -- ------------------------------------------------
 -- Module
