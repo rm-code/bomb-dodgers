@@ -31,6 +31,14 @@ local ResourceManager = require('lib/ResourceManager');
 local Intro = {};
 
 -- ------------------------------------------------
+-- Constants
+-- ------------------------------------------------
+
+local DISPLAY_TIME = 3;
+local WIDTH = 640;
+local HEIGHT = 480;
+
+-- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
@@ -46,8 +54,8 @@ function Intro.new()
         logos[1] = love.graphics.newImage('res/img/ui/rmcode.png');
         logos[2] = love.graphics.newImage('res/img/ui/love.png');
 
-        x = 640 * 0.5 - logos[index]:getWidth() * 0.5;
-        y = 480 * 0.5 - logos[index]:getHeight() * 0.5;
+        x = WIDTH * 0.5 - logos[index]:getWidth() * 0.5;
+        y = HEIGHT * 0.5 - logos[index]:getHeight() * 0.5;
     end
 
     function self:draw()
@@ -61,16 +69,18 @@ function Intro.new()
             -- Load resources.
             ResourceManager.loadResources();
             loading = true;
+            counter = 0;
         end
 
-        if index == 1 and counter > 5 then
-            index = 2;
-            x = 640 * 0.5 - logos[index]:getWidth() * 0.5;
-            y = 480 * 0.5 - logos[index]:getHeight() * 0.5;
-        end
-
-        if index == 2 and counter > 10 then
-            ScreenManager.switch(MainMenu.new());
+        if counter > DISPLAY_TIME then
+            index = index + 1;
+            if index > 2 then
+                ScreenManager.switch(MainMenu.new());
+            else
+                x = WIDTH * 0.5 - logos[index]:getWidth() * 0.5;
+                y = HEIGHT * 0.5 - logos[index]:getHeight() * 0.5;
+            end
+            counter = 0;
         end
     end
 
