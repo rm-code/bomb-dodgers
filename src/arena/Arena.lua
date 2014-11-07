@@ -1,6 +1,24 @@
---==================================================================================================
--- Copyright (C) 2014 by Robert Machmer                                                            =
---==================================================================================================
+--===============================================================================--
+--                                                                               --
+-- Copyright (c) 2014 Robert Machmer                                             --
+--                                                                               --
+-- This software is provided 'as-is', without any express or implied             --
+-- warranty. In no event will the authors be held liable for any damages         --
+-- arising from the use of this software.                                        --
+--                                                                               --
+-- Permission is granted to anyone to use this software for any purpose,         --
+-- including commercial applications, and to alter it and redistribute it        --
+-- freely, subject to the following restrictions:                                --
+--                                                                               --
+--  1. The origin of this software must not be misrepresented; you must not      --
+--      claim that you wrote the original software. If you use this software     --
+--      in a product, an acknowledgment in the product documentation would be    --
+--      appreciated but is not required.                                         --
+--  2. Altered source versions must be plainly marked as such, and must not be   --
+--      misrepresented as being the original software.                           --
+--  3. This notice may not be removed or altered from any source distribution.   --
+--                                                                               --
+--===============================================================================--
 
 local Constants = require('src/Constants');
 local Tile = require('src/arena/Tile');
@@ -35,25 +53,27 @@ ResourceManager.register(Arena);
 -- Load images.
 --
 function Arena.loadImages()
-    images.stonegarden = {};
-    images.stonegarden['floor'] = ResourceManager.loadImage('res/img/levels/stonegarden/floor.png');
-    images.stonegarden['hwall'] = ResourceManager.loadImage('res/img/levels/stonegarden/hardwall.png');
-    images.stonegarden['swall'] = ResourceManager.loadImage('res/img/levels/stonegarden/softwall.png');
+    images['tiles'] = ResourceManager.loadImage('res/img/levels/tiles.png');
+
+    images.stone = {};
+    images.stone['floor'] = love.graphics.newQuad(1, 1, 32, 32, images['tiles']:getDimensions());
+    images.stone['hwall'] = love.graphics.newQuad(35, 1, 32, 32, images['tiles']:getDimensions());
+    images.stone['swall'] = love.graphics.newQuad(69, 1, 32, 32, images['tiles']:getDimensions());
 
     images.desert = {};
-    images.desert['floor'] = ResourceManager.loadImage('res/img/levels/desert/floor.png');
-    images.desert['hwall'] = ResourceManager.loadImage('res/img/levels/desert/hardwall.png');
-    images.desert['swall'] = ResourceManager.loadImage('res/img/levels/desert/softwall.png');
+    images.desert['floor'] = love.graphics.newQuad(1, 35, 32, 32, images['tiles']:getDimensions());
+    images.desert['hwall'] = love.graphics.newQuad(35, 35, 32, 32, images['tiles']:getDimensions());
+    images.desert['swall'] = love.graphics.newQuad(69, 35, 32, 32, images['tiles']:getDimensions());
 
     images.snow = {};
-    images.snow['floor'] = ResourceManager.loadImage('res/img/levels/snow/floor.png');
-    images.snow['hwall'] = ResourceManager.loadImage('res/img/levels/snow/hardwall.png');
-    images.snow['swall'] = ResourceManager.loadImage('res/img/levels/snow/softwall.png');
+    images.snow['floor'] = love.graphics.newQuad(1, 69, 32, 32, images['tiles']:getDimensions());
+    images.snow['hwall'] = love.graphics.newQuad(35, 69, 32, 32, images['tiles']:getDimensions());
+    images.snow['swall'] = love.graphics.newQuad(69, 69, 32, 32, images['tiles']:getDimensions());
 
     images.forest = {};
-    images.forest['floor'] = ResourceManager.loadImage('res/img/levels/forest/floor.png');
-    images.forest['hwall'] = ResourceManager.loadImage('res/img/levels/forest/hardwall.png');
-    images.forest['swall'] = ResourceManager.loadImage('res/img/levels/forest/softwall.png');
+    images.forest['floor'] = love.graphics.newQuad(1, 103, 32, 32, images['tiles']:getDimensions());
+    images.forest['hwall'] = love.graphics.newQuad(35, 103, 32, 32, images['tiles']:getDimensions());
+    images.forest['swall'] = love.graphics.newQuad(69, 103, 32, 32, images['tiles']:getDimensions());
 end
 
 -- ------------------------------------------------
@@ -70,7 +90,7 @@ function Arena.new(ts)
     local grid;
     local w, h;
     local canvas;
-    local tilesheet = ts or 'stonegarden';
+    local tilesheet = ts or 'stone';
 
     -- ------------------------------------------------
     -- Private Functions
@@ -126,9 +146,9 @@ function Arena.new(ts)
             for x = 1, #grid do
                 for y = 1, #grid[x] do
                     if grid[x][y]:getContentType() == CONTENT.HARDWALL then
-                        love.graphics.draw(images[tilesheet]['hwall'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                        love.graphics.draw(images['tiles'], images[tilesheet]['hwall'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
                     else
-                        love.graphics.draw(images[tilesheet]['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
+                        love.graphics.draw(images['tiles'], images[tilesheet]['floor'], (x - 1) * TILESIZE, (y - 1) * TILESIZE);
                     end
                 end
             end
@@ -254,7 +274,7 @@ function Arena.new(ts)
         for x = 1, #grid do
             for y = 1, #grid[x] do
                 if grid[x][y]:getContentType() == CONTENT.SOFTWALL then
-                    love.graphics.draw(images[tilesheet]['swall'], x * TILESIZE, y * TILESIZE);
+                    love.graphics.draw(images['tiles'], images[tilesheet]['swall'], x * TILESIZE, y * TILESIZE);
                 end
                 grid[x][y]:draw();
             end
