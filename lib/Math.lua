@@ -46,7 +46,7 @@ end
 -- @param t - The factor by which to lerp.
 --
 function Math.lerp(a, b, t)
-    return (1 - t) * a + t * b;
+    return a + (b - a) * t;
 end
 
 ---

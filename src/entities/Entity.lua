@@ -49,7 +49,7 @@ function Entity.new(arena, x, y, animations)
     local curAnim = animations.idleS;
 
     local speed = 150;
-    local lerpFactor = 0.2; -- The lerpFactor to use for the entity's movement.
+    local lerpFactor = 18; -- The lerpFactor to use for the entity's movement.
 
     local prevDirection;
 
@@ -87,19 +87,19 @@ function Entity.new(arena, x, y, animations)
         if direction == 'n' then
             curAnim = animations.walkN;
             realY = realY - 1 * speed * dt;
-            realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
+            realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor * dt);
         elseif direction == 's' then
             curAnim = animations.walkS;
             realY = realY + 1 * speed * dt;
-            realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
+            realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor * dt);
         elseif direction == 'e' then
             curAnim = animations.walkE;
             realX = realX + 1 * speed * dt;
-            realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
+            realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor * dt);
         elseif direction == 'w' then
             curAnim = animations.walkW;
             realX = realX - 1 * speed * dt;
-            realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
+            realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor * dt);
         end
 
         -- Calculate the grid coordinates, by dividing the real
@@ -144,10 +144,10 @@ function Entity.new(arena, x, y, animations)
         -- axis belonging to the movement direction and return 'false' to notify the
         -- game that this direction isn't valid anymore.
         if direction == 'n' or direction == 's' then
-            realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor);
+            realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor * dt);
             return false;
         elseif direction == 'e' or direction == 'w' then
-            realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor);
+            realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor * dt);
             return false;
         end
     end
