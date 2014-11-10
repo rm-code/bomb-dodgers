@@ -21,7 +21,6 @@
 --===============================================================================--
 
 local ResourceManager = require('lib/ResourceManager');
-local ScreenManager = require('lib/screens/ScreenManager');
 local Screen = require('lib/screens/Screen');
 local ButtonManager = require('src/ui/ButtonManager');
 local Button = require('src/ui/Button');
@@ -89,7 +88,7 @@ function Modal.new(tConfirm, tDecline)
         end
 
         -- Exit the game.
-        if InputManager.hasCommand('ABORT') then
+        if InputManager.hasCommand('BACK') then
             decline();
         end
     end
