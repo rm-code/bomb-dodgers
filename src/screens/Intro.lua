@@ -85,7 +85,7 @@ function Intro.new()
     end
 
     function self:keypressed(key)
-        if key ~= ' ' then
+        if key ~= 'return' and loading then
             ScreenManager.switch(MainMenu.new());
         end
     end
