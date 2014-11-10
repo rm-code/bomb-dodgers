@@ -65,6 +65,7 @@ Controls.MENU.keyboard.right         = { cmd = 'RIGHT',  rep = false, locked = f
 Controls.MENU.keyboard.left          = { cmd = 'LEFT',   rep = false, locked = false };
 Controls.MENU.keyboard['return']     = { cmd = 'SELECT', rep = false, locked = false };
 Controls.MENU.keyboard['tab']        = { cmd = 'COL',    rep = false, locked = false };
+Controls.MENU.keyboard['escape']     = { cmd = 'BACK',   rep = false, locked = false };
 
 Controls.LEVELMENU= {};
 Controls.LEVELMENU.gamepad = {};
