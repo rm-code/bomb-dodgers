@@ -87,6 +87,7 @@ function Bomb.new(x, y)
     local realX = gridX * TILESIZE;
     local realY = gridY * TILESIZE;
     local speed = 200;
+    local lerpFactor = 18;
 
     -- ------------------------------------------------
     -- Private Functions
@@ -102,8 +103,8 @@ function Bomb.new(x, y)
         elseif direction == 'w' then
             realX = realX - 1 * speed * dt;
         elseif direction == 'lerp' then
-            realX = Math.lerp(realX, gridX * Constants.TILESIZE, 0.2);
-            realY = Math.lerp(realY, gridY * Constants.TILESIZE, 0.2);
+            realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor * dt);
+            realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor * dt);
         end
     end
 

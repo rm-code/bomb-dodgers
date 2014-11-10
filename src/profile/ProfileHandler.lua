@@ -48,7 +48,7 @@ function FileHandler.load()
         door2 = false,
         door3 = false,
         door4 = false,
-        vsync = false,
+        vsync = true,
         mode = 1,
         scaleX = 1,
         scaleY = 1,

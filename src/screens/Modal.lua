@@ -20,110 +20,115 @@
 --                                                                               --
 --===============================================================================--
 
-local Screen = require('lib/screens/Screen');
-local ScreenManager = require('lib/screens/ScreenManager');
-local Button = require('src/ui/Button');
-local ButtonManager = require('src/ui/ButtonManager');
 local ResourceManager = require('lib/ResourceManager');
-local Controls = require('src/Controls');
+local Screen = require('lib/screens/Screen');
+local ButtonManager = require('src/ui/ButtonManager');
+local Button = require('src/ui/Button');
 local InputManager = require('lib/InputManager');
-local AniMAL = require('lib/AniMAL');
-local SoundManager = require('lib/SoundManager');
 
 -- ------------------------------------------------
 -- Module
 -- ------------------------------------------------
 
-local MainMenu = {};
+local Modal = {};
 
 -- ------------------------------------------------
--- Resource Loading
+-- Load Resources
 -- ------------------------------------------------
 
 local images = {};
-local music = {};
 
-ResourceManager.register(MainMenu);
+ResourceManager.register(Modal);
 
-function MainMenu.loadImages()
-    images['start'] = ResourceManager.loadImage('res/img/ui/startgame.png');
-    images['options'] = ResourceManager.loadImage('res/img/ui/options.png');
-    images['exit'] = ResourceManager.loadImage('res/img/ui/exit.png');
-    images['logo'] = ResourceManager.loadImage('res/img/ui/logo_anim.png');
-    images['anim'] = AniMAL.new(images['logo'], 71, 25, 0.18);
-    images['anim']:setScale(8, 8);
+function Modal.loadImages()
+    images['yes'] = ResourceManager.loadImage('res/img/ui/yes.png');
+    images['no'] = ResourceManager.loadImage('res/img/ui/no.png');
+    images['sure'] = ResourceManager.loadImage('res/img/ui/sure.png');
 end
 
-function MainMenu.loadMusic()
-    music['main'] = ResourceManager.loadMusic('res/music/main.ogg', 'static');
-    music['main']:setRelative(true);
-end
 
 -- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
-function MainMenu.new()
+function Modal.new(tConfirm, tDecline)
     local self = Screen.new();
 
+    local x, y, w, h;
+
+    local tConfirm = tConfirm;
+    local tDecline = tDecline;
     local buttons;
-    local sw, sh;
 
-    local function start()
-        ScreenManager.switch(LevelMenu.new());
+    -- ------------------------------------------------
+    -- Private Functions
+    -- ------------------------------------------------
+
+    local function confirm()
+        tConfirm();
     end
 
-    local function options()
-        ScreenManager.switch(Options.new());
+    local function decline()
+        if tDecline then
+            tDecline();
+        end
     end
 
-    local function exit()
-        ScreenManager.switch(Modal.new(function() love.event.quit() end, function() ScreenManager.switch(MainMenu.new()) end));
-    end
-
-    local function handleInput(dt)
-        if InputManager.hasCommand('UP') or InputManager.hasCommand('LEFT') then
-            buttons:prev();
-        elseif InputManager.hasCommand('DOWN') or InputManager.hasCommand('RIGHT') then
+    local function handleInput()
+        -- Allows cycling through the menu entries by keyboard.
+        if InputManager.hasCommand('RIGHT') then
             buttons:next();
+        elseif InputManager.hasCommand('LEFT') then
+            buttons:prev();
         end
 
+        -- Press the button below the mouse cursor.
         if InputManager.hasCommand('SELECT') then
             buttons:press();
         end
 
+        -- Exit the game.
         if InputManager.hasCommand('BACK') then
-            exit();
+            decline();
         end
     end
 
+    -- ------------------------------------------------
+    -- Public Functions
+    -- ------------------------------------------------
+
     function self:init()
-        InputManager.clear();
-        InputManager.setMap(Controls.MENU);
+        h = 100;
+        w = 200;
+        x = 640 * 0.5 - w * 0.5;
+        y = 480 * 0.5 - h * 0.5;
 
         buttons = ButtonManager.new();
-        buttons:register(Button.new(images['start'], 172, 256, 3, 3, start));
-        buttons:register(Button.new(images['options'], 172, 256 + 48, 3, 3, options));
-        buttons:register(Button.new(images['exit'], 172, 256 + 96, 3, 3, exit));
-        buttons:select(1);
-
-        SoundManager.play(music['main'], 'music', 0, 0, 0);
-
-        sw, sh = love.graphics.getDimensions();
+        buttons:register(Button.new(images['yes'], x + 10, y + h * 0.5, 3, 3, confirm));
+        buttons:register(Button.new(images['no'], x + w * 0.5 + 30, y + h * 0.5, 3, 3, decline));
+        buttons:select(2);
     end
 
     function self:update(dt)
-        images['anim']:update(dt);
+        -- Update buttons.
         handleInput();
         buttons:update(dt);
     end
 
     function self:draw()
-        love.graphics.setColor(215, 232, 148);
-        love.graphics.rectangle('fill', 0, 0, sw, sh);
         love.graphics.setColor(255, 255, 255);
-        images['anim']:draw(40);
+        love.graphics.setLineWidth(4);
+        love.graphics.rectangle('fill', 0, 0, 640, 480);
+        love.graphics.setColor(0, 0, 0);
+        love.graphics.rectangle('line', x, y, w, h);
+        love.graphics.setColor(255, 255, 255);
+        love.graphics.draw(images['sure'], x + (w * 0.5) - 72, y + 10, 0, 3, 3);
+
         buttons:draw();
+    end
+
+    function self:mousepressed()
+        buttons:select();
     end
 
     return self;
@@ -133,8 +138,8 @@ end
 -- Return Module
 -- ------------------------------------------------
 
-return MainMenu;
+return Modal;
 
 --==================================================================================================
--- Created 11.09.14 - 17:52                                                                        =
+-- Created 10.11.14 - 12:35                                                                        =
 --==================================================================================================

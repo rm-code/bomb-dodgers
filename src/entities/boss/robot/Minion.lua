@@ -60,6 +60,7 @@ function Minion.new(arena, x, y)
     local dead = false;
     local validDirections = {};
     local prevTile;
+    local lerpFactor = 18;
 
     local function rndDirection()
         local adjTiles = arena:getAdjacentTiles(gridX, gridY);
@@ -80,16 +81,16 @@ function Minion.new(arena, x, y)
     local function move(dt, dir)
         if dir == 'n' then
             realY = realY - 1 * speed * dt;
-            realX = Math.lerp(realX, gridX * Constants.TILESIZE, 0.2);
+            realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor * dt);
         elseif dir == 's' then
             realY = realY + 1 * speed * dt;
-            realX = Math.lerp(realX, gridX * Constants.TILESIZE, 0.2);
+            realX = Math.lerp(realX, gridX * Constants.TILESIZE, lerpFactor * dt);
         elseif dir == 'e' then
             realX = realX + 1 * speed * dt;
-            realY = Math.lerp(realY, gridY * Constants.TILESIZE, 0.2);
+            realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor * dt);
         elseif dir == 'w' then
             realX = realX - 1 * speed * dt;
-            realY = Math.lerp(realY, gridY * Constants.TILESIZE, 0.2);
+            realY = Math.lerp(realY, gridY * Constants.TILESIZE, lerpFactor * dt);
         end
     end
 

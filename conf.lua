@@ -26,7 +26,7 @@ local GAME_TITLE = "Bomb Dodgers";
 
 local LOVE_VERSION = "0.9.1";
 
-local GAME_VERSION = "v0228";
+local GAME_VERSION = "v0241";
 
 -- ------------------------------------------------
 -- Local variables
@@ -48,7 +48,7 @@ function love.conf(t)
     t.console = true;
 
     t.window.title = GAME_TITLE;
-    t.window.icon = nil;
+    t.window.icon = 'res/img/icon.png';
     t.window.width = 640;
     t.window.height = 480;
     t.window.borderless = false;
