@@ -129,7 +129,9 @@ function NPC.new(arena, x, y)
     end
 
     function self:update(dt)
-        if self:getTile():getContentType() == Constants.CONTENT.EXPLOSION then
+        if self:isDead() then
+            return;
+        elseif self:getTile():getContentType() == Constants.CONTENT.EXPLOSION then
             self:setDead(true);
             return;
         end
@@ -147,7 +149,9 @@ function NPC.new(arena, x, y)
     end
 
     function self:draw()
-        self:drawAnimation();
+        if not self:isDead() then
+            self:drawAnimation();
+        end
     end
 
     function self:setPreviousTile(nprevTile)
