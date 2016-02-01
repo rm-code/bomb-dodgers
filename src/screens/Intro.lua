@@ -75,7 +75,7 @@ function Intro.new()
         if counter > DISPLAY_TIME then
             index = index + 1;
             if index > 2 then
-                ScreenManager.switch(MainMenu.new());
+                ScreenManager.switch( 'mainMenu' );
             else
                 x = WIDTH * 0.5 - logos[index]:getWidth() * 0.5;
                 y = HEIGHT * 0.5 - logos[index]:getHeight() * 0.5;
@@ -86,7 +86,7 @@ function Intro.new()
 
     function self:keypressed(key)
         if key ~= 'return' and loading then
-            ScreenManager.switch(MainMenu.new());
+            ScreenManager.switch( 'mainMenu' );
         end
     end
 

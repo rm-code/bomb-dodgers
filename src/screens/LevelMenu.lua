@@ -177,7 +177,7 @@ function LevelMenu.new()
 
     local function handleInput()
         if InputManager.hasCommand('BACK') then
-            ScreenManager.switch(MainMenu.new());
+            ScreenManager.switch( 'mainMenu' );
         end
     end
 
@@ -199,7 +199,7 @@ function LevelMenu.new()
         if nextLevel then
             timer = timer - dt;
             if timer <= 0 then
-                ScreenManager.switch(LevelSwitcher.new(nextLevel));
+                ScreenManager.switch( 'levelSwitcher', nextLevel );
                 return;
             end
             blurAmount = blurAmount + dt;

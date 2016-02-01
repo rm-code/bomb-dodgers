@@ -70,12 +70,12 @@ local BOSSES = {
 -- Constructor
 -- ------------------------------------------------
 
-function LevelSwitcher.new(level)
+function LevelSwitcher.new()
     local self = Screen.new();
 
     local camera;
 
-    local level = level; -- The current level (stonegarden, desert, ...).
+    local level; -- The current level (stonegarden, desert, ...).
     local stage;
 
     local rounds;
@@ -220,10 +220,11 @@ function LevelSwitcher.new(level)
     -- Public Functions
     -- ------------------------------------------------
 
-    function self:init()
+    function self:init( index )
         -- Set the input map for the game.
         InputManager.setMap(Controls.GAME);
 
+        level = index;
         stage = 1;
         rounds = {};
         arena = createArena(LEVELS[level]);
@@ -235,13 +236,13 @@ function LevelSwitcher.new(level)
 
         profile = ProfileHandler.load();
 
-        ScreenManager.push(Level.new(LEVELS[level], stage, arena, rounds, camera));
+        ScreenManager.push( 'level', LEVELS[level], stage, arena, rounds, camera );
     end
 
     function self:update()
         if self:isActive() then
             endRound(arena, rounds);
-            ScreenManager.push(Level.new(LEVELS[level], stage, arena, rounds, camera));
+            ScreenManager.push( 'level', LEVELS[level], stage, arena, rounds, camera );
         end
     end
 

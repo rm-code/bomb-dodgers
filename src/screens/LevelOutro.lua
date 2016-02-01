@@ -69,15 +69,17 @@ end
 -- Constructor
 -- ------------------------------------------------
 
-function LevelOutro.new(level, scores)
+function LevelOutro.new()
     local self = Screen.new();
 
+    local scores;
     local timer = 4;
     local anim;
     local one, two, three;
     local sw, sh;
 
-    function self:init()
+    function self:init( scores )
+        scores = scores;
         sw, sh = love.graphics.getDimensions();
 
         anim = scores[#scores] == 'player' and anims['winner'] or anims['loser'];

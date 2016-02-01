@@ -63,16 +63,27 @@ end
 -- Constructor
 -- ------------------------------------------------
 
-function Level.new(level, stage, arena, scores, camera)
+function Level.new()
     local self = Screen.new();
 
     local curSong;
+    local level;
+    local stage;
+    local arena;
+    local scores;
+    local camera;
 
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
 
-    function self:init()
+    function self:init( nlevel, nstage, narena, nscores, ncamera )
+        level = nlevel;
+        stage = nstage;
+        arena = narena;
+        scores = nscores;
+        camera = ncamera;
+
         if stage == 4 then
             curSong = music['boss'];
         else
@@ -116,7 +127,7 @@ function Level.new(level, stage, arena, scores, camera)
 
     function self:close()
         curSong:stop();
-        ScreenManager.push(LevelOutro.new(level, scores));
+        ScreenManager.push( 'levelOutro', scores );
     end
 
     return self;

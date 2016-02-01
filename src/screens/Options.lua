@@ -150,7 +150,7 @@ function Options.new()
     end
 
     local function back()
-        ScreenManager.switch(MainMenu.new());
+        ScreenManager.switch( 'mainMenu' );
     end
 
     local function handleInput()

@@ -51,13 +51,13 @@ end
 -- Constructor
 -- ------------------------------------------------
 
-function Modal.new(tConfirm, tDecline)
+function Modal.new()
     local self = Screen.new();
 
     local x, y, w, h;
 
-    local tConfirm = tConfirm;
-    local tDecline = tDecline;
+    local tConfirm;
+    local tDecline;
     local buttons;
 
     -- ------------------------------------------------
@@ -97,7 +97,10 @@ function Modal.new(tConfirm, tDecline)
     -- Public Functions
     -- ------------------------------------------------
 
-    function self:init()
+    function self:init( ntConfirm, ntDecline )
+        tConfirm = ntConfirm;
+        tDecline = ntDecline;
+
         h = 100;
         w = 200;
         x = 640 * 0.5 - w * 0.5;

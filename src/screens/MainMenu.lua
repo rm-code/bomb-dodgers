@@ -70,15 +70,15 @@ function MainMenu.new()
     local sw, sh;
 
     local function start()
-        ScreenManager.switch(LevelMenu.new());
+        ScreenManager.switch( 'levelMenu' );
     end
 
     local function options()
-        ScreenManager.switch(Options.new());
+        ScreenManager.switch( 'options' );
     end
 
     local function exit()
-        ScreenManager.switch(Modal.new(function() love.event.quit() end, function() ScreenManager.switch(MainMenu.new()) end));
+        ScreenManager.switch( 'modal', function() love.event.quit() end, function() ScreenManager.switch( 'mainMenu' ) end );
     end
 
     local function handleInput(dt)
