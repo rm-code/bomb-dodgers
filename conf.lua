@@ -24,7 +24,7 @@ local GAME_IDENTITY = "rmcode_BombDodgers";
 
 local GAME_TITLE = "Bomb Dodgers";
 
-local LOVE_VERSION = "0.9.1";
+local LOVE_VERSION = "0.10.0";
 
 local GAME_VERSION = "v0245";
 
