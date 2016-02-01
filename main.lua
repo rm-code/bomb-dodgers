@@ -71,6 +71,7 @@ function love.load()
     ScreenScaler.init(profile.mode, profile.scaleX, profile.scaleY, profile.vsync);
 
     PaletteSwitcher.init('lib/colswitcher/palettes.png', 'lib/colswitcher/palette.fs');
+    PaletteSwitcher.setActive(profile.shaders);
 
     -- Start game on the main menu.
     ScreenManager.init(Intro.new());
