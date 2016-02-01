@@ -40,12 +40,14 @@ local config;
 
 ---
 -- Initialise löve's config file.
--- @param _conf
+-- @param t
 --
-function love.conf(t)
+function love.conf( t )
     t.identity = GAME_IDENTITY;
     t.version = LOVE_VERSION;
     t.console = true;
+    t.accelerometerjoystick = true
+    t.gammacorrect = false
 
     t.window.title = GAME_TITLE;
     t.window.icon = 'res/img/icon.png';
@@ -58,10 +60,11 @@ function love.conf(t)
     t.window.fullscreen = false;
     t.window.fullscreentype = "desktop";
     t.window.vsync = true;
-    t.window.fsaa = 0;
+    t.window.msaa = 0;
     t.window.display = 1;
     t.window.highdpi = false;
-    t.window.srgb = false;
+    t.window.x = nil
+    t.window.y = nil
 
     t.modules.audio = true;
     t.modules.event = true;
@@ -75,18 +78,10 @@ function love.conf(t)
     t.modules.sound = true;
     t.modules.system = true;
     t.modules.timer = true;
+    t.modules.touch = true;
+    t.modules.video = true;
     t.modules.window = true;
-
-    config = t;
-end
-
----
--- Returns the config file.
---
-function getConfig()
-    if config then
-        return config;
-    end
+    t.modules.thread = true;
 end
 
 ---
