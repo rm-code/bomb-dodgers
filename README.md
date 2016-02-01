@@ -17,17 +17,15 @@ You will have to win two out of three rounds against one, two and finally three 
 
 (The game can also be played with a gamepad although it has only been tested with a XBOX 360 Controller).
 
-
 ### Feedback
 ---
-If you have __comments__, __feedback__ or __issues__ with the game, you can post them [here](https://bitbucket.org/rmcode/bomb-dodgers/issues) or tweet me [@rm_code](https://twitter.com/rm_code).
+If you have __comments__, __feedback__ or __issues__ with the game, you can post them [here](https://github.com/rm-code/bomb-dodgers/issues) or tweet me [@rm_code](https://twitter.com/rm_code).
 
 ### Installing Instructions
 ---
 - __Windows__: Unpack the .zip folder and run the exe.  
 - __Mac OS__: Unpack the .zip folder and run the app.  
 - __Linux__: Linux users will need to install the [LÖVE](http://love2d.org/) framework to run the love file.
-
 
 ---
 
