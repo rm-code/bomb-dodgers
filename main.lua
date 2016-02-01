@@ -60,6 +60,12 @@ function love.load()
     local name, version, vendor, device = love.graphics.getRendererInfo();
     print( string.format( "Name: %s \nVersion: %s \nVendor: %s \nDevice: %s", name, version, vendor, device ));
 
+    print( "\n----  SYSTEM   ---- " );
+    print( love.system.getOS() );
+    print( "===================" );
+    print( os.date( '%c', os.time() ));
+    print( "===================" );
+
     -- Set default filters.
     love.graphics.setDefaultFilter('nearest', 'nearest');
 
