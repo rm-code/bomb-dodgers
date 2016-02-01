@@ -1,6 +1,6 @@
 # Bomb Dodgers
 
-__Bomb Dodgers__ is a maze-based bombing game inspired by the classic Bomberman games. 
+__Bomb Dodgers__ is a maze-based bombing game inspired by the classic Bomberman games.
 
 You will have to win two out of three rounds against one, two and finally three enemies to reach the endboss of each level. After you have beaten an endboss the next level will be unlocked.
 
@@ -23,8 +23,8 @@ If you have __comments__, __feedback__ or __issues__ with the game, you can post
 - __Windows__: Unpack the .zip folder and run the exe.  
 - __Mac OS__: Unpack the .zip folder and run the app.  
 - __Linux__: Linux users will need to install the [LÖVE](http://love2d.org/) framework to run the love file.
-    
-    
+
+
 ---
-    
+
 Created with the *awesome* [LÖVE](http://love2d.org/) framework.
