@@ -38,12 +38,6 @@ Options = require('src/screens/Options');
 Modal = require('src/screens/Modal');
 
 -- ------------------------------------------------
--- Local variables
--- ------------------------------------------------
-
-local info = false;
-
--- ------------------------------------------------
 -- Loading
 -- ------------------------------------------------
 
@@ -92,10 +86,6 @@ function love.update(dt)
 end
 
 function love.draw()
-    local lg = love.graphics;
-    local lt = love.timer;
-    local format = string.format;
-
     PaletteSwitcher.set();
     ScreenScaler.push();
 
@@ -105,12 +95,6 @@ function love.draw()
     PaletteSwitcher.unset();
 
     -- InputManager.draw();
-
-    if info then
-        lg.print(format("FT: %.3f ms", 1000 * lt.getAverageDelta()), 10, love.window.getHeight() - 60);
-        lg.print(format("FPS: %.3f fps", lt.getFPS()), 10, love.window.getHeight() - 40);
-        lg.print(format("MEM: %.3f kb", collectgarbage("count")), 10, love.window.getHeight() - 20);
-    end
 end
 
 -- ------------------------------------------------
@@ -134,10 +118,6 @@ end
 -- ------------------------------------------------
 
 function love.keypressed(key)
-    if key == 'f1' then
-        info = not info;
-    end
-
     if key == 'tab' then
         PaletteSwitcher.next();
     end
