@@ -43,7 +43,7 @@ Controls.GAME.keyboard.right         = { cmd = 'RIGHT',   rep = true, locked = f
 Controls.GAME.keyboard.left          = { cmd = 'LEFT',    rep = true, locked = false };
 Controls.GAME.keyboard.up            = { cmd = 'UP',      rep = true, locked = false };
 Controls.GAME.keyboard.down          = { cmd = 'DOWN',    rep = true, locked = false };
-Controls.GAME.keyboard[' ']          = { cmd = 'BOMB',    rep = false, locked = false };
+Controls.GAME.keyboard['space']      = { cmd = 'BOMB',    rep = false, locked = false };
 Controls.GAME.keyboard['tab']        = { cmd = 'COL',     rep = false, locked = false };
 
 Controls.MENU= {};
