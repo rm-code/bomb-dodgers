@@ -1,5 +1,9 @@
 # Bomb Dodgers
 
+[![Version](https://img.shields.io/badge/Version-0245-blue.svg)](https://github.com/rm-code/bomb-dodgers/releases/latest)
+[![LOVE](https://img.shields.io/badge/L%C3%96VE-0.10.0-EA316E.svg)](http://love2d.org/)
+[![License](http://img.shields.io/badge/Licence-zlib-brightgreen.svg)](LICENSE.md)
+
 __Bomb Dodgers__ is a maze-based bombing game inspired by the classic Bomberman games.
 
 You will have to win two out of three rounds against one, two and finally three enemies to reach the endboss of each level. After you have beaten an endboss the next level will be unlocked.
