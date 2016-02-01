@@ -139,10 +139,8 @@ function Arena.new(ts)
     end
 
     local function renderToCanvas(canvas, grid)
-        canvas:clear();
-
-        -- Draw to canvas.
         canvas:renderTo(function()
+            love.graphics.clear();
             for x = 1, #grid do
                 for y = 1, #grid[x] do
                     if grid[x][y]:getContentType() == CONTENT.HARDWALL then

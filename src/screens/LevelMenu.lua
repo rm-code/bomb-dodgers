@@ -179,9 +179,9 @@ function LevelMenu.new()
     end
 
     local function updatePreviews()
-        previews:clear();
         waveShader:send('time', love.timer.getTime());
         previews:renderTo(function()
+            love.graphics.clear();
             waveShader:set();
             for i = 1, #TELEPORTER_POSITIONS do
                 love.graphics.draw(images['lvl' .. i], TILESIZE * TELEPORTER_POSITIONS[i].x, TILESIZE * TELEPORTER_POSITIONS[i].y);
