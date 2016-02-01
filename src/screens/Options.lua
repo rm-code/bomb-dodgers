@@ -124,9 +124,6 @@ function Options.new()
     end
 
     local function toggleShaders()
-        if not love.graphics.isSupported('shader') then
-            return;
-        end
         profile.shaders = not profile.shaders;
         ProfileHandler.save(profile);
         PaletteSwitcher.setActive(profile.shaders);
