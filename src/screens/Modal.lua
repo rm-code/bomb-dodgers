@@ -119,10 +119,10 @@ function Modal.new()
     end
 
     function self:draw()
-        love.graphics.setColor(255, 255, 255);
+        love.graphics.setColor(215, 232, 148);
+        love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight());
+        love.graphics.setColor(32, 70, 49);
         love.graphics.setLineWidth(4);
-        love.graphics.rectangle('fill', 0, 0, 640, 480);
-        love.graphics.setColor(0, 0, 0);
         love.graphics.rectangle('line', x, y, w, h);
         love.graphics.setColor(255, 255, 255);
         love.graphics.draw(images['sure'], x + (w * 0.5) - 72, y + 10, 0, 3, 3);
