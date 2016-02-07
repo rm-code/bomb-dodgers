@@ -33,6 +33,7 @@ local ProfileHandler = require( 'src.profile.ProfileHandler' );
 local Door = require( 'src.arena.objects.Door' );
 local Shader = require( 'lib.Shader' );
 local SoundManager = require( 'lib.SoundManager' );
+local PaletteSwitcher = require( 'lib.colswitcher.PaletteSwitcher' );
 
 -- ------------------------------------------------
 -- Module
@@ -107,7 +108,9 @@ function LevelMenu.new()
     local function loadLevel(level)
         canvas = love.graphics.newCanvas();
         canvas:renderTo(function()
+            PaletteSwitcher.set();
             self:draw();
+            PaletteSwitcher.unset();
         end);
 
         if music['main']:isPlaying() then
