@@ -20,7 +20,7 @@
 --                                                                               --
 --===============================================================================--
 
-local ProfileHandler = require('src/profile/ProfileHandler');
+local ProfileHandler = require( 'src.profile.ProfileHandler' );
 
 -- ------------------------------------------------
 -- Module

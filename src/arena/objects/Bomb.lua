@@ -20,15 +20,15 @@
 --                                                                               --
 --===============================================================================--
 
-local Content = require('src/arena/objects/Content');
-local Constants = require('src/Constants');
-local Explosion = require('src/arena/objects/Explosion');
-local AniMAL = require('lib/AniMAL');
-local ResourceManager = require('lib/ResourceManager');
-local PlayerManager = require('src/entities/dodgers/PlayerManager');
-local NpcManager = require('src/entities/dodgers/NpcManager');
-local Math = require('lib/Math');
-local SoundManager = require('lib/SoundManager');
+local Content = require( 'src.arena.objects.Content' );
+local Constants = require( 'src.Constants' );
+local Explosion = require( 'src.arena.objects.Explosion' );
+local AniMAL = require( 'lib.AniMAL' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local PlayerManager = require( 'src.entities.dodgers.PlayerManager' );
+local NpcManager = require( 'src.entities.dodgers.NpcManager' );
+local Math = require( 'lib.Math' );
+local SoundManager = require( 'lib.SoundManager' );
 
 -- ------------------------------------------------
 -- Module

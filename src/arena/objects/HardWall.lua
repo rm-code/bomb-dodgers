@@ -20,8 +20,8 @@
 --                                                                               --
 --===============================================================================--
 
-local Content = require('src/arena/objects/Content');
-local Constants = require('src/Constants');
+local Content = require( 'src.arena.objects.Content' );
+local Constants = require( 'src.Constants' );
 
 -- ------------------------------------------------
 -- Module

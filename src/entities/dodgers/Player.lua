@@ -20,11 +20,11 @@
 --                                                                               --
 --===============================================================================--
 
-local Constants = require('src/Constants');
-local Dodger = require('src/entities/dodgers/Dodger');
-local InputManager = require('lib/InputManager');
-local AniMAL = require('lib/AniMAL');
-local ResourceManager = require('lib/ResourceManager');
+local Constants = require( 'src.Constants' );
+local Dodger = require( 'src.entities.dodgers.Dodger' );
+local InputManager = require( 'lib.InputManager' );
+local AniMAL = require( 'lib.AniMAL' );
+local ResourceManager = require( 'lib.ResourceManager' );
 
 -- ------------------------------------------------
 -- Module

@@ -20,12 +20,12 @@
 --                                                                               --
 --===============================================================================--
 
-local Screen = require('lib/screens/Screen');
-local ScreenManager = require('lib/screens/ScreenManager');
-local PlayerManager = require('src/entities/dodgers/PlayerManager');
-local NpcManager = require('src/entities/dodgers/NpcManager');
-local ResourceManager = require('lib/ResourceManager');
-local SoundManager = require('lib/SoundManager');
+local Screen = require( 'lib.screens.Screen' );
+local ScreenManager = require( 'lib.screens.ScreenManager' );
+local PlayerManager = require( 'src.entities.dodgers.PlayerManager' );
+local NpcManager = require( 'src.entities.dodgers.NpcManager' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local SoundManager = require( 'lib.SoundManager' );
 
 -- ------------------------------------------------
 -- Module

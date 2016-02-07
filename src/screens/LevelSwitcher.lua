@@ -20,18 +20,18 @@
 --                                                                               --
 --===============================================================================--
 
-local Constants = require('src/Constants');
-local Screen = require('lib/screens/Screen');
-local ScreenManager = require('lib/screens/ScreenManager');
-local InputManager = require('lib/InputManager');
-local Controls = require('src/Controls');
-local Arena = require('src/arena/Arena');
-local PlayerManager = require('src/entities/dodgers/PlayerManager');
-local Player = require('src/entities/dodgers/Player');
-local NpcManager = require('src/entities/dodgers/NpcManager');
-local Npc = require('src/entities/dodgers/Npc');
-local Camera = require('lib/Camera');
-local ProfileHandler = require('src/profile/ProfileHandler');
+local Constants = require( 'src.Constants' );
+local Screen = require( 'lib.screens.Screen' );
+local ScreenManager = require( 'lib.screens.ScreenManager' );
+local InputManager = require( 'lib.InputManager' );
+local Controls = require( 'src.Controls' );
+local Arena = require( 'src.arena.Arena' );
+local PlayerManager = require( 'src.entities.dodgers.PlayerManager' );
+local Player = require( 'src.entities.dodgers.Player' );
+local NpcManager = require( 'src.entities.dodgers.NpcManager' );
+local Npc = require( 'src.entities.dodgers.Npc' );
+local Camera = require( 'lib.Camera' );
+local ProfileHandler = require( 'src.profile.ProfileHandler' );
 
 -- ------------------------------------------------
 -- Module
@@ -60,10 +60,10 @@ local LEVELS = {
 };
 
 local BOSSES = {
-    require('src/entities/boss/robot/Robot'),
-    require('src/entities/boss/mummy/Mummy'),
-    require('src/entities/boss/yeti/Yeti'),
-    require('src/entities/boss/ant/Ant'),
+    require('src.entities.boss.robot.Robot'),
+    require('src.entities.boss.mummy.Mummy'),
+    require('src.entities.boss.yeti.Yeti'),
+    require('src.entities.boss.ant.Ant'),
 };
 
 -- ------------------------------------------------

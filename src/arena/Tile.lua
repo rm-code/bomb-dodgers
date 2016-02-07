@@ -20,9 +20,9 @@
 --                                                                               --
 --===============================================================================--
 
-local Constants = require('src/Constants');
-local Explosion = require('src/arena/objects/Explosion');
-local Bomb = require('src/arena/objects/Bomb');
+local Constants = require( 'src.Constants' );
+local Explosion = require( 'src.arena.objects.Explosion' );
+local Bomb = require( 'src.arena.objects.Bomb' );
 
 -- ------------------------------------------------
 -- Module

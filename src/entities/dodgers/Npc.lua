@@ -20,15 +20,15 @@
 --                                                                               --
 --===============================================================================--
 
-local Constants = require('src/Constants');
-local Dodger = require('src/entities/dodgers/Dodger');
-local StateManager = require('src/entities/StateManager');
-local Move = require('src/entities/dodgers/states/Move');
-local Evade = require('src/entities/dodgers/states/Evade');
-local Random = require('src/entities/dodgers/states/Random');
-local AniMAL = require('lib/AniMAL');
-local ResourceManager = require('lib/ResourceManager');
-local PlayerManager = require('src/entities/dodgers/PlayerManager');
+local Constants = require( 'src.Constants' );
+local Dodger = require( 'src.entities.dodgers.Dodger' );
+local StateManager = require( 'src.entities.StateManager' );
+local Move = require( 'src.entities.dodgers.states.Move' );
+local Evade = require( 'src.entities.dodgers.states.Evade' );
+local Random = require( 'src.entities.dodgers.states.Random' );
+local AniMAL = require( 'lib.AniMAL' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local PlayerManager = require( 'src.entities.dodgers.PlayerManager' );
 
 -- ------------------------------------------------
 -- Module

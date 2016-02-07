@@ -20,11 +20,11 @@
 --                                                                               --
 --===============================================================================--
 
-local Content = require('src/arena/objects/Content');
-local Constants = require('src/Constants');
-local AniMAL = require('lib/AniMAL');
-local ResourceManager = require('lib/ResourceManager');
-local Explosion = require('src/arena/objects/Explosion');
+local Content = require( 'src.arena.objects.Content' );
+local Constants = require( 'src.Constants' );
+local AniMAL = require( 'lib.AniMAL' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local Explosion = require( 'src.arena.objects.Explosion' );
 
 -- ------------------------------------------------
 -- Module

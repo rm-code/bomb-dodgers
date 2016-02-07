@@ -20,8 +20,8 @@
 --                                                                               --
 --===============================================================================--
 
-local ResourceManager = require('lib/ResourceManager');
-local SoundManager = require('lib/SoundManager');
+local ResourceManager = require( 'lib.ResourceManager' );
+local SoundManager = require( 'lib.SoundManager' );
 
 -- ------------------------------------------------
 -- Module

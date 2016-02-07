@@ -20,10 +20,10 @@
 --                                                                               --
 --===============================================================================--
 
-local Content = require('src/arena/objects/Content');
-local Constants = require('src/Constants');
-local UpgradeManager = require('src/arena/objects/UpgradeManager');
-local ResourceManager = require('lib/ResourceManager');
+local Content = require( 'src.arena.objects.Content' );
+local Constants = require( 'src.Constants' );
+local UpgradeManager = require( 'src.arena.objects.UpgradeManager' );
+local ResourceManager = require( 'lib.ResourceManager' );
 
 -- ------------------------------------------------
 -- Module

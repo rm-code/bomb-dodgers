@@ -20,17 +20,17 @@
 --                                                                               --
 --===============================================================================--
 
-local Constants = require('src/Constants');
-local Entity = require('src/entities/Entity');
-local Missile = require('src/entities/boss/robot/Missile');
-local Minion = require('src/entities/boss/robot/Minion');
-local StateManager = require('src/entities/StateManager');
-local Move = require('src/entities/boss/robot/Move');
-local Hurt = require('src/entities/boss/Hurt');
-local PlayerManager = require('src/entities/dodgers/PlayerManager');
-local ResourceManager = require('lib/ResourceManager');
-local AniMAL = require('lib/AniMAL');
-local SoundManager = require('lib/SoundManager');
+local Constants = require( 'src.Constants' );
+local Entity = require( 'src.entities.Entity' );
+local Missile = require( 'src.entities.boss.robot.Missile' );
+local Minion = require( 'src.entities.boss.robot.Minion' );
+local StateManager = require( 'src.entities.StateManager' );
+local Move = require( 'src.entities.boss.robot.Move' );
+local Hurt = require( 'src.entities.boss.Hurt' );
+local PlayerManager = require( 'src.entities.dodgers.PlayerManager' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local AniMAL = require( 'lib.AniMAL' );
+local SoundManager = require( 'lib.SoundManager' );
 
 -- ------------------------------------------------
 -- Module

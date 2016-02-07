@@ -20,9 +20,9 @@
 --                                                                               --
 --===============================================================================--
 
-local Content = require('src/arena/objects/Content');
-local Constants = require('src/Constants');
-local ResourceManager = require('lib/ResourceManager');
+local Content = require( 'src.arena.objects.Content' );
+local Constants = require( 'src.Constants' );
+local ResourceManager = require( 'lib.ResourceManager' );
 
 -- ------------------------------------------------
 -- Module

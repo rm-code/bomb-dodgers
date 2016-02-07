@@ -20,8 +20,8 @@
 --                                                                               --
 --===============================================================================--
 
-local PlayerManager = require('src/entities/dodgers/PlayerManager');
-local UpgradeManager = require('src/arena/objects/UpgradeManager');
+local PlayerManager = require( 'src.entities.dodgers.PlayerManager' );
+local UpgradeManager = require( 'src.arena.objects.UpgradeManager' );
 
 -- ------------------------------------------------
 -- Module

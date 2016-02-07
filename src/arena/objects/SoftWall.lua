@@ -20,10 +20,10 @@
 --                                                                               --
 --===============================================================================--
 
-local Content = require('src/arena/objects/Content');
-local Constants = require('src/Constants');
-local Upgrade = require('src/arena/objects/Upgrade');
-local Destruction = require('src/arena/objects/Destruction');
+local Content = require( 'src.arena.objects.Content' );
+local Constants = require( 'src.Constants' );
+local Upgrade = require( 'src.arena.objects.Upgrade' );
+local Destruction = require( 'src.arena.objects.Destruction' );
 
 -- ------------------------------------------------
 -- Module

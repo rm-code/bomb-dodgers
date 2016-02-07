@@ -20,15 +20,15 @@
 --                                                                               --
 --===============================================================================--
 
-local Screen = require('lib/screens/Screen');
-local ScreenManager = require('lib/screens/ScreenManager');
-local Button = require('src/ui/Button');
-local ButtonManager = require('src/ui/ButtonManager');
-local ResourceManager = require('lib/ResourceManager');
-local Controls = require('src/Controls');
-local InputManager = require('lib/InputManager');
-local AniMAL = require('lib/AniMAL');
-local SoundManager = require('lib/SoundManager');
+local Screen = require( 'lib.screens.Screen' );
+local ScreenManager = require( 'lib.screens.ScreenManager' );
+local Button = require( 'src.ui.Button' );
+local ButtonManager = require( 'src.ui.ButtonManager' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local Controls = require( 'src.Controls' );
+local InputManager = require( 'lib.InputManager' );
+local AniMAL = require( 'lib.AniMAL' );
+local SoundManager = require( 'lib.SoundManager' );
 
 -- ------------------------------------------------
 -- Module

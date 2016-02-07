@@ -20,16 +20,16 @@
 --                                                                               --
 --===============================================================================--
 
-local Constants = require('src/Constants');
-local Entity = require('src/entities/Entity');
-local StateManager = require('src/entities/StateManager');
-local ResourceManager = require('lib/ResourceManager');
-local PlayerManager = require('src/entities/dodgers/PlayerManager');
-local Missile = require('src/entities/boss/ant/Missile');
-local AniMAL = require('lib/AniMAL');
-local Move = require('src/entities/boss/ant/Move');
-local Hurt = require('src/entities/boss/Hurt');
-local SoundManager = require('lib/SoundManager');
+local Constants = require( 'src.Constants' );
+local Entity = require( 'src.entities.Entity' );
+local StateManager = require( 'src.entities.StateManager' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local PlayerManager = require( 'src.entities.dodgers.PlayerManager' );
+local Missile = require( 'src.entities.boss.ant.Missile' );
+local AniMAL = require( 'lib.AniMAL' );
+local Move = require( 'src.entities.boss.ant.Move' );
+local Hurt = require( 'src.entities.boss.Hurt' );
+local SoundManager = require( 'lib.SoundManager' );
 
 -- ------------------------------------------------
 -- Module

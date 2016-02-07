@@ -20,8 +20,8 @@
 --                                                                               --
 --===============================================================================--
 
-local Math = require('lib/Math');
-local Constants = require('src/Constants');
+local Math = require( 'lib.Math' );
+local Constants = require( 'src.Constants' );
 
 -- ------------------------------------------------
 -- Module

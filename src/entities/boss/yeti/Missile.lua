@@ -20,10 +20,10 @@
 --                                                                               --
 --===============================================================================--
 
-local Constants = require('src/Constants');
-local PlayerManager = require('src/entities/dodgers/PlayerManager');
-local ResourceManager = require('lib/ResourceManager');
-local AniMAL = require('lib/AniMAL');
+local Constants = require( 'src.Constants' );
+local PlayerManager = require( 'src.entities.dodgers.PlayerManager' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local AniMAL = require( 'lib.AniMAL' );
 
 -- ------------------------------------------------
 -- Module

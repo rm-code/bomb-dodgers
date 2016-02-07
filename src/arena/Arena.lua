@@ -20,12 +20,12 @@
 --                                                                               --
 --===============================================================================--
 
-local Constants = require('src/Constants');
-local Tile = require('src/arena/Tile');
-local ResourceManager = require('lib/ResourceManager');
-local SoftWall = require('src/arena/objects/SoftWall');
-local HardWall = require('src/arena/objects/HardWall');
-local Upgrade = require('src/arena/objects/Upgrade');
+local Constants = require( 'src.Constants' );
+local Tile = require( 'src.arena.Tile' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local SoftWall = require( 'src.arena.objects.SoftWall' );
+local HardWall = require( 'src.arena.objects.HardWall' );
+local Upgrade = require( 'src.arena.objects.Upgrade' );
 
 -- ------------------------------------------------
 -- Module

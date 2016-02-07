@@ -20,19 +20,19 @@
 --                                                                               --
 --===============================================================================--
 
-local Controls = require('src/Controls');
-local Screen = require('lib/screens/Screen');
-local ScreenManager = require('lib/screens/ScreenManager');
-local Arena = require('src/arena/Arena');
-local Player = require('src/entities/dodgers/Player');
-local InputManager = require('lib/InputManager');
-local Camera = require('lib/Camera');
-local Constants = require('src/Constants');
-local ResourceManager = require('lib/ResourceManager');
-local ProfileHandler = require('src/profile/ProfileHandler');
-local Door = require('src/arena/objects/Door');
-local Shader = require('lib/Shader');
-local SoundManager = require('lib/SoundManager');
+local Controls = require( 'src.Controls' );
+local Screen = require( 'lib.screens.Screen' );
+local ScreenManager = require( 'lib.screens.ScreenManager' );
+local Arena = require( 'src.arena.Arena' );
+local Player = require( 'src.entities.dodgers.Player' );
+local InputManager = require( 'lib.InputManager' );
+local Camera = require( 'lib.Camera' );
+local Constants = require( 'src.Constants' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local ProfileHandler = require( 'src.profile.ProfileHandler' );
+local Door = require( 'src.arena.objects.Door' );
+local Shader = require( 'lib.Shader' );
+local SoundManager = require( 'lib.SoundManager' );
 
 -- ------------------------------------------------
 -- Module

@@ -20,9 +20,9 @@
 --                                                                               --
 --===============================================================================--
 
-local ScreenManager = require('lib/screens/ScreenManager');
-local Screen = require('lib/screens/Screen');
-local ResourceManager = require('lib/ResourceManager');
+local ScreenManager = require( 'lib.screens.ScreenManager' );
+local Screen = require( 'lib.screens.Screen' );
+local ResourceManager = require( 'lib.ResourceManager' );
 
 -- ------------------------------------------------
 -- Module

@@ -20,11 +20,11 @@
 --                                                                               --
 --===============================================================================--
 
-local ResourceManager = require('lib/ResourceManager');
-local Screen = require('lib/screens/Screen');
-local ButtonManager = require('src/ui/ButtonManager');
-local Button = require('src/ui/Button');
-local InputManager = require('lib/InputManager');
+local ResourceManager = require( 'lib.ResourceManager' );
+local Screen = require( 'lib.screens.Screen' );
+local ButtonManager = require( 'src.ui.ButtonManager' );
+local Button = require( 'src.ui.Button' );
+local InputManager = require( 'lib.InputManager' );
 
 -- ------------------------------------------------
 -- Module

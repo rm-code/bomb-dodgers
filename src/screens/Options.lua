@@ -20,16 +20,16 @@
 --                                                                               --
 --===============================================================================--
 
-local Screen = require('lib/screens/Screen');
-local ScreenManager = require('lib/screens/ScreenManager');
-local ScreenScaler = require('lib/ScreenScaler');
-local ResourceManager = require('lib/ResourceManager');
-local Button = require('src/ui/Button');
-local ButtonManager = require('src/ui/ButtonManager');
-local InputManager = require('lib/InputManager');
-local ProfileHandler = require('src/profile/ProfileHandler');
-local SoundManager = require('lib/SoundManager');
-local PaletteSwitcher = require('lib/colswitcher/PaletteSwitcher');
+local Screen = require( 'lib.screens.Screen' );
+local ScreenManager = require( 'lib.screens.ScreenManager' );
+local ScreenScaler = require( 'lib.ScreenScaler' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local Button = require( 'src.ui.Button' );
+local ButtonManager = require( 'src.ui.ButtonManager' );
+local InputManager = require( 'lib.InputManager' );
+local ProfileHandler = require( 'src.profile.ProfileHandler' );
+local SoundManager = require( 'lib.SoundManager' );
+local PaletteSwitcher = require( 'lib.colswitcher.PaletteSwitcher' );
 
 -- ------------------------------------------------
 -- Module

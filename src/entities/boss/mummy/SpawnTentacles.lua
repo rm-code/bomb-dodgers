@@ -20,7 +20,7 @@
 --                                                                               --
 --===============================================================================--
 
-local Tentacles = require('src/entities/boss/mummy/ClothTentacle');
+local Tentacles = require( 'src.entities.boss.mummy.ClothTentacle' );
 
 -- ------------------------------------------------
 -- Module

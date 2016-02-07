@@ -20,11 +20,11 @@
 --                                                                               --
 --===============================================================================--
 
-local Screen = require('lib/screens/Screen');
-local ScreenManager = require('lib/screens/ScreenManager');
-local ResourceManager = require('lib/ResourceManager');
-local AniMAL = require('lib/AniMAL');
-local SoundManager = require('lib/SoundManager');
+local Screen = require( 'lib.screens.Screen' );
+local ScreenManager = require( 'lib.screens.ScreenManager' );
+local ResourceManager = require( 'lib.ResourceManager' );
+local AniMAL = require( 'lib.AniMAL' );
+local SoundManager = require( 'lib.SoundManager' );
 
 -- ------------------------------------------------
 -- Module
