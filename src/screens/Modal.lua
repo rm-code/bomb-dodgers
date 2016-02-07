@@ -130,10 +130,6 @@ function Modal.new()
         buttons:draw();
     end
 
-    function self:mousepressed()
-        buttons:select();
-    end
-
     return self;
 end
 
