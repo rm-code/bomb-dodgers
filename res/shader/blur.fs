@@ -20,7 +20,7 @@
 /*                                                                               */
 /*===============================================================================*/
 
-uniform float radius = 1.0;
+uniform float radius;
 const vec2 dir = vec2(2.0, 2.0);
 const float res = 200;
 

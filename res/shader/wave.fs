@@ -20,7 +20,7 @@
 /*                                                                               */
 /*===============================================================================*/
 
-uniform float time = 0.0;
+uniform float time;
 const float size = 32.0;
 const float strength = 8.0;
 const vec2 res = vec2(512.0, 512.0);
