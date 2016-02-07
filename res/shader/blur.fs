@@ -22,7 +22,7 @@
 
 uniform float radius;
 const vec2 dir = vec2(2.0, 2.0);
-const float res = 200;
+const float res = 200.0;
 
 vec4 effect( vec4 color, sampler2D texture, vec2 texture_coords, vec2 screen_coords )
 {
