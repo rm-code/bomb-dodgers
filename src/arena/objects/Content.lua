@@ -87,6 +87,10 @@ function Content.new(type, passable, x, y)
         return y;
     end
 
+    function self:getPosition()
+        return x, y;
+    end
+
     function self:getParent()
         return parentTile;
     end
