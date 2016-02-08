@@ -99,32 +99,46 @@ function NPC.new(arena, x, y)
     -- Public Functions
     -- ------------------------------------------------
 
-    function self:isSafeToPlant(adjTiles)
-        for _, tile in pairs(adjTiles) do
+    function self:isSafeToPlant()
+        for _, tile in pairs( self:getAdjacentTiles() ) do
             if tile:isSafe() and tile:isPassable() then
                 return true;
             end
         end
     end
 
-    function self:isGoodToPlant(adjTiles, x, y, radius)
+    function self:isGoodToPlant()
         -- Plant bombs next to soft walls.
-        for _, tile in pairs(adjTiles) do
+        for _, tile in pairs( self:getAdjacentTiles() ) do
             if tile:getContentType() == Constants.CONTENT.SOFTWALL then
                 return true;
             end
         end
 
+        local nx, ny = self:getPosition();
+        local blastRadius = self:getBlastRadius();
+
         -- Plant bombs if player is in bomb's blast radius.
-        local player = PlayerManager.getClosest(x, y);
-        if player:getX() == x then
-            if math.abs(player:getY() - y) < radius then
-                return true;
-            end
-        elseif player:getY() == y then
-            if math.abs(player:getX() - x) < radius then
-                return true;
-            end
+        local player = PlayerManager.getClosest( nx, ny );
+        local px, py = player:getPosition();
+
+        -- Check if the player is on either the same row or the same line as
+        -- the npc and check if the blast radius would reach him.
+        if px == nx then
+            return math.abs( py - ny ) < blastRadius;
+        elseif py == ny then
+            return math.abs( px - nx ) < blastRadius;
+        end
+    end
+
+    ---
+    -- Plants a bomb if at least one of the adjacent tiles is safe, if it is
+    -- next to a soft wall, or if the player is within the blast radius of the
+    -- bomb.
+    --
+    function self:tryToPlantBomb()
+        if self:isSafeToPlant() and self:isGoodToPlant() then
+            self:plantBomb();
         end
     end
 

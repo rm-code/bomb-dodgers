@@ -90,13 +90,6 @@ function Random.new(fsm, npc)
         end
     end
 
-    local function tryToPlant()
-        local adjTiles = npc:getAdjacentTiles();
-        if npc:isSafeToPlant(adjTiles) and npc:isGoodToPlant(adjTiles, npc:getX(), npc:getY(), npc:getBlastRadius()) then
-            npc:plantBomb();
-        end
-    end
-
     -- ------------------------------------------------
     -- Public Functions
     -- ------------------------------------------------
@@ -135,7 +128,7 @@ function Random.new(fsm, npc)
             curTile = npc:getTile();
             walkedTiles = walkedTiles + 1;
 
-            tryToPlant();
+            npc:tryToPlantBomb();
         end
     end
 

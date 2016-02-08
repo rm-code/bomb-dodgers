@@ -107,18 +107,6 @@ function Move.new( fsm, npc )
     end
 
     ---
-    -- Plants a bomb if at least one of the adjacent tiles is safe, if it is
-    -- next to a soft wall, or if the player is within the blast radius of the
-    -- bomb.
-    --
-    local function tryToPlant()
-        local adjTiles = npc:getAdjacentTiles();
-        if npc:isSafeToPlant( adjTiles ) and npc:isGoodToPlant( adjTiles, npc:getX(), npc:getY(), npc:getBlastRadius() ) then
-            npc:plantBomb();
-        end
-    end
-
-    ---
     -- Initialises this state.
     --
     function self:enter()
@@ -147,7 +135,7 @@ function Move.new( fsm, npc )
             prevDirection = getPrevDirection(direction);
             curTile = npc:getTile();
 
-            tryToPlant();
+            npc:tryToPlantBomb();
         end
     end
 
