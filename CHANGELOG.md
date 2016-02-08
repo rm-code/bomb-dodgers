@@ -1,11 +1,29 @@
 
-- Update to LÖVE 0.10.0
-- Update shader code to work with OpenGL ES 2.0 (Thanks to @HerbFargus)
+#### [Fixes]
+
+- Fix #6 - Correctly use palette switcher when switching to a level
+- Fix #7 - Use correct background color on exit modal
+- Fix #8 - Pressing a mouse button no longer crashes the game
+
+#### [Misc]
+
+- Updated to LÖVE 0.10.0
+    - Replaced love.window.getDimensions with love.graphics.getDimensions
+    - Replaced code for checking hardware support
+    - Replaced Canvas:clear with love.graphics.clear
+    - Use 'space' instead of ' ' for spacebar Controls
+    - Changed music files to mono
+    - Removed calls to removed love.graphics.isSupported function
+- Updated shader code to work with OpenGL ES 2.0 (Thanks to @HerbFargus)
+
+#### [Removals]
+
+- Removed debug window
 
 -------
 
 # 1.0.1 - 0245
-- Fixed #23 - Dead Enemies are removed correctly
+- Fixed #23 (bitbucket) - Dead Enemies are removed correctly
 
 -------
 
@@ -19,8 +37,8 @@
 
 #### [Fixes]
 
-- Fixed #21 - Lerping now takes delta time into account
-- Fixed #22 - Intro can't be skipped before resources have been loaded
+- Fixed #21 (bitbucket) - Lerping now takes delta time into account
+- Fixed #22 (bitbucket) - Intro can't be skipped before resources have been loaded
 
 #### [Misc]
 
@@ -41,7 +59,7 @@
 
 #### [Fixes]
 
-- Fixed #19 - Reset scores correctly after a boss stage has been beaten
+- Fixed #19 (bitbucket) - Reset scores correctly after a boss stage has been beaten
 
 #### [Misc]
 
@@ -91,10 +109,10 @@
 
 #### [Fixes]
 
-- Fixed #4 - NPCs no longer get stuck in a movement loop
-- Fixed #16 - Added missing gamepad mapping for the main menu
-- Fixed #18 - Level previews are affected by palette shader
-- Fixed #20 - Outro screen has correct background color now when shaders are deactivated
+- Fixed #4  (bitbucket) - NPCs no longer get stuck in a movement loop
+- Fixed #16 (bitbucket) - Added missing gamepad mapping for the main menu
+- Fixed #18 (bitbucket) - Level previews are affected by palette shader
+- Fixed #20 (bitbucket) - Outro screen has correct background color now when shaders are deactivated
 - Fixed Issue where endboss wouldn't reset its alpha correctly
 
 #### [Misc]
@@ -126,22 +144,22 @@
 - Added gamepad support
 - Added 'rausers' and 'cosmo' palettes
 - Added destruction animations for softwalls based on the active tileset
-- Added #11 - Bombs collide with players and npcs after being kicked
-- Added #12 - Bombs which are kicked into an explosion will explode on the tile, which contained the previous explosion
+- Added #11 (bitbucket) - Bombs collide with players and npcs after being kicked
+- Added #12 (bitbucket) - Bombs which are kicked into an explosion will explode on the tile, which contained the previous explosion
 - Upgrades work even if they are picked up while a negative effect is active
 - Generally improved AI
 - Entities can infect each other with negative effects
 
 #### [Fixes]
 
-- Fixed #1 - Fixed the bomb counter
-- Fixed #6 - NPCs won't stay on the same path for too long anymore
-- Fixed #7 - Fixed entity movement by adding bounding box collisions
-- Fixed #9 - Bombs no longer "jump" to the target position when being kicked
-- Fixed #10 - Animations now play normally.
-- Fixed #13 - Fixed bombs getting kicked too early
-- Fixed #14 - Removed stray pixels from npc walk animation
-- Fixed #17 - Bombs slowly glide into their final position when colliding with objects
+- Fixed #1  (bitbucket) - Fixed the bomb counter
+- Fixed #6  (bitbucket) - NPCs won't stay on the same path for too long anymore
+- Fixed #7  (bitbucket) - Fixed entity movement by adding bounding box collisions
+- Fixed #9  (bitbucket) - Bombs no longer "jump" to the target position when being kicked
+- Fixed #10 (bitbucket) - Animations now play normally.
+- Fixed #13 (bitbucket) - Fixed bombs getting kicked too early
+- Fixed #14 (bitbucket) - Removed stray pixels from npc walk animation
+- Fixed #17 (bitbucket) - Bombs slowly glide into their final position when colliding with objects
 - Fixed small issue where occasionally a "ghost" upgrade would be created
 - Fixed minor issue with how screens are initialised in the screen manager
 - Fixed issues with case sensitivity on windows
