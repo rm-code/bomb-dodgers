@@ -38,7 +38,15 @@ Constants.UPGRADES = {};
 Constants.UPGRADES.TIMER = 30;
 Constants.UPGRADES.DROPCHANCE = 5;
 
-return Constants;
+-- Make table read-only.
+return setmetatable( Constants, {
+    __index = function( _, key )
+        error( "Can't access constant value at key: " .. key );
+    end,
+    __newindex = function()
+        error( "Can't change a constant value." );
+    end
+} );
 
 --==================================================================================================
 -- Created 13.08.14 - 01:48                                                                        =
