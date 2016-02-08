@@ -81,7 +81,7 @@ function MainMenu.new()
         ScreenManager.switch( 'modal', function() love.event.quit() end, function() ScreenManager.switch( 'mainMenu' ) end );
     end
 
-    local function handleInput(dt)
+    local function handleInput()
         if InputManager.hasCommand('UP') or InputManager.hasCommand('LEFT') then
             buttons:prev();
         elseif InputManager.hasCommand('DOWN') or InputManager.hasCommand('RIGHT') then
