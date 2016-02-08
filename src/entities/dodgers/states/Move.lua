@@ -33,38 +33,54 @@ local Move = {};
 -- Constructor
 -- ------------------------------------------------
 
-function Move.new(fsm, npc)
+function Move.new( fsm, npc )
     local self = {};
 
-    local tarX, tarY;
     local direction;
     local prevDirection;
     local possibleMove;
     local curTile;
 
-    local function aquireTarget(x, y)
-        local player = PlayerManager.getClosest(x, y);
-        local upgrade = UpgradeManager.getClosest(x, y);
+    ---
+    -- This function returns the coordinates to the next closest target which
+    -- could either be the player or an upgrade.
+    -- @param x (number) The x-coordinate of the npc.
+    -- @param y (number) The y-coordinate of the npc.
+    -- @return  (number) The x-coordinate of the target.
+    -- @return  (number) The y-coordinate of the target.
+    --
+    local function aquireTarget( x, y )
+        local player = PlayerManager.getClosest( x, y );
+        local upgrade = UpgradeManager.getClosest( x, y );
 
+        local px, py =  player:getPosition();
         if upgrade then
-            if math.abs(x - upgrade:getX()) + math.abs(y - upgrade:getY()) < math.abs(x - player:getX()) + math.abs(y - player:getY()) then
-                return upgrade:getX(), upgrade:getY();
+            local ux, uy = upgrade:getPosition();
+            if math.abs( x - ux ) + math.abs( y - uy ) < math.abs( x - px ) + math.abs( y - py ) then
+                return ux, uy;
             end
         end
 
-        return player:getX(), player:getY();
+        return px, py;
     end
 
-    local function getBestDirection(tarX, tarY)
+    ---
+    -- Checks the tiles adjacent to the tile the npc is currently standing on
+    -- and returns which direction brings it closer to the target and is safe.
+    -- @param tarX (number) The x-coordinate of the target the npc wants to reach.
+    -- @param tarY (number) The y-coordinate of the target the npc wants to reach.
+    -- @return     (string) The direction to pick (n, s, e, w).
+    --
+    local function getBestDirection( tarX, tarY )
         local adjTiles = npc:getAdjacentTiles();
         local bestDir;
-        local cost;
+        local lowestCost;
 
-        for dir, tile in pairs(adjTiles) do
+        for dir, tile in pairs( adjTiles ) do
             if tile:isPassable() and tile:isSafe() and dir ~= prevDirection then
-                local ncost = math.abs(tile:getX() - tarX) + math.abs(tile:getY() - tarY);
-                if not cost or ncost <= cost then
-                    cost = ncost;
+                local newCost = math.abs( tile:getX() - tarX ) + math.abs( tile:getY() - tarY );
+                if not lowestCost or newCost <= lowestCost then
+                    lowestCost = newCost;
                     bestDir = dir;
                 end
             end
@@ -73,7 +89,12 @@ function Move.new(fsm, npc)
         return bestDir;
     end
 
-    local function getPrevDirection(curDirection)
+    ---
+    -- Gets the previous direction by "inverting" the current direction.
+    -- @param curDirection (string) The current direction (n, s, e, w).
+    -- @return             (string) The previous direction (n, s, e, w).
+    --
+    local function getPrevDirection( curDirection )
         if curDirection == 'n' then
             return 's';
         elseif curDirection == 's' then
@@ -85,35 +106,43 @@ function Move.new(fsm, npc)
         end
     end
 
+    ---
+    -- Plants a bomb if at least one of the adjacent tiles is safe, if it is
+    -- next to a soft wall, or if the player is within the blast radius of the
+    -- bomb.
+    --
     local function tryToPlant()
         local adjTiles = npc:getAdjacentTiles();
-        if npc:isSafeToPlant(adjTiles) and npc:isGoodToPlant(adjTiles, npc:getX(), npc:getY(), npc:getBlastRadius()) then
+        if npc:isSafeToPlant( adjTiles ) and npc:isGoodToPlant( adjTiles, npc:getX(), npc:getY(), npc:getBlastRadius() ) then
             npc:plantBomb();
         end
     end
 
+    ---
+    -- Initialises this state.
+    --
     function self:enter()
-        tarX, tarY = aquireTarget(npc:getPosition());
-        direction = getBestDirection(tarX, tarY);
-        prevDirection = getPrevDirection(direction);
+        local tarX, tarY = aquireTarget( npc:getPosition() );
+        direction = getBestDirection( tarX, tarY );
+        prevDirection = getPrevDirection( direction );
         possibleMove = true;
         curTile = npc:getTile();
     end
 
-    function self:update(dt)
+    function self:update( dt )
         if not npc:getTile():isSafe() then
-            fsm:switch('evade');
+            fsm:switch( 'evade' );
         end
 
         if possibleMove then
-            possibleMove = npc:move(dt, direction);
+            possibleMove = npc:move( dt, direction );
         else
-            fsm:switch('random');
+            fsm:switch( 'random' );
             return;
         end
 
         if npc:getTile() ~= curTile then
-            tarX, tarY = aquireTarget(npc:getPosition());
+            local tarX, tarY = aquireTarget(npc:getPosition());
             direction = getBestDirection(tarX, tarY);
             prevDirection = getPrevDirection(direction);
             curTile = npc:getTile();
@@ -123,7 +152,6 @@ function Move.new(fsm, npc)
     end
 
     function self:exit()
-        tarX, tarY = nil, nil;
         direction = nil;
         prevDirection = nil;
         possibleMove = true;
