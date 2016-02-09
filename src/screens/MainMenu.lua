@@ -78,7 +78,7 @@ function MainMenu.new()
     end
 
     local function exit()
-        ScreenManager.switch( 'modal', function() love.event.quit() end, function() ScreenManager.switch( 'mainMenu' ) end );
+        ScreenManager.push( 'modal', function() love.event.quit() end, function() ScreenManager.pop() end );
     end
 
     local function handleInput()
@@ -114,8 +114,10 @@ function MainMenu.new()
 
     function self:update(dt)
         images['anim']:update(dt);
-        handleInput();
-        buttons:update(dt);
+        if self:isActive() then
+            handleInput();
+            buttons:update( dt );
+        end
     end
 
     function self:draw()

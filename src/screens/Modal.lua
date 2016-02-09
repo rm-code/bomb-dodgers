@@ -101,14 +101,14 @@ function Modal.new()
         tConfirm = ntConfirm;
         tDecline = ntDecline;
 
-        h = 100;
-        w = 200;
+        h = 150;
+        w = 250;
         x = 640 * 0.5 - w * 0.5;
         y = 480 * 0.5 - h * 0.5;
 
         buttons = ButtonManager.new();
-        buttons:register(Button.new(images['yes'], x + 10, y + h * 0.5, 3, 3, confirm));
-        buttons:register(Button.new(images['no'], x + w * 0.5 + 30, y + h * 0.5, 3, 3, decline));
+        buttons:register( Button.new( images['yes'], x + 30,           y + h * 0.5, 3, 3, confirm ));
+        buttons:register( Button.new( images['no'],  x + w * 0.5 + 30, y + h * 0.5, 3, 3, decline ));
         buttons:select(2);
     end
 
@@ -120,7 +120,7 @@ function Modal.new()
 
     function self:draw()
         love.graphics.setColor(215, 232, 148);
-        love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight());
+        love.graphics.rectangle( 'fill', x, y, w, h );
         love.graphics.setColor(32, 70, 49);
         love.graphics.setLineWidth(4);
         love.graphics.rectangle('line', x, y, w, h);
