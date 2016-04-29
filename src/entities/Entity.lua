@@ -310,6 +310,7 @@ function Entity.new(arena, x, y, animations)
 
     function self:setCamera(ncamera)
         camera = ncamera;
+        camera:setPosition( self:getRealX() + Constants.TILESIZE * 0.5, self:getRealY() + Constants.TILESIZE * 0.5 );
     end
 
     function self:setDead(ndead)
