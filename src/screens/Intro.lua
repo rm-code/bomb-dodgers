@@ -35,7 +35,7 @@ local Intro = {};
 -- ------------------------------------------------
 
 local DISPLAY_TIME = 3;
-local WIDTH = 640;
+local WIDTH  = 640;
 local HEIGHT = 480;
 
 -- ------------------------------------------------
@@ -47,44 +47,46 @@ function Intro.new()
 
     local logos = {};
     local loading = false;
-    local index = 1;
     local x, y;
+    local index = 1;
+    local timer = 0;
 
     function self:init()
-        logos[1] = love.graphics.newImage('res/img/ui/rmcode.png');
-        logos[2] = love.graphics.newImage('res/img/ui/love.png');
+        logos[1] = love.graphics.newImage( 'res/img/ui/rmcode.png' );
+        logos[2] = love.graphics.newImage( 'res/img/ui/love.png' );
 
-        x = WIDTH * 0.5 - logos[index]:getWidth() * 0.5;
+        x = WIDTH  * 0.5 - logos[index]:getWidth()  * 0.5;
         y = HEIGHT * 0.5 - logos[index]:getHeight() * 0.5;
     end
 
     function self:draw()
-        love.graphics.draw(logos[index], x, y);
+        love.graphics.draw( logos[index], x, y );
     end
 
-    local counter = 0;
-    function self:update(dt)
-        counter = counter + dt;
-        if not loading and counter > 0.05 then
+    function self:update( dt )
+        timer = timer + dt;
+        if not loading and timer > 0.05 then -- Small delay to make sure the first logo is displayed.
             -- Load resources.
             ResourceManager.loadResources();
             loading = true;
-            counter = 0;
+            timer = 0;
         end
 
-        if counter > DISPLAY_TIME then
+        -- If the timer is bigger than the display time, load the next logo.
+        -- If all logos have been displayed switch to the main menu.
+        if timer > DISPLAY_TIME then
             index = index + 1;
             if index > 2 then
                 ScreenManager.switch( 'mainMenu' );
             else
-                x = WIDTH * 0.5 - logos[index]:getWidth() * 0.5;
+                x = WIDTH  * 0.5 - logos[index]:getWidth()  * 0.5;
                 y = HEIGHT * 0.5 - logos[index]:getHeight() * 0.5;
             end
-            counter = 0;
+            timer = 0;
         end
     end
 
-    function self:keypressed(key)
+    function self:keypressed( key )
         if key ~= 'return' and loading then
             ScreenManager.switch( 'mainMenu' );
         end
