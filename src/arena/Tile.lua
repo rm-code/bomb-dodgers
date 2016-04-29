@@ -148,11 +148,7 @@ function Tile.new(x, y)
     end
 
     function self:isSafe()
-        if danger > 0 or (content and content:getType() == CONTENT.EXPLOSION) then
-            return false;
-        else
-            return true;
-        end
+        return not ( danger > 0 or ( content and content:getType() == CONTENT.EXPLOSION ));
     end
 
     function self:getContentType()
