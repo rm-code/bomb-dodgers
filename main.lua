@@ -87,13 +87,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    PaletteSwitcher.set();
-    ScreenScaler.push();
-
     ScreenManager.draw();
-
-    ScreenScaler.pop();
-    PaletteSwitcher.unset();
 
     -- InputManager.draw();
 end

@@ -34,6 +34,7 @@ local Door = require( 'src.arena.objects.Door' );
 local Shader = require( 'lib.Shader' );
 local SoundManager = require( 'lib.SoundManager' );
 local PaletteSwitcher = require( 'lib.colswitcher.PaletteSwitcher' );
+local ScreenScaler = require( 'lib.ScreenScaler' );
 
 -- ------------------------------------------------
 -- Module
@@ -215,6 +216,9 @@ function LevelMenu.new()
     end
 
     function self:draw()
+        PaletteSwitcher.set();
+        ScreenScaler.push();
+
         if not nextLevel then
             love.graphics.rectangle('fill', 0, 0, sw, sh);
             camera:set();
@@ -229,6 +233,9 @@ function LevelMenu.new()
             love.graphics.draw(canvas);
             blurShader:unset();
         end
+
+        ScreenScaler.pop();
+        PaletteSwitcher.unset();
     end
 
     return self;

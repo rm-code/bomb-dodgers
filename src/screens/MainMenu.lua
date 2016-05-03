@@ -29,6 +29,8 @@ local Controls = require( 'src.Controls' );
 local InputManager = require( 'lib.InputManager' );
 local AniMAL = require( 'lib.AniMAL' );
 local SoundManager = require( 'lib.SoundManager' );
+local PaletteSwitcher = require( 'lib.colswitcher.PaletteSwitcher' );
+local ScreenScaler = require( 'lib.ScreenScaler' );
 
 -- ------------------------------------------------
 -- Module
@@ -121,11 +123,17 @@ function MainMenu.new()
     end
 
     function self:draw()
+        PaletteSwitcher.set();
+        ScreenScaler.push();
+
         love.graphics.setColor(215, 232, 148);
         love.graphics.rectangle('fill', 0, 0, sw, sh);
         love.graphics.setColor(255, 255, 255);
         images['anim']:draw(40);
         buttons:draw();
+
+        ScreenScaler.pop();
+        PaletteSwitcher.unset();
     end
 
     return self;

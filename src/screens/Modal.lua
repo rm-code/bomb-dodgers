@@ -25,6 +25,8 @@ local Screen = require( 'lib.screens.Screen' );
 local ButtonManager = require( 'src.ui.ButtonManager' );
 local Button = require( 'src.ui.Button' );
 local InputManager = require( 'lib.InputManager' );
+local PaletteSwitcher = require( 'lib.colswitcher.PaletteSwitcher' );
+local ScreenScaler = require( 'lib.ScreenScaler' );
 
 -- ------------------------------------------------
 -- Module
@@ -119,6 +121,9 @@ function Modal.new()
     end
 
     function self:draw()
+        PaletteSwitcher.set();
+        ScreenScaler.push();
+
         love.graphics.setColor(215, 232, 148);
         love.graphics.rectangle( 'fill', x, y, w, h );
         love.graphics.setColor(32, 70, 49);
@@ -128,6 +133,9 @@ function Modal.new()
         love.graphics.draw(images['sure'], x + (w * 0.5) - 72, y + 10, 0, 3, 3);
 
         buttons:draw();
+
+        ScreenScaler.pop();
+        PaletteSwitcher.unset();
     end
 
     return self;

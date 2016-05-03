@@ -182,6 +182,9 @@ function Options.new()
     end
 
     function self:draw()
+        PaletteSwitcher.set();
+        ScreenScaler.push();
+
         love.graphics.setColor(215, 232, 148);
         love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight());
         love.graphics.setColor(255, 255, 255);
@@ -193,6 +196,9 @@ function Options.new()
         love.graphics.draw(images['numbers'], images[profile.music], 416, offset + 256, 0, 3, 3);
         love.graphics.draw(images['numbers'], images[profile.sfx], 416, offset + 304, 0, 3, 3);
         buttons:draw();
+
+        ScreenScaler.pop();
+        PaletteSwitcher.unset();
     end
 
     function self:update(dt)

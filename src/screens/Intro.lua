@@ -23,6 +23,7 @@
 local ScreenManager = require( 'lib.screens.ScreenManager' );
 local Screen = require( 'lib.screens.Screen' );
 local ResourceManager = require( 'lib.ResourceManager' );
+local Splash = require( 'lib.o-ten-one' );
 
 -- ------------------------------------------------
 -- Module
@@ -34,9 +35,7 @@ local Intro = {};
 -- Constants
 -- ------------------------------------------------
 
-local DISPLAY_TIME = 3;
-local WIDTH  = 640;
-local HEIGHT = 480;
+local LOGO_DELAY = 3;
 
 -- ------------------------------------------------
 -- Constructor
@@ -45,51 +44,43 @@ local HEIGHT = 480;
 function Intro.new()
     local self = Screen.new();
 
-    local logos = {};
-    local loading = false;
-    local x, y;
-    local index = 1;
+    local logo;
     local timer = 0;
+    local x, y;
+
+    local splash = Splash();
 
     function self:init()
-        logos[1] = love.graphics.newImage( 'res/img/ui/rmcode.png' );
-        logos[2] = love.graphics.newImage( 'res/img/ui/love.png' );
+        ResourceManager.loadResources();
 
-        x = WIDTH  * 0.5 - logos[index]:getWidth()  * 0.5;
-        y = HEIGHT * 0.5 - logos[index]:getHeight() * 0.5;
+        logo = love.graphics.newImage( 'res/img/ui/rmcode.png' );
+
+        x = love.graphics.getWidth()  * 0.5 - logo:getWidth()  * 0.5;
+        y = love.graphics.getHeight() * 0.5 - logo:getHeight() * 0.5;
     end
 
     function self:draw()
-        love.graphics.draw( logos[index], x, y );
+        if timer > LOGO_DELAY then
+            splash:draw();
+        else
+            love.graphics.draw( logo, x, y );
+        end
     end
 
     function self:update( dt )
-        timer = timer + dt;
-        if not loading and timer > 0.05 then -- Small delay to make sure the first logo is displayed.
-            -- Load resources.
-            ResourceManager.loadResources();
-            loading = true;
-            timer = 0;
+        if timer > LOGO_DELAY then
+            splash:update( dt );
+
+            if splash.done then
+                ScreenManager.switch( 'mainMenu' );
+            end
         end
 
-        -- If the timer is bigger than the display time, load the next logo.
-        -- If all logos have been displayed switch to the main menu.
-        if timer > DISPLAY_TIME then
-            index = index + 1;
-            if index > 2 then
-                ScreenManager.switch( 'mainMenu' );
-            else
-                x = WIDTH  * 0.5 - logos[index]:getWidth()  * 0.5;
-                y = HEIGHT * 0.5 - logos[index]:getHeight() * 0.5;
-            end
-            timer = 0;
-        end
+        timer = timer + dt;
     end
 
-    function self:keypressed( key )
-        if key ~= 'return' and loading then
-            ScreenManager.switch( 'mainMenu' );
-        end
+    function self:keyreleased( _ )
+        ScreenManager.switch( 'mainMenu' );
     end
 
     return self;

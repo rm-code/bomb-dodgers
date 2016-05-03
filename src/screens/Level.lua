@@ -26,6 +26,8 @@ local PlayerManager = require( 'src.entities.dodgers.PlayerManager' );
 local NpcManager = require( 'src.entities.dodgers.NpcManager' );
 local ResourceManager = require( 'lib.ResourceManager' );
 local SoundManager = require( 'lib.SoundManager' );
+local PaletteSwitcher = require( 'lib.colswitcher.PaletteSwitcher' );
+local ScreenScaler = require( 'lib.ScreenScaler' );
 
 -- ------------------------------------------------
 -- Module
@@ -113,6 +115,9 @@ function Level.new()
     end
 
     function self:draw()
+        PaletteSwitcher.set();
+        ScreenScaler.push();
+
         if self:isActive() then
             camera:set();
             arena:draw();
@@ -123,6 +128,9 @@ function Level.new()
 
             camera:unset();
         end
+
+        ScreenScaler.pop();
+        PaletteSwitcher.unset();
     end
 
     function self:close()
